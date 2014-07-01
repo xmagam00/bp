@@ -1,0 +1,149 @@
+    %============================================================================
+% tento soubor pouzijte jako zaklad
+% (c) 2008 Michal Bidlo
+% E-mail: bidlom AT fit vutbr cz
+%============================================================================
+% kodovaní: iso-8859-2 (zmena prikazem iconv, recode nebo cstocs)
+%----------------------------------------------------------------------------
+% zpracování: make, make pdf, make desky, make clean
+% pøipomínky posílejte na e-mail: bidlom AT fit.vutbr.cz
+% vim: set syntax=tex encoding=latin2:
+%============================================================================
+\documentclass[cover,print]{fitthesis} % odevzdani do wisu - odkazy, na ktere se da klikat
+%\documentclass[print]{fitthesis} % pro tisk - na odkazy se neda klikat
+%\documentclass[english,print]{fitthesis} % pro tisk - na odkazy se neda klikat
+%      \documentclass[english]{fitthesis}
+% * Je-li prace psana v anglickem jazyce, je zapotrebi u tridy pouzit 
+%   parametr english nasledovne:
+%      \documentclass[english]{fitthesis}
+% * Neprejete-li si vysazet na prvni strane dokumentu desky, zruste 
+%   parametr cover
+
+% zde zvolime kodovani, ve kterem je napsan text prace
+% "latin2" pro iso8859-2 nebo "cp1250" pro windows-1250, "utf8" pro "utf-8"
+%\usepackage{ucs}
+\usepackage[latin2]{inputenc}
+\usepackage[T1, IL2]{fontenc}
+\usepackage{url}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{color}
+\DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
+
+%zde muzeme vlozit vlastni balicky
+
+
+% =======================================================================
+% balíèek "hyperref" vytváøí klikací odkazy v pdf, pokud tedy pou¾ijeme pdflatex
+% problém je, ¾e balíèek hyperref musí být uveden jako poslední, tak¾e nemù¾e
+% být v ¹ablonì
+\ifWis
+\ifx\pdfoutput\undefined % nejedeme pod pdflatexem
+\else
+  \usepackage{color}
+  \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
+  \definecolor{links}{rgb}{0.4,0.5,0}
+  \definecolor{anchors}{rgb}{1,0,0}
+  \def\AnchorColor{anchors}
+  \def\LinkColor{links}
+  \def\pdfBorderAttrs{/Border [0 0 0] }  % bez okrajù kolem odkazù
+  \pdfcompresslevel=9
+\fi
+\fi
+
+%Informace o praci/projektu
+%---------------------------------------------------------------------------
+\projectinfo{
+  %Prace
+  project=BP,            %typ prace BP/SP/DP/DR
+  year=2014,             %rok
+  date=\today,           %datum odevzdani
+  %Nazev prace
+  title.cs={Systém monitorování stavu plánovacích úloh},  %nazev prace v cestine
+  title.en={Planning Task Monitoring System}, %nazev prace v anglictine
+  %Autor
+  author={Martin Maga},   %jmeno prijmeni autora
+  %author.title.p=Bc., %titul pred jmenem (nepovinne)
+  %author.title.a=PhD, %titul za jmenem (nepovinne)
+  %Ustav
+  department=UITS, % doplnte prislusnou zkratku: UPSY/UIFS/UITS/UPGM
+  %Skolitel
+  supervisor=Zdenìk Letko, %jmeno prijmeni skolitele
+  supervisor.title.p=Ing.,   %titul pred jmenem (nepovinne)
+  supervisor.title.a={Ph.D.},    %titul za jmenem (nepovinne)
+  %Klicova slova, abstrakty, prohlaseni a podekovani je mozne definovat 
+  %bud pomoci nasledujicich parametru nebo pomoci vyhrazenych maker (viz dale)
+  %===========================================================================
+  %Klicova slova
+  keywords.cs={
+  Java EE 6, JavaServer Faces, Monitorovací systém, Twitter, Bootstrap, OptaPlanner, Webová slu¾ba, Enterprise JavaBean, JBoss, Rich Faces,  Arquillian, Plánování, MySQL, Plánovací problém
+  }, %klicova slova v ceskem jazyce
+  keywords.en={
+  Java EE 6, JavaServer Faces, Monitoring system, Twitter, Bootstrap, OptaPlanner, Web Service, Enterprise JavaBean, JBoss, Rich Faces,  Arquillian, Planning, MySQL, Planning problem
+  }, %klicova slova v anglickem jazyce
+  %Abstract
+  abstract.cs={
+  Úkolem této bakaláøské práce je dle konkretních po¾adavkù zadavatele spoloènosti Red Hat vytvoøit systém monitorování stavu plánovacích úloh. Hlavním cílem je pochopit, co je to plánovací problém, jako ho mù¾eme definovat, ulo¾it do systému, spustit jeho plánování a monitorovat prùbìh. Systém plánování byl rozdìlen na èásti u¾ívatelského rozhraní vytvoøeného pomocí technológií JavaServer Faces, Rich Faces a Twitter Boostrap, které umo¾òují nahrávání, spou¹tìní a pozastavení bìhu úloh a druhou èást reprezentovanou webovou slu¾bou v kombinaci s technologií Enterprise JavaBeans, která zpracovává po¾adavky na spou¹tení/pozastavení bìhu plánovaní, vykonáva je s vyu¾itím frameworku OptaPlanner a prùbeh plánování ukladá do MySQL databáze. Z této databáze jsou u¾ívatelským rozhraním získavany informace o plánovacích problémech a prùbì¾nì zobrazovány v u¾ivatelském rozhraní. Pro implementaci obou èástí byla pou¾ita platforma Java EE 6 a nasazena v Java EE kontejneri JBoss. Systém byl odzkou¹en na plánovacím problému N Dam na platformì UNIX u¾ivatelmi prostrednictvím cloudové slu¾by OpenShift, kteøí si zkusili vyøe¹it problém N Dam pro rùzná rozmístìní.
+  }, % abstrakt v ceskem jazyce
+  abstract.en={
+  The object of this thesis is based on specific company requirements Red Hat to create planning task monitoring system. The main objective is to understand what a planning problem is, as it can be defined, stored in the system, start and monitore its progress . Planning system has been divided into parts of the user interface created with technology JavaServer Faces, Rich Faces and Twitter Boostrap that allows recording, starting and suspension of the tasks and the second part represented by the Web service in combination with Enterprise JavaBeans technology that processes requests for start/pause run of planning, executes them using the framework OptaPlanner and store them in a MySQL database. From this database user interface gain information about planning problems and continuously displayed in the user interface. To implement both parts were used Java EE 6 platform and deployed in Java EE container JBoss . The system was tested on the planning problem N Queen on UNIX based system users through cloud service OpenShift, who tried to solve the problem for different location of Queens.
+  }, % abstrakt v anglickem jazyce
+  %Prohlaseni
+  declaration={
+  Prohla¹uji, ¾e jsem tuto bakaláøskou práci vypracoval samostatne pod vedením pana Zdìnka Letka a Martina Veèeøu. Uvedl jsem v¹echny literární prameny a publikace, ze kterých jsem èerpal.
+  }
+  ,
+  %Podekovani (nepovinne)
+  acknowledgment={
+  Veµmi rád by som poïakoval za vedenie mojej bakalárskej práce pánovi Zdìnkovi Letkovi a firme Red Hat, s ktorou som komunikoval prostredníctvom externého konzultanta Martina Veèeøu, ktorému tie¾ patrí moja vïaka.
+  } % nepovinne
+}
+
+%Abstrakt (cesky, anglicky)
+%\abstract[cs]{Do tohoto odstavce bude zapsán výtah (abstrakt) práce v èeském jazyce.}
+%\abstract[en]{Do tohoto odstavce bude zapsán výtah (abstrakt) práce v anglickém jazyce.}
+
+%Klicova slova (cesky, anglicky)
+%\keywords[cs]{Sem budou zapsána jednotlivá klíèová slova v èeském jazyce, oddìlená èárkami.}
+%\keywords[en]{Sem budou zapsána jednotlivá klíèová slova v anglickém jazyce, oddìlená èárkami.}
+
+%Prohlaseni
+%\declaration{Prohla¹uji, ¾e jsem tuto bakaláøskou práci vypracoval samostatnì pod vedením pana X...
+%Dal¹í informace mi poskytli...
+%Uvedl jsem v¹echny literární prameny a publikace, ze kterých jsem èerpal.}
+
+%Podekovani (nepovinne)
+%\acknowledgment{V této sekci je mo¾no uvést podìkování vedoucímu práce a tìm, kteøí poskytli odbornou pomoc
+%(externí zadavatel, konzultant, apod.).}
+
+\begin{document}
+  % Vysazeni titulnich stran
+  % ----------------------------------------------
+  \maketitle
+  % Obsah
+  % ----------------------------------------------
+  \tableofcontents
+  
+  % Seznam obrazku a tabulek (pokud prace obsahuje velke mnozstvi obrazku, tak se to hodi)
+  % \listoffigures
+  % \listoftables 
+
+  % Text prace
+  % ----------------------------------------------
+  \input{obsah} % viz. obsah.tex
+
+  % Pouzita literatura
+  % ----------------------------------------------
+\ifczech
+  \bibliographystyle{czechiso}
+\else 
+  \bibliographystyle{plain}
+%  \bibliographystyle{alpha}
+\fi
+  \begin{flushleft}
+  \bibliography{literatura} % viz. literatura.bib
+  \end{flushleft}
+  \appendix
+  
+  \input{prilohy} % viz. prilohy.tex
+\end{document}

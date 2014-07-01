@@ -1,0 +1,52 @@
+\select@language {slovak}
+\contentsline {chapter}{\numberline {1}\'Uvod}{3}
+\contentsline {chapter}{\numberline {2}Java Enterprise edition 6}{4}
+\contentsline {section}{\numberline {2.1}\v Specifik\'acia platformy}{4}
+\contentsline {section}{\numberline {2.2}Trojvrstvov\'y model}{4}
+\contentsline {subsection}{\numberline {2.2.1}Princ\IeC {\'\i }p webov\'ych komponent}{6}
+\contentsline {subsection}{\numberline {2.2.2}JavaServer Faces}{7}
+\contentsline {subsubsection}{\v Zivotn\'y cyklus spracovania po\v ziadavky}{7}
+\contentsline {subsubsection}{Facelets}{8}
+\contentsline {subsubsection}{Managed Beans}{8}
+\contentsline {section}{\numberline {2.3}Twitter Bootstrap}{9}
+\contentsline {section}{\numberline {2.4}Rich Faces}{9}
+\contentsline {section}{\numberline {2.5}Webov\'a slu\v zba}{9}
+\contentsline {subsection}{\numberline {2.5.1}Big webov\'a slu\v zba}{10}
+\contentsline {subsection}{\numberline {2.5.2}RESTful webov\'a slu\v zba}{10}
+\contentsline {section}{\numberline {2.6}Java Persistence API}{11}
+\contentsline {section}{\numberline {2.7}Enterprise JavaBeans}{12}
+\contentsline {subsection}{\numberline {2.7.1}Session Bean}{13}
+\contentsline {subsection}{\numberline {2.7.2}Message-driven Bean}{13}
+\contentsline {section}{\numberline {2.8}MySQL}{13}
+\contentsline {section}{\numberline {2.9}Seam}{14}
+\contentsline {section}{\numberline {2.10}Testovanie}{15}
+\contentsline {section}{\numberline {2.11}JBoss Aplika\v cn\'y server}{15}
+\contentsline {chapter}{\numberline {3}OptaPlanner}{17}
+\contentsline {section}{\numberline {3.1}Pl\'anovac\IeC {\'\i } probl\'em}{17}
+\contentsline {section}{\numberline {3.2}Princ\IeC {\'\i }p}{19}
+\contentsline {section}{\numberline {3.3}Konfigur\'aciu OptaPlanneru}{20}
+\contentsline {section}{\numberline {3.4}V\'ysledky pl\'anovacieho probl\'emu}{22}
+\contentsline {chapter}{\numberline {4}Aplik\'acia}{23}
+\contentsline {section}{\numberline {4.1}\v Specifik\'acia po\v ziadavkov}{23}
+\contentsline {section}{\numberline {4.2}Anal\'yza}{24}
+\contentsline {section}{\numberline {4.3}N\'avrh aplik\'acie}{26}
+\contentsline {subsection}{\numberline {4.3.1}N\'avrh modelu datab\'aze}{27}
+\contentsline {subsection}{\numberline {4.3.2}N\'avrh u\v z\IeC {\'\i }vate\v lsk\'eho rozhrania}{29}
+\contentsline {chapter}{\numberline {5}Implement\'acie}{31}
+\contentsline {section}{\numberline {5.1}Aplik\'acie pre u\v z\IeC {\'\i }vate\v lsk\'e rozhranie}{31}
+\contentsline {subsection}{\numberline {5.1.1}Prihlasovanie}{31}
+\contentsline {subsection}{\numberline {5.1.2}Zabezpe\v cenie}{32}
+\contentsline {subsection}{\numberline {5.1.3}Komunik\'acie s~PlannerService}{33}
+\contentsline {subsection}{\numberline {5.1.4}Logika aplik\'acie}{33}
+\contentsline {subsection}{\numberline {5.1.5}Implement\'acia rozhrania}{34}
+\contentsline {subsection}{\numberline {5.1.6}Publikovanie \'uloh}{35}
+\contentsline {subsection}{\numberline {5.1.7}Valid\'acia}{35}
+\contentsline {section}{\numberline {5.2}PlannerService}{36}
+\contentsline {section}{\numberline {5.3}Testovanie}{37}
+\contentsline {section}{\numberline {5.4}Vyhodnotenie aplik\'acie}{38}
+\contentsline {chapter}{\numberline {6}Z\'aver}{40}
+\contentsline {chapter}{\numberline {A}In\v stal\'acia}{43}
+\contentsline {chapter}{\numberline {B}U\v z\IeC {\'\i }vatelsk\'e rozhranie}{45}
+\contentsline {chapter}{\numberline {C}Dotazn\IeC {\'\i }k}{49}
+\contentsline {section}{\numberline {C.1}Obsah dotazn\IeC {\'\i }ka}{49}
+\contentsline {chapter}{\numberline {D}CD so zdrojov\'ymi k\'odmi}{53}
