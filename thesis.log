@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.4.18)  1 JUL 2014 13:56
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.4.18)  1 JUL 2014 20:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -186,51 +186,24 @@ File: il2cmr.fd 1997/02/06 CSLaTeX font definitions
 \Urlmuskip=\muskip11
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2010/09/12 v5.6 Page Geometry
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-)
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifvtex.sty
-Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
-Package ifvtex Info: VTeX not detected.
-)
-(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
-Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
-)
-\Gm@cnth=\count104
-\Gm@cntv=\count105
-\c@Gm@tempcnt=\count106
-\Gm@bindingoffset=\dimen115
-\Gm@wd@mp=\dimen116
-\Gm@odd@mp=\dimen117
-\Gm@even@mp=\dimen118
-\Gm@layoutwidth=\dimen119
-\Gm@layoutheight=\dimen120
-\Gm@layouthoffset=\dimen121
-\Gm@layoutvoffset=\dimen122
-\Gm@dimlist=\toks22
-)
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count107
+\lst@mode=\count104
 \lst@gtempboxa=\box28
-\lst@token=\toks23
-\lst@length=\count108
-\lst@currlwidth=\dimen123
-\lst@column=\count109
-\lst@pos=\count110
-\lst@lostspace=\dimen124
-\lst@width=\dimen125
-\lst@newlines=\count111
-\lst@lineno=\count112
-\lst@maxwidth=\dimen126
+\lst@token=\toks22
+\lst@length=\count105
+\lst@currlwidth=\dimen115
+\lst@column=\count106
+\lst@pos=\count107
+\lst@lostspace=\dimen116
+\lst@width=\dimen117
+\lst@newlines=\count108
+\lst@lineno=\count109
+\lst@maxwidth=\dimen118
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2013/08/26 1.5b (Carsten Heinz)
-\c@lstnumber=\count113
-\lst@skipnumbers=\count114
+\c@lstnumber=\count110
+\lst@skipnumbers=\count111
 \lst@framebox=\box29
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
@@ -264,17 +237,17 @@ LaTeX Font Info:    Checking defaults for IL2/cmr/m/n on input line 119.
 LaTeX Font Info:    ... okay on input line 119.
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count115
-\scratchdimen=\dimen127
+\scratchcounter=\count112
+\scratchdimen=\dimen119
 \scratchbox=\box30
-\nofMPsegments=\count116
-\nofMParguments=\count117
-\everyMPshowfont=\toks24
-\MPscratchCnt=\count118
-\MPscratchDim=\dimen128
-\MPnumerator=\count119
-\makeMPintoPDFobject=\count120
-\everyMPtoPDFconversion=\toks25
+\nofMPsegments=\count113
+\nofMParguments=\count114
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count115
+\MPscratchDim=\dimen120
+\MPnumerator=\count116
+\makeMPintoPDFobject=\count117
+\everyMPtoPDFconversion=\toks24
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -282,6 +255,10 @@ Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
@@ -319,42 +296,9 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-*geometry* driver: auto-detecting
-*geometry* detected driver: pdftex
-*geometry* verbose mode - [ preamble ] result:
-* driver: pdftex
-* paper: <default>
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
-* h-part:(L,W,R)=(89.62709pt, 418.25368pt, 89.6271pt)
-* v-part:(T,H,B)=(101.40665pt, 591.5302pt, 152.11pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
-* \textwidth=418.25368pt
-* \textheight=591.5302pt
-* \oddsidemargin=17.3571pt
-* \evensidemargin=17.3571pt
-* \topmargin=-7.86334pt
-* \headheight=12.0pt
-* \headsep=25.0pt
-* \topskip=11.0pt
-* \footskip=30.0pt
-* \marginparwidth=50.0pt
-* \marginparsep=10.0pt
-* \columnsep=10.0pt
-* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
-* \hoffset=-19.91684pt
-* \voffset=-42.67912pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidefalse
-* \@mparswitchfalse
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
-\c@lstlisting=\count121
+\c@lstlisting=\count118
 LaTeX Font Info:    Try loading font information for IL2+phv on input line 122.
+
 
 (/usr/share/texlive/texmf-dist/tex/cslatex/cspsfonts/il2phv.fd
 File: il2phv.fd 1998/01/31 CS Helvetica
@@ -362,7 +306,12 @@ LaTeX Font Info:     CS Helvetica on input line 2.
 LaTeX Font Info:    (C) Z. Wagner,1998/01/31 on input line 3.
 LaTeX Font Info:    Created by CsPsFont utility v.1.0e (C) Z. Wagner, 1998/01/3
 1 on input line 4.
-) [1
+)
+Overfull \hbox (22.26285pt too wide) in paragraph at lines 122--122
+\IL2/phv/m/n/18 SYSTÉM MO-NI-TO-RO-VÁNÍ STAVU PLÁ-NO-VA-CÍCH ÚLOH 
+ []
+
+[1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 \@obrlogo=\box31
@@ -388,6 +337,11 @@ Package pdftex.def Info: fig/fit-zp2.pdf used on input line 122.
 
 Overfull \hbox (109.58464pt too wide) in paragraph at lines 122--122
 [][] 
+ []
+
+
+Overfull \hbox (22.26285pt too wide) in paragraph at lines 122--122
+\IL2/phv/m/n/18 SYSTÉM MO-NI-TO-RO-VÁNÍ STAVU PLÁ-NO-VA-CÍCH ÚLOH 
  []
 
 [2 <./fig/vut-zp2.pdf> <./fig/fit-zp2.pdf>]
@@ -462,24 +416,23 @@ File: jsflifecycle.jpg Graphic file (type jpg)
 <use jsflifecycle.jpg>
 Package pdftex.def Info: jsflifecycle.jpg used on input line 89.
 (pdftex.def)             Requested size: 262.9556pt x 130.68735pt.
- [7] [8 <./jsflifecycle.jpg>]
+ [7 <./jsflifecycle.jpg>] [8]
 <webservice.jpg, id=56, 323.70938pt x 62.48344pt>
 File: webservice.jpg Graphic file (type jpg)
  <use webservice.jpg>
 Package pdftex.def Info: webservice.jpg used on input line 131.
 (pdftex.def)             Requested size: 194.22713pt x 37.49034pt.
- [9]
-[10 <./webservice.jpg>] [11] [12] [13] [14] [15] [16]
+ [9 <./webservice.jpg>] [10] [11] [12] [13] [14]
 Kapitola 3.
-[17
+[15
 
-] <fig/useCaseOverview.jpg, id=86, 233.05045pt x 187.5772pt>
+] <fig/useCaseOverview.jpg, id=80, 233.05045pt x 187.5772pt>
 File: fig/useCaseOverview.jpg Graphic file (type jpg)
 
 <use fig/useCaseOverview.jpg>
 Package pdftex.def Info: fig/useCaseOverview.jpg used on input line 266.
 (pdftex.def)             Requested size: 186.4406pt x 150.06194pt.
- [18 <./fig/useCaseOverview.jpg>] [19] [20]
+ [16 <./fig/useCaseOverview.jpg>] [17] [18]
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2013/08/26 1.5b listings language file
 )
@@ -494,176 +447,157 @@ File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <9> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 1.
-)
-Overfull \hbox (5.21384pt too wide) in paragraph at lines 356--357
-[]\IL2/cmr/m/n/10.95 Na riadku è.3 uve-dená me-dzi zna-èkami en-vi-ro-ment-Mode
- hod-nota []FAST[]ASSERT\,
- []
-
-[21]
-Overfull \hbox (11.43108pt too wide) in paragraph at lines 361--362
-[]\IL2/cmr/m/n/10.95 /or-g/op-tap-lan-ne-r/e-xam-ple-s/c-loud-ba-lan-cin-g/sol-
-ve-r/c-loud-Ba-lan-cingScoreRules.drl\, 
- []
-
-[22]
+) [19] [20]
 Kapitola 4.
-[23
+[21
 
-] [24] [25] <work.jpg, id=117, 1027.84pt x 770.88pt>
-File: work.jpg Graphic file (type jpg)
- <use work.jpg>
-Package pdftex.def Info: work.jpg used on input line 468.
-(pdftex.def)             Requested size: 411.12872pt x 308.34654pt.
+] [22]
+Overfull \hbox (60.13213pt too wide) in paragraph at lines 461--462
+[]\IL2/cmr/m/n/10.95 Pre spus-te-nie vý-po-ètu úlohy ko-mu-ni-kuje po-mo-cou we
+-bo-vej slu-¾by s []Plan-ner-Ser-vice\(optimalizovaná
+ []
 
-<ER.jpg, id=118, 498.36188pt x 414.79968pt>
-File: ER.jpg Graphic file (type jpg)
- <use ER.jpg>
-Package pdftex.def Info: ER.jpg used on input line 486.
-(pdftex.def)             Requested size: 348.85094pt x 290.3578pt.
- [26] [27 <./work.jpg>] [28 <./ER.jpg>] <page.jpg, id=129, 1010.27437pt x 443.4
-0656pt>
+[23] <komunikacia.jpg, id=111, 755.82375pt x 232.61906pt>
+File: komunikacia.jpg Graphic file (type jpg)
+
+<use komunikacia.jpg>
+Package pdftex.def Info: komunikacia.jpg used on input line 468.
+(pdftex.def)             Requested size: 453.49774pt x 139.57251pt.
+
+Overfull \hbox (21.01595pt too wide) in paragraph at lines 468--469
+ [] 
+ []
+
+
+Overfull \hbox (1.41249pt too wide) in paragraph at lines 475--476
+\IL2/cmr/m/n/10.95 úlohy o spus-te-nie-/za-sta-ve-nie pro-stred-níc-tvom we-bo-
+vej slu-¾by Plan-ner-Ser-vice(OptaPlanner),
+ []
+
+<BP.jpg, id=112, 514.17094pt x 621.82312pt>
+File: BP.jpg Graphic file (type jpg)
+ <use BP.jpg>
+Package pdftex.def Info: BP.jpg used on input line 486.
+(pdftex.def)             Requested size: 308.50494pt x 373.09674pt.
+ [24 <./komunikacia.jpg>] [25 <./BP.jpg>] <page.jpg, id=119, 1444.39626pt x 523
+.9575pt>
 File: page.jpg Graphic file (type jpg)
- <use page.jpg>
-Package pdftex.def Info: page.jpg used on input line 511.
-(pdftex.def)             Requested size: 404.10258pt x 177.35948pt.
 
-Overfull \hbox (0.62202pt too wide) in paragraph at lines 506--519
-\IL2/cmr/m/n/10.95 Výsledné ro-z-hra-nie kla-die dô-raz na jed-no-du-chos» a pr
-e-hµad-nos» zo-bra-ze-ných úloh. Z tôhto
+<use page.jpg>
+Package pdftex.def Info: page.jpg used on input line 514.
+(pdftex.def)             Requested size: 433.32222pt x 157.18846pt.
+
+Overfull \hbox (0.84042pt too wide) in paragraph at lines 514--515
+ [] 
  []
 
-[29 <./page.jpg>] [30]
+[26 <./page.jpg>] [27]
 Kapitola 5.
+[28
 
-Overfull \hbox (4.1139pt too wide) in paragraph at lines 534--535
-\IL2/cmr/m/n/10.95 ner-Ser-vice 5.2[], ktorá za-bez-pe-èuje rie-¹e-nie plá-no-v
-a-cích úloh pro-stred-níc-tvom OptaPlanner-
- []
-
-[31
-
-] [32]
-Overfull \hbox (15.48863pt too wide) in paragraph at lines 575--576
+] [29]
+Overfull \hbox (1.26051pt too wide) in paragraph at lines 578--579
 []\IL2/cmr/m/n/10.95 Pre rolu Ad-mi-ni-stra-tor je urèená stránka Ad-mi-ni-stra
 -tor.xhtml a bac-king be-ana(trieda)
  []
 
-[33] [34] [35] [36]
-Overfull \hbox (1.2636pt too wide) in paragraph at lines 622--623
-[]\IL2/cmr/m/n/10.95 Po uko-nèe-ní-/vy-rie-¹ení úlohy sa z triedy \IL2/cmr/m/it
-/10.95 Prob-lem-Sol-ver \IL2/cmr/m/n/10.95 získa naj-le-p¹ie rie-¹e-nie(XML
- []
-
-[37] [38] [39]
+[30] [31] [32] [33] [34] [35]
 Kapitola 6.
-) (./thesis.bbl [40
+) (./thesis.bbl [36
 
 ]
 LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 44.
 
  (/usr/share/texlive/texmf-dist/tex/cslatex/base/il2cmtt.fd
 File: il2cmtt.fd 1997/08/20 CSLaTeX font definitions
-) [41
+) [37
 
-]) (./prilohy.tex [42]
+]) (./prilohy.tex [38]
 Dodatok A.
 
-Overfull \hbox (9.00978pt too wide) in paragraph at lines 10--11
-\IL2/cmr/m/n/10.95 ins-tall ma-ven\ alebo vy-u¾i» od-kaz s po-pi-som http://mav
-en.apache.org/download.cgi) 
- []
-
-
-Overfull \hbox (19.76218pt too wide) in paragraph at lines 11--12
+Overfull \hbox (5.53406pt too wide) in paragraph at lines 11--12
 \IL2/cmr/m/n/10.95 apt-get ins-tall git\ alebo vy-u¾i» od-kaz s po-pi-som http:
 //git-scm.com/book/en/Getting-
  []
 
-[43
+[39
 
 ]
-Overfull \hbox (2.22699pt too wide) in paragraph at lines 33--34
-[]\IL2/cmr/m/n/10.95 Prejdeme do zlo-¾ky JBOSS[]HOME/standalone/bin a spus-tíme
- skript \IL2/cmr/m/it/10.95 stan-da-lone.sh 
- []
-
-
-Overfull \hbox (30.28647pt too wide) in paragraph at lines 36--37
+Overfull \hbox (16.05835pt too wide) in paragraph at lines 36--37
 []\IL2/cmr/m/n/10.95 K ap-li-ká-cií pri-stú-pime za-da-ním ad-resy []http://loc
 alhost:8080/optaplanner.controller.war/\
  []
 
-[44]
+[40]
 Dodatok B.
-<login.jpg, id=182, 990.70125pt x 580.41844pt>
+<login.jpg, id=170, 990.70125pt x 580.41844pt>
 File: login.jpg Graphic file (type jpg)
  <use login.jpg>
 Package pdftex.def Info: login.jpg used on input line 54.
 (pdftex.def)             Requested size: 396.27348pt x 232.16325pt.
 
-<page5.jpg, id=183, 902.6222pt x 336.50719pt>
+<page5.jpg, id=171, 902.6222pt x 336.50719pt>
 File: page5.jpg Graphic file (type jpg)
  <use page5.jpg>
 Package pdftex.def Info: page5.jpg used on input line 67.
 (pdftex.def)             Requested size: 361.04248pt x 134.60048pt.
 
-<page1.jpg, id=184, 980.16188pt x 469.00218pt>
+<page1.jpg, id=172, 980.16188pt x 469.00218pt>
 File: page1.jpg Graphic file (type jpg)
  <use page1.jpg>
 Package pdftex.def Info: page1.jpg used on input line 82.
 (pdftex.def)             Requested size: 392.05782pt x 187.59755pt.
 
-<page2.jpg, id=185, 925.20656pt x 418.56375pt>
+<page2.jpg, id=173, 925.20656pt x 418.56375pt>
 File: page2.jpg Graphic file (type jpg)
  <use page2.jpg>
 Package pdftex.def Info: page2.jpg used on input line 94.
 (pdftex.def)             Requested size: 370.07607pt x 167.42252pt.
 
-<page3.jpg, id=186, 617.30624pt x 454.69875pt>
+<page3.jpg, id=174, 617.30624pt x 454.69875pt>
 File: page3.jpg Graphic file (type jpg)
  <use page3.jpg>
 Package pdftex.def Info: page3.jpg used on input line 108.
 (pdftex.def)             Requested size: 246.91812pt x 181.87627pt.
 
-<page4.jpg, id=187, 935.74594pt x 450.18187pt>
+<page4.jpg, id=175, 935.74594pt x 450.18187pt>
 File: page4.jpg Graphic file (type jpg)
  <use page4.jpg>
 Package pdftex.def Info: page4.jpg used on input line 120.
 (pdftex.def)             Requested size: 374.29175pt x 180.06955pt.
- [45
+ [41
 
- <./login.jpg>] [46 <./page5.jpg> <./page1.jpg>] [47 <./page2.jpg> <./page3.jpg
->] [48 <./page4.jpg>]
+ <./login.jpg> <./page5.jpg>] [42 <./page1.jpg> <./page2.jpg>] [43 <./page3.jpg
+> <./page4.jpg>]
 Dodatok C.
-<dotaz.jpg, id=202, 464.4853pt x 432.86719pt>
+<dotaz.jpg, id=185, 464.4853pt x 432.86719pt>
 File: dotaz.jpg Graphic file (type jpg)
  <use dotaz.jpg>
 Package pdftex.def Info: dotaz.jpg used on input line 143.
 (pdftex.def)             Requested size: 278.69333pt x 259.7223pt.
 
-<dotaz1.jpg, id=203, 456.95718pt x 462.22687pt>
+<dotaz1.jpg, id=186, 456.95718pt x 462.22687pt>
 File: dotaz1.jpg Graphic file (type jpg)
  <use dotaz1.jpg>
 Package pdftex.def Info: dotaz1.jpg used on input line 156.
 (pdftex.def)             Requested size: 274.1764pt x 277.33826pt.
 
-<dotaz2.jpg, id=204, 454.69875pt x 444.15938pt>
+<dotaz2.jpg, id=187, 454.69875pt x 444.15938pt>
 File: dotaz2.jpg Graphic file (type jpg)
  <use dotaz2.jpg>
 Package pdftex.def Info: dotaz2.jpg used on input line 169.
 (pdftex.def)             Requested size: 272.82135pt x 266.49767pt.
 
-<dotaz3.jpg, id=205, 464.4853pt x 456.95718pt>
+<dotaz3.jpg, id=188, 464.4853pt x 456.95718pt>
 File: dotaz3.jpg Graphic file (type jpg)
  <use dotaz3.jpg>
 Package pdftex.def Info: dotaz3.jpg used on input line 181.
 (pdftex.def)             Requested size: 278.69333pt x 274.1764pt.
- [49
+ [44
 
- <./dotaz.jpg>] [50 <./dotaz1.jpg>] [51 <./dotaz2.jpg>] [52 <./dotaz3.jpg>]
+ <./dotaz.jpg>] [45 <./dotaz1.jpg> <./dotaz2.jpg>] [46 <./dotaz3.jpg>]
 Dodatok D.
-) [53
+) [47
 
 ] (./thesis.aux)
 
@@ -675,10 +609,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 6153 strings out of 494994
- 81246 string characters out of 6180200
- 265425 words of memory out of 5000000
- 9201 multiletter control sequences out of 15000+600000
+ 5674 strings out of 494994
+ 74252 string characters out of 6180200
+ 251967 words of memory out of 5000000
+ 8732 multiletter control sequences out of 15000+600000
  27331 words of font info for 65 fonts, out of 8000000 for 9000
  24 hyphenation exceptions out of 8191
  38i,8n,49p,1962b,1346s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -695,10 +629,10 @@ lic/cs/csr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cs/csr9.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/cs/csti10.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/cs/cstt10.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/helvetic/uhvr8a.pfb>
-Output written on thesis.pdf (57 pages, 2237731 bytes).
+Output written on thesis.pdf (51 pages, 2242537 bytes).
 PDF statistics:
- 270 PDF objects out of 1000 (max. 8388607)
- 175 compressed objects within 2 object streams
+ 251 PDF objects out of 1000 (max. 8388607)
+ 162 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  101 words of extra memory for PDF output out of 10000 (max. 10000000)
 

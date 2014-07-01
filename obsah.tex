@@ -330,7 +330,7 @@ Pre lep¹iu prehµadnos» je uvedená uká¾ka konfiguraèného súboru.
 \newpage
 \lstset{
 	language=xml,
-    tabsize=3,
+    tabsize=2,
     %frame=lines,
     caption=Test,
     label=cloud,
@@ -343,7 +343,7 @@ Pre lep¹iu prehµadnos» je uvedená uká¾ka konfiguraèného súboru.
     stringstyle=\color{red},
     numbers=left,
     numberstyle=\tiny,
-    numbersep=5pt,
+    numbersep=3pt,
     breaklines=true,
     showstringspaces=false,
     basicstyle=\footnotesize,
@@ -465,7 +465,7 @@ Výsledná aplikácia je rozdelená na 2 èasti. Na èas» reprezentujúci grafického u¾
 
 \begin{center}
 
-\includegraphics[scale=0.4]{work.jpg} 
+\includegraphics[scale=0.6]{komunikacia.jpg} 
 \caption{Diagram komunikácie}
 \label{work}
 
@@ -483,7 +483,7 @@ Na nasledujúcom obrázku je ukázaný ER diagram, ktorý bol pou¾itý pre databázu:
 
 \begin{center}
 
-\includegraphics[scale=0.7]{ER.jpg} 
+\includegraphics[scale=0.6]{BP.jpg} 
 \caption{ER diagram}
 \label{ER}
 
@@ -491,7 +491,10 @@ Na nasledujúcom obrázku je ukázaný ER diagram, ktorý bol pou¾itý pre databázu:
 
 \end{figure}
 
-Tento obrázok zobrazuje jednotlivé entity, ktoré sú potrebné na ulo¾enie v~databáze, ka¾dá z~nich ma urèité polo¾ky. ER diagram sa skladá z~3 entít: user - entita, ktorá reprezentuje u¾ívateµa, task - entita, ktorá reprezentuje úlohu a organization - entita, ktorá reprezentuje organizáciu. Výsledný návrh odpovedá skutoènosti, ¾e ka¾dý u¾ívateµ musí by» súèa¹»ou organizácia, rovnako mô¾e ma» vytvorené 0 a¾ N úloh. Taktie¾ pre zjednodu¹enie je ka¾da úloha priradená priamo organizácií pre zlep¹enie rýchlosti získania výsledkou a zjednodu¹enia ich nájdenia. Ka¾dá entita obsahuje primárny kµúè(jedná sa o~silné entitné mno¾iny), ktorý je odvodený od názvu a zaèína predponou \uv{id\_} a pokraèuje názvom entity s~CamelCase notáciou(ka¾dé slovo zaèína veµkým písmenom a slová sú spojené dokopy). Poïme sa pozrie» bli¾¹ie na jednotlivé entity. Entitná mno¾ina organization obsahuje 2 polo¾ky jednou z~nich je primárny klúè a ïal¹ou názov organizácia podµa, ktorej sú zaraïovaný jednotlivý u¾ívatelia. Ïalej prejdime k~entitnej mno¾ine user. Táto entita má rovnako primárny kµúè. Ïalej obsahuje polo¾ku pre u¾ívateµské meno(username), heslo(password), email, u¾ívateµskú rolu(role) a cudzí kµúè organization, ktorý obsahuje na odkaz na organizáciu, ku ktorej je u¾ívateµ priradený. Nakoniec prejdime k~entitnej mno¾ine task. Táto entitná mno¾ina obsahuje primárny kµúè, ïalej obsahuje XML súbor, ktorý reprezentuje danú úlohu(v na¹om prípade N dám), stav úloh(stateOfTask, ktorý reprezentuje rôzne stavy úlohy), ktorý si podrobnej¹ie rozobereme. Úloha sa mô¾e nachádza» v~jednom z~nasledujúcich stavov:
+Tento obrázok zobrazuje jednotlivé entity, ktoré sú potrebné na ulo¾enie v~databáze, ka¾dá z~nich ma urèité polo¾ky. ER diagram sa skladá z~3 entít: user - entita, ktorá reprezentuje u¾ívateµa, task - entita, ktorá reprezentuje úlohu a organization - entita, ktorá reprezentuje organizáciu a tasktype - entita, ktorá reprezentuje typ problému. Výsledný návrh odpovedá skutoènosti, ¾e ka¾dý u¾ívateµ musí by» súèa¹»ou organizácia, rovnako mô¾e ma» vytvorené 0 a¾ N úloh. Taktie¾ pre zjednodu¹enie je ka¾da úloha priradená priamo organizácií pre zlep¹enie rýchlosti získania výsledkou a zjednodu¹enia ich nájdenia. Ka¾dá entita obsahuje primárny kµúè(jedná sa o~silné entitné mno¾iny), ktorý je odvodený od názvu a zaèína predponou \uv{id\_} a pokraèuje názvom entity s~CamelCase notáciou(ka¾dé slovo zaèína veµkým písmenom a slová sú spojené dokopy). Poïme sa pozrie» bli¾¹ie na jednotlivé entity. Entitná mno¾ina tasktype obsahuje 3 polo¾ky a to idType, ktorá reprezentuje primárny kµúè, name, ktorý reprezentuje názov plánovacieho problému(napr. N Dám, problém vyvá¾enia cloudu, \ldots) a configuration, ktorá reprezentuje XML konfiguráciu pre daný typ problému.
+
+
+Entitná mno¾ina organization obsahuje 2 polo¾ky jednou z~nich je primárny klúè a ïal¹ou názov organizácia podµa, ktorej sú zaraïovaný jednotlivý u¾ívatelia. Ïalej prejdime k~entitnej mno¾ine user. Táto entita má rovnako primárny kµúè. Ïalej obsahuje polo¾ku pre u¾ívateµské meno(username), heslo(password), email, u¾ívateµskú rolu(role) a cudzí kµúè organization, ktorý obsahuje na odkaz na organizáciu, ku ktorej je u¾ívateµ priradený. Nakoniec prejdime k~entitnej mno¾ine task. Táto entitná mno¾ina obsahuje primárny kµúè, ïalej obsahuje XML súbor, ktorý reprezentuje danú úlohu(v na¹om prípade N dám), stav úloh(stateOfTask, ktorý reprezentuje rôzne stavy úlohy), ktorý si podrobnej¹ie rozobereme. Úloha sa mô¾e nachádza» v~jednom z~nasledujúcich stavov:
 \begin{itemize}
 \item NEW - úloha bola vytvorená
 \item MODIFIED - XML súbor bol modifikovaný
@@ -508,7 +511,7 @@ Výsledné rozhranie kladie dôraz na jednoduchos» a prehµadnos» zobrazených úloh. 
 
 \begin{center}
 
-\includegraphics[scale=0.4]{page.jpg} 
+\includegraphics[scale=0.3]{page.jpg} 
 \caption{Návrh u¾ívateµského rozhrania}
 \label{rozhranie}
 
@@ -517,7 +520,7 @@ Výsledné rozhranie kladie dôraz na jednoduchos» a prehµadnos» zobrazených úloh. 
 \end{figure}
 Na obrázku è.\ref{rozhranie} mô¾me vidie» návrh u¾ívateµského rozhrania. Rozhranie je rozdelené do 6 èastí, ktoré mô¾me rozozna» na obrázku èíslami od 1 do 6, ktoré sú aj ohranièené. Celé rozhranie mô¾me rozdeli» do nasledujúcich èastí:
 \begin{itemize}
-\item Oblas» è.1 predstavuje navigaèné menu, kde sú jednotlivé akcie rozdelené do zálo¾iek podµa ich názvu. Pre klinutí na príslu¹nú zálo¾ku sa zmení aj obsah na stránke. 
+\item Oblas» è.1 predstavuje navigaèné menu, kde sú jednotlivé akcie rozdelené do rolovacích zoznamov. Pre klinutí na príslu¹ný zoznam dôjde k jeho odrolovaniu a zobrazeniu polo¾iek. Po kliknutí na polo¾ku dôjde k zmenu obsahuje stránky.
 \item Oblas» è.2 obsahuje informáciu o~prihlásenom u¾ívateµovi , rovnako obsahuje aj tlaèidlo \uv{Logout}, prostredníctvom ktorého sa mô¾e u¾ívateµ z~aplikácie odhlási»
 \item Oblas» è.6 predstavuje funkènú oblas». Táto oblas» je ¹pecifická pre ka¾dú zálo¾ka, ktorá reprezentuje jej obsah. V~tej oblasti sú umiestnené typicky obsahy databázových tabuliek, nástroje na vyhµadávanie, rôzne akcie, ktoré je mo¾né vykonáva» s~dátami, rovnako aj mo¾nosti na vytváranie entít
 \item Oblas» è.3 predstavuje jednu z~funkèných mo¾ností. Jedná sa o~vyhµadávanie, ktoré je zlo¾ené zo vstupného prvky, do ktorého zadamé vyhµadávaný re»azec a druhá èas» predstavuje menu,z ktorého zvolíme ståpec na vyhµadávanie. Následne je mo¾nos» realizova» tlaèidlom Find, ktoré prekreslí obsah tabulky ni¾¹ie a naplní ju nájdenými výsledkami.
