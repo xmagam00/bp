@@ -1,46 +1,40 @@
 %\chapter{Obsah CD}
 \chapter{In¹talácia}
 {
-	V~tejto kapitole by som Vád objasnil postup in¹talácie aplikácie. V~prvom rade uviediem potrebné prostriedky pre beh aplikácie. Pre správny beh aplikácie potrebujeme nasledovné prostriedky:
+	V~tejto kapitole by som Vád objasnil postup in¹talácie aplikácie. V~prvom rade uvediem potrebné prostriedky pre beh aplikácie:
 	\begin{itemize}
-	\item JBoss aplikaèný server najmenej vo verzii 7.1.1.Final. Je mo¾né ho zdarma stiahnu» z~http://jbossas.jboss.org/downloads
+	\item JBoss aplikaèný server najmenej vo verzii 7.1.1.Final, ktorý je súèas»ou CD
 	\item MySQL Connector/J minimálne vo verzii 5.0.8, ktorý je súèas»ou CD
-	\item MySQL databázový server najmenej vo verzii 5.5.37(na distribúcií ubuntu je mo¾né nain¹talova» príkazom \uv{apt-get install mysql-server mysql-client}, alebo je mo¾né postupova» podµa nasledujúceho návodu  \\http://dev.mysql.com/doc/refman/5.1/en/linux-installation.html)
-	\item Webový prehlidaè Mozilla Firefox najmenej vo verzii 29.0 alebo Google Chrome najmenej vo verzii 34.0(v prostredí ubuntu je mo¾né ho nain¹talova» nasledujúcim príkazom \uv{apt get install firefox/google-chrome})
-	\item Nástroj Maven(mô¾eme ho nain¹talova» príkazom v prostredí ubuntu \uv{sudo apt-get install maven} alebo vyu¾i» odkaz s popisom http://maven.apache.org/download.cgi) 
-	\item Verzovací nástroj Git (mô¾eme ho nain¹talova» príkazom v prostredí ubuntu \uv{sudo apt-get install git} alebo vyu¾i» odkaz s popisom http://git-scm.com/book/en/Getting-Started-Installing-Git)
-	\end{itemize}
-	V~prvom rade je potrebné nain¹talova» MySQL server nakonfigurova» databázu s~názvom \uv{optaplanner} s~u¾ívateµským menom \uv{root} a heslom \uv{root}. Následne je potrebné rozbali» stiahnutý JBoss aplikaèný server na súborový systém. V~ïal¹om kroku nastaví ná¹ aplikaèný server pre správne pou¾itie MySQL databáze.  To urobíme zkopírovaním súboru standalone-full.xml do adresára JBOSS\_HOME\footnote{JBOSS\_HOME predstavuje koreòový adresár serveru JBoss na disku}/standalone/configuration a prepí¹e aktuálny obsah súboru. 
+	\item MySQL databázový server najmenej vo verzii 5.5.37(na distribúcií ubuntu je mo¾né nain¹talova» príkazom apt-get install mysql-server mysql-client, alebo je mo¾né postupova» podµa nasledujúceho návodu  \\http://dev.mysql.com/doc/refman/5.1/en/linux-installation.html)
+	\item Webový prehlidaè Mozilla Firefox najmenej vo verzii 29.0 alebo Google Chrome najmenej vo verzii 34.0(v prostredí ubuntu je mo¾né ho nain¹talova» nasledujúcim príkazom apt get install firefox/google-chrome)
 
-	Následne treba ovládaè mysql-connector-java-5.1.29-bin.jar umiestni» do adresára \\ JBOSS\_HOME/standalone/deployments. Následne treba vytvori» potrebnú databázu to a naplni» ju dátami :
+	\end{itemize}
+	V~prvom rade je potrebné nain¹talova» MySQL server nakonfigurova» databázu s~názvom optaplanner s~u¾ívateµským menom root a heslom root. Následne je potrebné skopírova» JBoss aplikaèný server na súborový systém z CD.  
+
+	Následne treba vytvori» potrebnú databázu to a naplni» ju dátami, preto spustíme terminál :
 	\begin{itemize}
-	\item zadaním príkazu mysql -u root -p optaplanner $\prec$ cesta/k/suboru/create.sql(bude od nás vy¾adované heslo root, ktoré zadáme)
-	\item zadaním príkazu mysql -u root -p optaplanner $\prec$ cesta/k/suboru/insert.sql(bude od nás vy¾adované heslo root, ktoré zadáme)
+	\item Zadáme príkaz mysql -u root -e "create database optaplanner" -p a zadáme heslo root
+	\item Zadáme príkaz mysql -u root -p optaplanner $\prec$ cesta/k/suboru/create.sql(bude od nás vy¾adované heslo root, ktoré zadáme)
+	\item Zadáme príkaz mysql -u root -p optaplanner $\prec$ cesta/k/suboru/insert.sql(bude od nás vy¾adované heslo root, ktoré zadáme)
 	\end{itemize}
 
-	Nakoniec skopírujeme súbor standalone.conf do adresára JBOSS\_HOME/bin a prepí¹eme aktuálny obsah súboru. Nakoniec získame aplikáciu PlannerService. Je potrebné aplikáciu stiahnu» a vytvori», to urobíme nasledovne, ale predtým je potrebné nain¹talova» závislos» z aplikácie optaplanner.controller:
-	\begin{enumerate}
-	\item Nastavíme sa do koreòového adresára optaplanner.controller a následne do zlo¾ky Entities
-	\item Zadáme príkaz \uv{mvn clean package} a následne \uv{mvn install}
-	\item Následne zadáme príkaz \\\uv{git clone https://github.com/marvec/PlannerService.git}
-	\item Nastavíme sa do zlo¾ky pomocou príkazu \uv{cd PlannerService}
-	\item Zadáme príkaz \uv{mvn clean package}
-	\end{enumerate}
+	
 	Aplikáciu mô¾me spusti» nasledovne:
 	\begin{itemize}
-	\item Skopírujeme pripravený adresára optaplanner.controller.war do adresára \\ JBOSS\_HOME/standalone/deployments
-	\item Skopírujeme súbor optaplanner-service.war z adresára, kde sme spustili príkaz \uv{mvn clean package} a nastavíme sa v òom do podadresára \uv{target}. Odtiaµ skopírujeme súbor optaplanner-service.war\footnote{optaplanner-service.war predstavuje PlannerService} do adresára \\ JBOSS\_HOME/standalone/deployments
-	\item Prejdeme do zlo¾ky JBOSS\_HOME/standalone/bin a spustíme skript \emph{standalone.sh}
+	\item Skopírujeme pripravený adresára optaplanner.controller.war a optaplanner-service.war do adresára \\ JBOSS\_HOME\footnote{JBOSS\_HOME predstavuje koreòový adresár serveru JBoss na disku}/standalone/deployments
+	\item Prejdeme do zlo¾ky JBOSS\_HOME/standalone/bin a spustíme skript standalone.sh zadaním do terminálu ./standalone.sh
 	\end{itemize}
 	
-	K~aplikácií pristúpime zadaním adresy \uv{http://localhost:8080/optaplanner.controller.war/} do webového podporovaného webového prehliadaèu a mô¾me sa prihlási» do systému nasledovne:
+	K~aplikácií pristúpime zadaním adresy http://localhost:8080/optaplanner.controller.war/ do podporovaného webového prehliadaèa a mô¾me sa prihlási» do systému nasledovne:
 	\begin{itemize}
 	\item Pre u¾ívateµskú rolu Administrátor - prihlasovacie meno: martin, heslo:martin
 	\item Pre u¾ívateµskú rolu Plánovaè - prihlasovacie meno:peter heslo:peter
 	\item Pre u¾ívateµskú rolu Èitateµ - prihlasovacie meno:david heslo:david
 
 	\end{itemize}
-	Aplikáciu optaplanner.controller je mo¾né prelo¾i» príkazom v jej zlo¾ke príkazom \uv{mvn clean package} a následne zabali» do súboru war pomocou príkazu \uv{mvn war:war}.
+	Aplikácia je prístupná aj prostredníctvom cloudovej slu¾by OpenShift na adrese http://optaplanner-xmagam00.rhcloud.com/optaplanner.controller/. Prihlasovacie údaje pre jednotlivé u¾ívateµské role sú zhodné s údajmi uvedenými vy¹¹ie.
+
+	Aplikáciu optaplanner.controller je mo¾né prelo¾i» príkazom v jej zlo¾ke príkazom mvn clean package a následne zabali» do súboru war pomocou príkazu mvn war:war. Aplikáciu optaplanner-service je mo¾né prelo¾i» príkazom mvn clean package.
 
 }
 
@@ -64,8 +58,8 @@
 
 \begin{center}
 
-\includegraphics[scale=0.4]{page5.jpg} 
-\caption{Zmena hesla}
+\includegraphics[scale=0.3]{page5.jpg} 
+\caption{Zobrazenie úloh}
 
 
 
@@ -79,7 +73,7 @@
 
 \begin{center}
 
-\includegraphics[scale=0.4]{page1.jpg} 
+\includegraphics[scale=0.3]{page1.jpg} 
 \caption{Editovanie úlohy}
 
 
@@ -91,7 +85,7 @@
 
 \begin{center}
 
-\includegraphics[scale=0.4]{page2.jpg} 
+\includegraphics[scale=0.3]{page2.jpg} 
 \caption{Nahrávanie novej úlohy}
 
 
@@ -105,7 +99,7 @@
 
 \begin{center}
 
-\includegraphics[scale=0.4]{page3.jpg} 
+\includegraphics[scale=0.3]{page3.jpg} 
 \caption{Spravovanie u¾ívateµov}
 
 
@@ -117,7 +111,7 @@
 
 \begin{center}
 
-\includegraphics[scale=0.4]{page4.jpg} 
+\includegraphics[scale=0.3]{page4.jpg} 
 \caption{Spravovanie organizácií}
 
 
@@ -199,12 +193,10 @@
 	Prilo¾ené CD obsahuje nasledujúce súbory:
 	\begin{itemize}
 	\item optaplanner.controller.war - adresár aplikácie pre u¾ívateµské rozhranie obsahujúce prelo¾ené zdrojové súbory
-	\item install.txt - súbor s~popisom in¹talácie
 	\item create.sql - SQL súbor s~definíciami tabuliek
 	\item insert.sql - SQL súbor s~naplnením dát tabuliek
 	\item bachelor\_thesis.pdf - elektronická verzia textovej èasti bakálarskej práce
-	\item mysql-connector-java-5.1.29-bin.jar - ovládaè pre prácu s~MySQL databázou
-	\item 4queens.xml,8queens.xml, 16queens.xml - definièné súbory pre plánovací problém 4, 8 a 16 dám
+	\item 4queens.xml,cloudbalance.xml, travellingtournament.xml - definièné súbory pre plánovacie problémy
 	\item src - adresár, ktorý obsahuje zdrojové kódy k~aplikácií pre u¾ívateµské \\rozhranie(optaplanner.controller)
 	\item docs - adresár zo zdrojovými textami k dokumentácií
 	\end{itemize}
