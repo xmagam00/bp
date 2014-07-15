@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.4.18)  11 JUL 2014 01:52
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.4.18)  15 JUL 2014 19:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -400,24 +400,24 @@ File: model.jpg Graphic file (type jpg)
  <use model.jpg>
 Package pdftex.def Info: model.jpg used on input line 29.
 (pdftex.def)             Requested size: 164.11272pt x 173.14644pt.
- [5 <./model.jpg>] <webtechnology.jpg, id=45, 297.36093pt x 244.66406pt>
+ [5 <./model.jpg>] <webtechnology.jpg, id=44, 297.36093pt x 244.66406pt>
 File: webtechnology.jpg Graphic file (type jpg)
 
 <use webtechnology.jpg>
 Package pdftex.def Info: webtechnology.jpg used on input line 58.
 (pdftex.def)             Requested size: 148.6801pt x 122.33173pt.
  [6 <./webtechnology.jpg>]
-<jsflifecycle.jpg, id=49, 375.65344pt x 186.6975pt>
+<jsflifecycle.jpg, id=48, 375.65344pt x 186.6975pt>
 File: jsflifecycle.jpg Graphic file (type jpg)
  <use jsflifecycle.jpg>
-Package pdftex.def Info: jsflifecycle.jpg used on input line 89.
+Package pdftex.def Info: jsflifecycle.jpg used on input line 91.
 (pdftex.def)             Requested size: 262.9556pt x 130.68735pt.
 
-[7 <./jsflifecycle.jpg>] [8] <webservice.jpg, id=56, 323.70938pt x 62.48344pt>
+[7 <./jsflifecycle.jpg>] [8] <webservice.jpg, id=55, 323.70938pt x 62.48344pt>
 File: webservice.jpg Graphic file (type jpg)
 
 <use webservice.jpg>
-Package pdftex.def Info: webservice.jpg used on input line 131.
+Package pdftex.def Info: webservice.jpg used on input line 137.
 (pdftex.def)             Requested size: 194.22713pt x 37.49034pt.
  [9 <./webservice.jpg>] [10] [11] [12] [13] [14]
 Kapitola 3.
@@ -427,7 +427,7 @@ Kapitola 3.
 File: fig/useCaseOverview.jpg Graphic file (type jpg)
 
 <use fig/useCaseOverview.jpg>
-Package pdftex.def Info: fig/useCaseOverview.jpg used on input line 263.
+Package pdftex.def Info: fig/useCaseOverview.jpg used on input line 273.
 (pdftex.def)             Requested size: 186.4406pt x 150.06194pt.
  [16 <./fig/useCaseOverview.jpg>] [17] [18]
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
@@ -445,19 +445,19 @@ File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <9> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 1.
 ) [19]
-Overfull \hbox (4.91173pt too wide) in paragraph at lines 351--352
+Overfull \hbox (4.91173pt too wide) in paragraph at lines 361--362
 \IL2/cmr/m/n/10.95 org.optaplanner.examples.cloudbalancing.domain.CloudBalance,
  ktorá od-ka-zuje na de-
  []
 
 
-Overfull \hbox (20.30258pt too wide) in paragraph at lines 352--353
+Overfull \hbox (20.30258pt too wide) in paragraph at lines 362--363
 \IL2/cmr/m/n/10.95 org.optaplanner.examples.cloudbalancing.domain.CloudProcess,
  ktorá od-ka-zuje na triedu,
  []
 
 
-Overfull \hbox (1.96255pt too wide) in paragraph at lines 354--355
+Overfull \hbox (1.96255pt too wide) in paragraph at lines 364--365
 \IL2/cmr/m/n/10.95 CloudBalancingSimpleScoreCalculator, ktorá od-ka-zuje na tri
 edu, ktorá kal-ku-luje skóre
  []
@@ -470,15 +470,15 @@ Kapitola 4.
 File: komunikacia.jpg Graphic file (type jpg)
 
 <use komunikacia.jpg>
-Package pdftex.def Info: komunikacia.jpg used on input line 462.
+Package pdftex.def Info: komunikacia.jpg used on input line 472.
 (pdftex.def)             Requested size: 453.49774pt x 139.57251pt.
 
-Overfull \hbox (21.01595pt too wide) in paragraph at lines 462--463
+Overfull \hbox (21.01595pt too wide) in paragraph at lines 472--473
  [] 
  []
 
 
-Overfull \hbox (1.41249pt too wide) in paragraph at lines 469--470
+Overfull \hbox (1.41249pt too wide) in paragraph at lines 479--480
 \IL2/cmr/m/n/10.95 úlohy o spus-te-nie-/za-sta-ve-nie pro-stred-níc-tvom we-bo-
 vej slu-¾by Plan-ner-Ser-vice(OptaPlanner),
  []
@@ -486,24 +486,24 @@ vej slu-¾by Plan-ner-Ser-vice(OptaPlanner),
 <BP.jpg, id=115, 514.17094pt x 621.82312pt>
 File: BP.jpg Graphic file (type jpg)
  <use BP.jpg>
-Package pdftex.def Info: BP.jpg used on input line 480.
+Package pdftex.def Info: BP.jpg used on input line 490.
 (pdftex.def)             Requested size: 308.50494pt x 373.09674pt.
  [25 <./komunikacia.jpg>] [26 <./BP.jpg>] <page.jpg, id=122, 1444.39626pt x 523
 .9575pt>
 File: page.jpg Graphic file (type jpg)
 
 <use page.jpg>
-Package pdftex.def Info: page.jpg used on input line 508.
+Package pdftex.def Info: page.jpg used on input line 518.
 (pdftex.def)             Requested size: 433.32222pt x 157.18846pt.
 
-Overfull \hbox (0.84042pt too wide) in paragraph at lines 508--509
+Overfull \hbox (0.84042pt too wide) in paragraph at lines 518--519
  [] 
  []
 
 [27 <./page.jpg>] [28]
 Kapitola 5.
 
-Overfull \hbox (10.9634pt too wide) in paragraph at lines 547--548
+Overfull \hbox (10.9634pt too wide) in paragraph at lines 557--558
 []\IL2/cmr/m/n/10.95 org.jboss.optaplanner.controller.restservice - ba-lík ob-s
 a-huje triedu pre vy-tvo-re-nie REST-
  []
@@ -515,104 +515,104 @@ Kapitola 6.
 ) (./thesis.bbl [36
 
 ]
-LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 49.
+LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 36.
 
  (/usr/share/texlive/texmf-dist/tex/cslatex/base/il2cmtt.fd
 File: il2cmtt.fd 1997/08/20 CSLaTeX font definitions
-) [37
+)) (./prilohy.tex [37
 
-]) (./prilohy.tex [38]
+]
 Dodatok A.
 
-Overfull \hbox (1.74707pt too wide) in paragraph at lines 24--25
+Overfull \hbox (1.74707pt too wide) in paragraph at lines 25--26
 []\IL2/cmr/m/n/10.95 Skopírujeme pri-pra-vený ad-re-sára optap-lan-ner.controll
 er.war a optaplanner-service.war
  []
 
 
-Overfull \hbox (5.54626pt too wide) in paragraph at lines 28--29
+Overfull \hbox (5.54626pt too wide) in paragraph at lines 29--30
 []\IL2/cmr/m/n/10.95 K ap-li-ká-cií pri-stú-pime za-da-ním ad-resy http://local
 host:8080/optaplanner.controller.war/
  []
 
-[39
+[38
 
 ]
-Overfull \hbox (37.54756pt too wide) in paragraph at lines 35--36
+Overfull \hbox (37.54756pt too wide) in paragraph at lines 36--37
 \IL2/cmr/m/n/10.95 Aplikácia je prí-stupná aj pro-stred-níc-tvom clou-do-vej sl
 u-¾by OpenS-hift na ad-rese http://optaplanner-
  []
 
-[40]
+[39]
 Dodatok B.
-<login.jpg, id=170, 990.70125pt x 580.41844pt>
+<login.jpg, id=167, 990.70125pt x 580.41844pt>
 File: login.jpg Graphic file (type jpg)
  <use login.jpg>
-Package pdftex.def Info: login.jpg used on input line 48.
+Package pdftex.def Info: login.jpg used on input line 49.
 (pdftex.def)             Requested size: 396.27348pt x 232.16325pt.
 
-<page5.jpg, id=171, 1366.10374pt x 502.87875pt>
+<page5.jpg, id=168, 1366.10374pt x 502.87875pt>
 File: page5.jpg Graphic file (type jpg)
  <use page5.jpg>
-Package pdftex.def Info: page5.jpg used on input line 61.
+Package pdftex.def Info: page5.jpg used on input line 62.
 (pdftex.def)             Requested size: 409.83429pt x 150.86478pt.
 
-<page1.jpg, id=172, 1361.085pt x 612.2875pt>
+<page1.jpg, id=169, 1361.085pt x 612.2875pt>
 File: page1.jpg Graphic file (type jpg)
  <use page1.jpg>
-Package pdftex.def Info: page1.jpg used on input line 76.
+Package pdftex.def Info: page1.jpg used on input line 77.
 (pdftex.def)             Requested size: 408.32866pt x 183.68767pt.
 
-<page2.jpg, id=173, 1370.11874pt x 624.3325pt>
+<page2.jpg, id=170, 1370.11874pt x 624.3325pt>
 File: page2.jpg Graphic file (type jpg)
  <use page2.jpg>
-Package pdftex.def Info: page2.jpg used on input line 88.
+Package pdftex.def Info: page2.jpg used on input line 89.
 (pdftex.def)             Requested size: 411.03879pt x 187.3012pt.
 
-<page3.jpg, id=174, 1372.12625pt x 540.0175pt>
+<page3.jpg, id=171, 1372.12625pt x 540.0175pt>
 File: page3.jpg Graphic file (type jpg)
  <use page3.jpg>
-Package pdftex.def Info: page3.jpg used on input line 102.
+Package pdftex.def Info: page3.jpg used on input line 103.
 (pdftex.def)             Requested size: 411.64105pt x 162.0065pt.
 
-<page4.jpg, id=175, 1372.12625pt x 502.87875pt>
+<page4.jpg, id=172, 1372.12625pt x 502.87875pt>
 File: page4.jpg Graphic file (type jpg)
  <use page4.jpg>
-Package pdftex.def Info: page4.jpg used on input line 114.
+Package pdftex.def Info: page4.jpg used on input line 115.
 (pdftex.def)             Requested size: 411.64105pt x 150.86478pt.
- [41
+ [40
 
- <./login.jpg>] [42 <./page5.jpg> <./page1.jpg> <./page2.jpg>] [43 <./page3.jpg
+ <./login.jpg>] [41 <./page5.jpg> <./page1.jpg> <./page2.jpg>] [42 <./page3.jpg
 > <./page4.jpg>]
 Dodatok C.
-<dotaz.jpg, id=185, 464.4853pt x 432.86719pt>
+<dotaz.jpg, id=182, 464.4853pt x 432.86719pt>
 File: dotaz.jpg Graphic file (type jpg)
  <use dotaz.jpg>
-Package pdftex.def Info: dotaz.jpg used on input line 137.
+Package pdftex.def Info: dotaz.jpg used on input line 138.
 (pdftex.def)             Requested size: 278.69333pt x 259.7223pt.
 
-<dotaz1.jpg, id=186, 456.95718pt x 462.22687pt>
+<dotaz1.jpg, id=183, 456.95718pt x 462.22687pt>
 File: dotaz1.jpg Graphic file (type jpg)
  <use dotaz1.jpg>
-Package pdftex.def Info: dotaz1.jpg used on input line 150.
+Package pdftex.def Info: dotaz1.jpg used on input line 151.
 (pdftex.def)             Requested size: 274.1764pt x 277.33826pt.
 
-<dotaz2.jpg, id=187, 454.69875pt x 444.15938pt>
+<dotaz2.jpg, id=184, 454.69875pt x 444.15938pt>
 File: dotaz2.jpg Graphic file (type jpg)
  <use dotaz2.jpg>
-Package pdftex.def Info: dotaz2.jpg used on input line 163.
+Package pdftex.def Info: dotaz2.jpg used on input line 164.
 (pdftex.def)             Requested size: 272.82135pt x 266.49767pt.
 
-<dotaz3.jpg, id=188, 464.4853pt x 456.95718pt>
+<dotaz3.jpg, id=185, 464.4853pt x 456.95718pt>
 File: dotaz3.jpg Graphic file (type jpg)
  <use dotaz3.jpg>
-Package pdftex.def Info: dotaz3.jpg used on input line 175.
+Package pdftex.def Info: dotaz3.jpg used on input line 176.
 (pdftex.def)             Requested size: 278.69333pt x 274.1764pt.
- [44
+ [43
 
- <./dotaz.jpg>] [45 <./dotaz1.jpg> <./dotaz2.jpg>] [46 <./dotaz3.jpg>]
+ <./dotaz.jpg>] [44 <./dotaz1.jpg> <./dotaz2.jpg>] [45 <./dotaz3.jpg>]
 Dodatok D.
-) [47
+) [46
 
 ] (./thesis.aux)
 
@@ -621,13 +621,13 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 5676 strings out of 494994
- 74293 string characters out of 6180200
- 251477 words of memory out of 5000000
- 8734 multiletter control sequences out of 15000+600000
+ 5675 strings out of 494994
+ 74284 string characters out of 6180200
+ 251469 words of memory out of 5000000
+ 8733 multiletter control sequences out of 15000+600000
  27331 words of font info for 65 fonts, out of 8000000 for 9000
  24 hyphenation exceptions out of 8191
- 38i,8n,49p,1926b,1342s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,8n,49p,1758b,1342s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/cs/xl2.enc}</usr/share/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fo
@@ -641,10 +641,10 @@ lic/cs/csr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cs/csr9.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/cs/csti10.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/cs/cstt10.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/helvetic/uhvr8a.pfb>
-Output written on thesis.pdf (51 pages, 2050744 bytes).
+Output written on thesis.pdf (50 pages, 2050113 bytes).
 PDF statistics:
- 251 PDF objects out of 1000 (max. 8388607)
- 162 compressed objects within 2 object streams
+ 248 PDF objects out of 1000 (max. 8388607)
+ 160 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  101 words of extra memory for PDF output out of 10000 (max. 10000000)
 
