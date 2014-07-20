@@ -8,6 +8,10 @@
 \providecommand{\selectlanguage}[1]{\relax}
 \providecommand{\eprint}[2][]{\url{#2}}
 
+\bibitem{arqbook}
+Ament, J.~D.: \emph{Arquillian Testing Guide}. Packt Publishing, 2013,
+  iSBN~978-1782160700.
+
 \bibitem{droolsbook}
 Ary, J.: \emph{Instant Drools Starter}. Packt Publishing, 2013,
   iSBN~978-1782165545.
@@ -15,6 +19,10 @@ Ary, J.: \emph{Instant Drools Starter}. Packt Publishing, 2013,
 \bibitem{optabook}
 Bali, M.: \emph{Drools JBoss Rules 5.X Developer's Guide}. Manning
   Publications, 2007, iSBN~978-1933988344.
+
+\bibitem{mysqlbook}
+DuBois, P.: \emph{MySQL (5th Edition) (Developer's Library)}. Addison-Wesley
+  Professional, 2013, iSBN~978-0321833877.
 
 \bibitem{xhtmlbook}
 Felke-Morris, T.: \emph{Web Development and Design Foundations with XHTML, 5th
@@ -39,6 +47,10 @@ Jendrock, E.: The Java EE 6 Tutorial [online]. {\tt
 \bibitem{junitbook}
 Kaczanowski, T.: \emph{Practical Unit Testing with JUnit and Mockito}. Tomasz
   Kaczanowski, 2005, iSBN~978-1584504184.
+
+\bibitem{webserbook}
+Kali, M.: \emph{Java Web Services: Up and Running}. O'Reilly Media, 2013,
+  iSBN~978-1449365110.
 
 \bibitem{boot}
 Otto, M.: Twitter Bootstrap [online]. {\tt hhttp://getbootstrap.com/},
