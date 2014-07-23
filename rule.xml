@@ -1,0 +1,8 @@
+<navigation-rule>
+    <from-view-id>/login.xhtml</from-view-id>
+    <navigation-case>
+        <from-action>#{LoginForm.login}</from-action>
+        <from-outcome>success</from-outcome>
+        <to-view-id>/storefront.xhtml</to-view-id>
+    </navigation-case>
+</navigation-rule>

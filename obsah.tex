@@ -14,8 +14,7 @@ Táto kapitola poskytuje prehµad o~platforme Java Enterprise Edition 6 (Java EE 6
 Java EE je platforma, ktorá zastre¹uje viaceré technológie a definuje prostriedky urèené pre zjednodu¹enie vývoja komplexných podnikových aplikácií \cite{fitweb}. Tieto aplikácie sú rozsiahle, komplexné a kladú dôraz na bezpeènos» a spoµahlivos». Z dôvodu prehµadnej¹ieho návrhu, implementácie a jednoduch¹ej údr¾by sú tieto aplikácie rozdelené do vrstiev. Týmito vrstvami sú: klient, Java EE Server a databázový server. Rovnako je súèas»ou tejto platformy kolekcia ¹pecifikácií od Sun/Oracle pre vývoj webových aplikácií, podporu webových slu¾ieb, \ldots, ktoré zjednodu¹ujú a zeefektívòujú výsledný vývoj. Základom Javy EE je ¹pecifikácia Java SE, ktorá je vyvíjaná prostredníctvom Java Community Process \cite{javase}. Ten predstavuje spoluprácu viacerých firiem, ktoré sa podieµajú na výsledných ¹pecifikáciách platformy.
 
 \section{Trojvrstvový model}\label{kapapp}
-J
-ava EE definuje rozdelenie aplikácie do vrstiev, ktoré medzi sebou komunikujú. Toto rozdelenie sprehµadòuje a uµahèuje vývojové cykly jednotlivých èastí aplikácie \cite{fitweb}. Ka¾dá vrstva je reprezentovaná komponentami, ktoré odpovedajú zodpovednosti danej vrstvy a sú vytvorené technológiami z platformy Java EE:  
+Java EE definuje rozdelenie aplikácie do vrstiev, ktoré medzi sebou komunikujú. Toto rozdelenie sprehµadòuje a uµahèuje vývojové cykly jednotlivých èastí aplikácie \cite{fitweb}. Ka¾dá vrstva je reprezentovaná komponentami, ktoré odpovedajú zodpovednosti danej vrstvy a sú vytvorené technológiami z platformy Java EE:  
 \begin{itemize} 
 \item Klientská vrstva sa skladá z~klientských komponent, ktoré be¾ia na klientskom poèítaèi. Táto vrstva sa stará o spracovanie u¾ívateµských vstupov a ich poslanie na spracovanej strednej vrstve. 
 \item Stredná vrstva sa skladá z~webových a podnikových komponent, ktoré be¾ia na Java EE serveri, ktorý predstavuje prostredie pre nasadenie, spravovanie a beh podnikových a webových komponent Java EE aplikácie. Táto vrstva definuje logiku systému, keï na jednu stranu pracuje s u¾ívateµskými vstupmi a na strane druhej ukladá/získava informácie z najni¾¹ej vrstvy. 
@@ -106,9 +105,45 @@ Pri prelo¾ení aplikácie sa vytvorí zo stránky strom komponent, nad ktorými sú ná
 \subsubsection{Managed Beans}
 Managed Beans sú triedy, ktoré sú definované v súbore faces-config.xml alebo sú anotované anotáciu @ManagedBean. Tieto triedy zhroma¾ïujú dáta z prezentaènej èasti. Managed Beans sú definované ich menom a rozsahom platnosti. ManagedBean-a je spravovaná automaticky, teda v prípade, ¾e na stránke nachádza výraz po¾adujúci hodnotu z modelu JavaServer Faces automaticky zabezpeèí priradenie konkrétnej Managed Bean-e. Pre prepojenie prezentaènej èasti a Managed Beany sa pou¾íva ¹peciálny jazyk, ktorý sa nazýva Expression Language (EL) \cite{jsfbook}. Tento jazyk zabezpeèuje obojsmerné viazanie hodnôt medzi komponentami a Managed Bean-ami. JSF zabezpeèuje pravidelné aktualizácie hodnôt v Managed Bean-e v rámci fáze aktualizácie hodnôt.
 
+\subsection{Navigácia}
+Framework JSF definuje navigáciu medzi stránkami vytvorenými rôznymi znaèkovacími jazykmi po vykonaní nejakej akcie(napr. kliknutí na odkaz, tlaèidlo) na základe sady navigaèných pravidiel ulo¾ených v súbore faces-config.xml. Ka¾dé navigaèné pravidlo definuje ako má prebieha» navigácia z jednej stránky na stránku ïal¹iu. Navigaèné pravidlá sú aplikované na základe aktuálne zobrazenej stránky. Po vybratí navigaèné pravidla je prístup na ïal¹iu stránku závislý od invokaènej metódy komponenty a logického výsledku referencovaného komponentou.
+
+
+\lstset{
+	language=xml,
+    tabsize=2,
+    %frame=lines,
+    caption=Uká¾ka konfigurácie navigáce v súbore faces-config.xml,
+    label=navig,
+    frame=shadowbox,
+    rulesepcolor=\color{black},
+    xleftmargin=20pt,
+    framexleftmargin=15pt,
+    keywordstyle=\color{blue}\bf,
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=3pt,
+    breaklines=true,
+    showstringspaces=false,
+    basicstyle=\footnotesize,
+    emph={test},emphstyle={\color{magenta}}}
+
+    \lstinputlisting{rule.xml}
+
+Na obrázku è. \ref{navig} je uká¾ka navigaèného pravidla ulo¾eného v súbore faces-config.xml pre JSF aplikáciu:
+\begin{itemize}
+\item Na riadku è. 1 je uvedená párová znaèka <navigation-rule>, ktorá zaobaµuje 1 navigaèné pravidlo. Takýchto navigaèných pravidiel mô¾e by» v súbore faces-config.xml viacero.
+\item Na riadku è. 2 je uvedená párová znaèka <from-view-id>, ktorá obsahuje re»azec /login.xhtml. Ten definuje,¾e navigaèné pravidlo je aplikované pokiaµ je zobrazená stránka login.xhtml
+\item Na riadku è.3 je uvedená párová znaèka <navigation-case>. V jej obsahuje sú uvedený podmienky za akých sa vykoná nagivácia, rovnako aj stránka, na ktorú vykoná navigácia
+\item Na riadku è. 4 je uvedená párová znaèka <from-action>, ktorá obsahuje re»azec LoginForm.login. Tá odkazuje na metódu login v beane LoginForm. Tá definuje, ¾e navigácia bude realizovaná pri zachytení(stlaèení odkazu/tlaèidla) udalosti login
+\item Na riadku è.5 je uvedená párová znaèka <from-outcome>, ktorá obsahuje hodnotu success. Táto znaèka indikuje vykonanie navigácie pri úspe¹nom(bezchybnom) invokovaní metódy na riadku è. 4
+\item Na riadku è. 6 je uvedená znaèka párová <to-view-id>, ktorá obsahuje re»azec /storefront.xhtml. Obsah tejto znaèky definuje, na ktorú stránku bude realizovaná navigácia v prípade splnenia v¹etkých podmienok uvedených na riadku è.2, è.3, è.4, è.5
 
 
 
+\end{itemize}
 
 
 \section{Webová slu¾ba}\label{webkap}
@@ -689,7 +724,7 @@ Na stránke Tasks.xhtml je zobrazená tabuµka, ktorá pre daný stav úlohy povoµuje 
 Pre implementáciu rozhrania bola pou¾itá technológia XHTML stránok. Pre ka¾dú u¾ívateµskú rolu sú sprístupnené rovnaké stránky a¾ na to, ¾e do ka¾dej stránky je vlo¾ené menu a to stránkou template.xhtml, prièom polo¾ky menu sú zobrazované podµa u¾ívateµskej role. Stránka template.xhtml obsahuje menu, ktoré je rozdelené do kategórií. V~pravej hornej èasti sa nachádza informácia o~prihlásenom u¾ívateµovi vrátane tlaèidla na odhlásenie.   
  
  
-Pri kliknutí na danú kategóriu sa vyroluje zoznam, ktorý obsahuje rôzne polo¾ky v závislosti od kategórie. Polo¾ky View Tasks, View Users a View Organition obsahujú komponenty h:datatable z~kni¾nice JSF pre zobrazenie dát. Tieto dáta sú pravidelné obnovované z~databáze, èo zabezpeèuje ich aktuálnos» prostredníctvom komponenty a4j:poll, ktorá je vytvorená pre ka¾dú tabuµku a pravidelne volá metódu, ktorá získava údaje z~databáze. Rovnako ka¾dá stránka obsahuje pole pre vyhµadávanie, prièom je mo¾né zvoli» podµa, ktorého ståpca sa bude vyhµadáva». Výsledky sa zobrazia do tabuµky(h:datatable) prièom zobrazené polo¾ky budú odpoveda» nájdeným výsledkom. Pri vyhµadávaní sa preru¹ení obnovovania obsahu tabuliek a zobrazí sa informácia o~vyhµadávanom re»azci a èasovom razítku kedy bolo vyhµadávanie realizované. S~vyhµadanými polo¾kami je rovnako mo¾né realizova» v¹etky akcie ako s dátami, ktorých obsah je pravidelne obnovovaný. Po vyhµadávaní treba stlaèi» tlaèidlo Cancel vedµa tlaèidla Find. Toto tlaèidlo spôsobí pre danú tabuµku(users,taks,organizations) získanie aktuálnych dát z~databáze zavolaním metódy z~triedy database, ktorá vytvorí dotaz na získanie aktuálnych dát z~databáze. Tieto dáta sú predané príslu¹nej tabuµke a zároveò sa obnoví obnovovanie obsahu tabuliek. 
+Pri kliknutí na danú kategóriu sa vyroluje zoznam, ktorý obsahuje rôzne polo¾ky v závislosti od kategórie. Polo¾ky View Tasks, View Users a View Organition obsahujú komponenty h:datatable z~kni¾nice JSF pre zobrazenie dát. Tieto dáta sú pravidelné obnovované z~databáze, èo zabezpeèuje ich aktuálnos» prostredníctvom komponenty a4j:poll, ktorá je vytvorená pre ka¾dú tabuµku a pravidelne volá metódu, ktorá získava údaje z~databáze. Rovnako ka¾dá stránka obsahuje pole pre vyhµadávanie, prièom je mo¾né zvoli» podµa, ktorého ståpca sa bude vyhµadáva». Výsledky sa zobrazia do tabuµky(h:datatable) prièom zobrazené polo¾ky budú odpoveda» nájdeným výsledkom. Pri vyhµadávaní sa preru¹í obnovovanie obsahu tabuliek a zobrazí sa informácia o~vyhµadávanom re»azci a èasovom razítku kedy bolo vyhµadávanie realizované. S~vyhµadanými polo¾kami je rovnako mo¾né realizova» v¹etky akcie ako s dátami, ktorých obsah je pravidelne obnovovaný. Po vyhµadávaní treba stlaèi» tlaèidlo Cancel vedµa tlaèidla Find. Toto tlaèidlo spôsobí pre danú tabuµku(users,taks,organizations) získanie aktuálnych dát z~databáze zavolaním metódy z~triedy database, ktorá vytvorí dotaz na získanie aktuálnych dát z~databáze. Tieto dáta sú predané príslu¹nej tabuµke a zároveò sa obnoví obnovovanie obsahu tabuliek. 
  
  Pri ka¾dej polo¾ke v~tabuµke je mo¾né vykonáva» isté akcie ako je vymaza» danú entitu(task,user,organization), po prípade ju editova», alebo vykonáva» mno¾stvo iných akcií. Akcie pritom reflektujú individuálny stav danej entity. Rovnako je mo¾né jednotlivé entity(organizácie, úlohy, u¾ívateµov) vytvára» prostredníctvom stránok Create Task/Organization/User. Tie zavolajú metódu z triedy AdministratorBean, ktorá zabezpeèí jej vytvorenie a ulo¾enie do databáze. 
  
@@ -754,7 +789,7 @@ U¾ívatelia následne testovali vytváranie u¾ívateµov, organizácií, úloh. Následne
 \item Testovanie u¾ívateµskej prívetivosti rozhrania skúsenými a laickými u¾ívateµmi, rovnako otestovanie u¾ívateµského rozhrania na mobilnom telefóne 
 \end{itemize} 
  
-Rovnako boli u¾ívateµom predlo¾ené XML súboru pre rie¹enie problému plánovanie cluodu, N Dám a problém obchodného cestujúceho. U¾ívatelia nahrali tieto súbory do systému a sledovali priebeh rie¹enia plánovacieho problému. 
+Rovnako boli u¾ívateµom predlo¾ené XML súbory pre rie¹enie problému plánovanie cluodu, N Dám a problém obchodného cestujúceho. U¾ívatelia nahrali tieto súbory do systému a sledovali priebeh rie¹enia plánovacieho problému. 
  
 U¾ívateµské rozhranie bolo otestované pre mobilné telefóny na zariadení HUAWEI Honour 2 s~prehliadaèom Google Chrome 35.0, v~ktorom sa zobrazovalo korektne.
 
@@ -765,7 +800,7 @@ Po testovacej fáze nasledovala fáza vyhodnotenia aplikácie. Cieµovej skupine bol
  
  
  
- Rovnako oceòovali mo¾nos» zobrazovanie tlaèidla Save Changes pri editovaní tabuµky vedµa polo¾ky, ktorá je práve editovaná v~danom riadku spolu s tlaèidlom Drop Changes na zahodenie vykonaných zmien. Pri vyhµadávaní ocenili u¾ívatelia zachovania zadaných informácií pre vyhµadávanie. U¾ívatelia by ocenili pri úlohách ma» mo¾nos» informácie o~èasovom razítku vytvorení úlohy. Prehliadania pomocou tabuliek im pri¹lo ako veµmi vhodné rovnako aj pou¾itie stránkovania. U¾ívateµom chýbala mo¾nos» vyhµadáva» poïla viacerých kritérií súèasne. 
+ Rovnako oceòovali mo¾nos» zobrazovanie tlaèidla Save Changes pri editovaní tabuµky vedµa polo¾ky, ktorá je práve editovaná v~danom riadku spolu s tlaèidlom Drop Changes na zahodenie vykonaných zmien. Pri vyhµadávaní ocenili u¾ívatelia zachovanie zadaných informácií pre vyhµadávanie. U¾ívatelia by ocenili pri úlohách ma» mo¾nos» informácie o~èasovom razítku vytvorení úlohy. Prehliadania pomocou tabuliek im pri¹lo ako veµmi vhodné rovnako aj pou¾itie stránkovania. U¾ívateµom chýbala mo¾nos» vyhµadáva» poïla viacerých kritérií súèasne. 
  
  
  
@@ -773,7 +808,7 @@ Aplikácia by mohla by» upravená do u¾ívateµsky prívetivej¹ieho rozhrania a mohli
 
 
 \chapter{Záver}\label{zaver}
-Plánovanie a s~ním spojené problémy nará¾ame v~be¾nom ¾ivote èoraz èastej¹ie. E¹te väè¹ie problémy tohto typu majú organizácie, ktoré musia dennodenne rie¹i» ako naplánova» efektívnu prácu svojich zamestnancov, ako správne komunikova» so zákazníkom a mnoho iných problémov. Rie¹enie klasickým prístupom a to vyu¾itím µudskými zdrojmi je èasovo neefektívne, rovnako treba bra» do úvahy µudský faktor. Preto vzniklo rie¹enie, ktoré odbremeòuje organizácie od rie¹ení komplikovaných plánovacích úloh. Taký software je ¹írený pod licenciou open-source a nazýva sa Optaplanner. Tento systém je následne mo¾né vyu¾íva» pre akúkoµvek oblas» plánovania, aká len nás napadne. Jediné obmedzenie tohto systému sú pou¾ité plánovacie algoritmy kombinované s~rôznymi heuristikami.  
+Plánovanie a s~ním spojené problémy nás stretávajú v~be¾nom ¾ivote èoraz èastej¹ie. E¹te väè¹ie problémy tohto typu majú organizácie, ktoré musia dennodenne rie¹i» ako naplánova» efektívnu prácu svojich zamestnancov, ako správne komunikova» so zákazníkom a mnoho iných problémov. Rie¹enie klasickým prístupom a to vyu¾itím µudskými zdrojmi je èasovo neefektívne, rovnako treba bra» do úvahy µudský faktor. Preto vzniklo rie¹enie, ktoré odbremeòuje organizácie od rie¹ení komplikovaných plánovacích úloh. Taký software je ¹írený pod licenciou open-source a nazýva sa Optaplanner. Tento systém je následne mo¾né vyu¾íva» pre akúkoµvek oblas» plánovania, aká len nás napadne. Jediné obmedzenie tohto systému sú pou¾ité plánovacie algoritmy kombinované s~rôznymi heuristikami.  
  
 U¾ívateµ je schopný definova» problém, prièom sa mô¾me in¹pirova» verejne dostupnými príkladmi, vytvori» si pravidlá a necha» systém nech nájde optimálne rie¹enie pre daný problém. Vytvorená aplikácia predstavuje jedným zo spôsobov ako daný systém vyu¾i» pre plánovanie. Aplikácia je intuitívna, rovnako sú predstavené mo¾nosti roz¹írenia rozhrania a urobenie tohto rozhrania oveµa u¾ívateµsky prívetivej¹ím a efektívnej¹ím. Rovnako ukazuje akým spôsobom bol systém navrhnutý z~implementaèného hµadiska, sú vysvetlené technológie potrebné pre implementáciu so zreteµom na výhody pou¾itia. Pre systém bol pou¾itý aplikaèný server JBoss, ktorý predstavoval medzi dostupnými rie¹enia najvhodnej¹í Java EE kontajner vzhµadom na pou¾ité technológie. Pre lep¹í návrh by mohla by» aplikácia roz¹írená na pou¾itie iných plánovacích úloh. V~poslednom rade kvôli lep¹ej pochopiteµnosti aplikácie by mohla by» aplikácia kvalitne zdokumentovaná.
 
