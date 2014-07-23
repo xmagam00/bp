@@ -1,0 +1,17 @@
+\subsection{Princíp webových komponent}
+Java EE webové komponenty sú softwarové komponenty, ktoré spracovávajú prichádzajúci HTTP požiadavok a poskytujú naň odpoveď. Komponenta je samostatný funkčný kus softwaru, ktorý sa podieľa na skladbe výslednej Java EE aplikácie a komunikuje s inými komponentami. Všetky Java EE webové komponenty sú postavené na servletoch. Servlety sú javovské triedy, ktoré dynamicky spracovávajú požiadavky a tvoria odpovede. Súčasťou servletov alebo webových stránok sú technológie JavaServer Faces technológiu(JSF) \ref{jsfkap} a JavaServer pages (JSP) \cite{jspbook}. Technológie JavaServer Faces a JavaServer Pages podporujú spracovanie užívateľských vstupov a ich predanie podnikovej vrstve. 
+ 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.5]{webtechnology.jpg}  
+\caption{Princíp činnosti webových komponent a spolupráca s inými vrstvami. Prevzaté z\newline \cite{fitweb}. } 
+\label{web} 
+ 
+\end{center} 
+ 
+\end{figure} 
+Na nasledujúcom obrázku č.\ref{web} je ukázaný princíp fungovania webových komponent. V~hornej ľavej časti obrázku sa nachádza klientská vrstva, ktorá obsahuje buď len webový prehliadač alebo applety. Applet je aplikácia, ktorú spúšťa užívateľ prostredníctvom webového prehliadača a je vykonávaná virtuálnym strojom Javy. V~hornej pravej časti môžme vidieť, že klient je reprezentovaný aplikačným klientom, ktorý obsahuje obsahuje úplnú prezentačnú logiku aplikácie a teda v~tom prípade, odpadá potreba spracovania vstupov webovými komponentami. Takýto klient komunikuje už len priamo s~Java EE serverom, konkrétne podnikovou vrstvou, ktorá implementuje zvyšnú logiku aplikácie \cite{fitweb}.  
+ 
+V~prípade, že máme k~dispozícií tenkého klienta, klient komunikuje prostredníctvom webové prehliadača s~HTML alebo XHTML stránkami, ktoré sú vytvorené technológiou JavaServer Faces \ref{jsfkap} alebo JavaServer Pages \cite{jspbook}, ktoré spracovávajú požiadavky od klienta (vstupy) a následne komunikuje s~podnikovým stupňom, ktorý obsahuje logiku aplikácie, ktorá následne môže komunikovať s~databázovým serverom. Odpoveď je v~prípade tenkého klienta následne predaná stránkam vytvoreným prostredníctvom JavaServer Faces alebo JavaServer Pages technológie a následne zobrazená užívateľovi v~podobe webovej stránky. V~prípade hrubého klienta sa výstup zobrazí v~aplikácií.

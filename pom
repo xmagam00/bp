@@ -1,0 +1,466 @@
+\chapter{Úvod}
+V poslednej dobe sa pre tvorbu rozsiahlych aplikácií, ktoré kladú dôraz na rýchlosť, bezpečnosť a transakčné spracovanie používa trojvrstvový model. Komplexným riešením pre vývoj rozsiahlych informačných systémov s využitím trojvrstvového modelu je platforma Java Enterprise Edition, ktorá zahŕňa množstvo technológií pre prístup k relačným databázam, pre podporu webových služieb, pre vývoj zdieľanej podnikovej logiky, \ldots .
+
+Cieľom tejto práce bolo vytvorenie systému monitorovania stavu plánovacích úloh, ktorý bol zadaný spoločnosťou Red Hat. Tento systém je schopný riešiť rozličné plánovacie problémy reprezentované definičným súborom vo formáte XML. Riešenie takto zadaných plánovacích problémov je realizované frameworkom OptaPlanner, ktorý na základe pravidiel a definičného súboru pre danú úlohu sa pokúsi nájsť najlepšie riešenie na základe plánovania problému, ktoré poskytne ako výsledok vo forme XML súboru, ktoré reprezentuje najlepšie dosiahnuté riešenie. Rovnako je proces analýzy a vývoja výsledného systému obsahom tejto správy.
+
+ Nasledujúca kapitola \ref{JavaEE} sa venuje Java Enterprise Edition platforme, rovnako jej trojvrstvovému modelu spolu s použitými technológiami. \newline \indent V~tretej kapitole \ref{optaplannerC} sa pojednáva postupne od základov problematiky plánovania až po bližšie vysvetlenie pojmu plánovací problém. V~tejto kapitole sa ešte oboznámime s~princípom plánovania prostredníctvom frameworku OptaPlanner, rovnako aj jeho konfiguráciou.  \newline \indent V~štvrtej kapitole \ref{impl} je prezentovaná špecifikácia požiadaviek, rovnako ako aj analýza plánovacieho systému spolu s návrhom užívateľského rozhrania a databázovej schémy. V~predposlednej kapitole \ref{implc} je uvedená implementácia výsledného systému. Na záver kapitoly sú uvedené metódy a postupy testovania grafického užívateľského rozhrania. V~záverečnej kapitole \ref{zaver} je zhrnutý obsah celej práce, sú zhodnotené jej prínosy a možnosti ďalšieho rozšírenia.\newline \indent  V~prílohách nájdeme postup na inštaláciu a spustenie aplikácie rovnako ako aj kompletný prehľad navrhnutého rozhrania.
+
+
+\chapter{Java Enterprise edition 6}\label{JavaEE}
+Táto kapitola poskytuje prehľad o~platforme Java Enterprise Edition 6 (Java EE 6), rovnako ako o technológiách, ktoré sú súčasťou tejto platformy a sú používané pri implementácií systému monitorovania. Kapitola rovnako predstavuje trojvrstvový model pre tvorbu aplikácií. Všetky spomenuté technológie sú použité pre tvorbu systému monitorovania, konkrétne pre tvorbu užívateľského rozhrania, pre prácu s databázou a pre komunikáciu medzi jednotlivými časťami systému.\newline \indent V~závere kapitoly je rozobratý aplikačný server JBoss, ktorý je použitý pre nasadenie výslednej aplikácie. Dôvodom použitia tohoto servera je možnosť použitia pokročilých testovacích nástrojov a nástroja na správu projektu, ktorý je určený pre jazyk Java.
+
+
+\section{Špecifikácia platformy}
+Java EE je platforma, ktorá zastrešuje viaceré technológie a definuje prostriedky určené pre zjednodušenie vývoja podnikových aplikácií \cite{fitweb}. Tieto aplikácie sú rozsiahle, komplexné a kladú dôraz na bezpečnosť a spoľahlivosť. Z dôvodu prehľadnejšieho návrhu, implementácie a jednoduchšej údržby sú tieto aplikácie rozdelené do vrstiev. Týmito vrstvami sú: klient, Java EE Server a databázový server. Rovnako je súčasťou tejto platformy kolekcia špecifikácií od Sun/Oracle pre vývoj webových aplikácií, podporu webových služieb, \ldots, ktoré zjednodušujú a zefektívňujú výsledný vývoj. Základom Javy EE je špecifikácia Java SE, ktorá je vyvíjaná prostredníctvom Java Community Process \cite{javase}. Ten predstavuje spoluprácu viacerých firiem, ktoré sa podieľajú na výsledných špecifikáciách platformy.
+
+\section{Trojvrstvový model}\label{kapapp}
+Java EE definuje rozdelenie aplikácie do vrstiev, ktoré medzi sebou komunikujú. Toto rozdelenie sprehľadňuje a uľahčuje vývojové cykly jednotlivých častí aplikácie \cite{fitweb}. Každá vrstva je reprezentovaná komponentami, ktoré odpovedajú zodpovednosti danej vrstvy a sú vytvorené technológiami z platformy Java EE:  
+\begin{itemize} 
+\item Klientská vrstva sa skladá z~klientských komponentov, ktoré bežia na klientskom počítači. Táto vrstva sa stará o spracovanie užívateľských vstupov a ich poslanie na spracovanej strednej vrstve. 
+\item Stredná vrstva sa skladá z~webových a podnikových komponentov, ktoré bežia na Java EE serveri, ktorý predstavuje prostredie pre nasadenie, spravovanie a beh podnikových a webových komponent Java EE aplikácie. Táto vrstva definuje logiku systému, keď na jednu stranu pracuje s užívateľskými vstupmi a na strane druhej ukladá/získava informácie z najnižšej vrstvy. 
+\item Najnižšia vrstva predstavuje externé systémy využívané Java EE aplikáciou. Typicky sa jedná o~databázový server alebo externé systémy, ktoré označujeme názvom Enterprise Information System (EIS). Úlohou tejto vrstvy je ukladanie a sprístupňovanie dát.
+\end{itemize} 
+ 
+Na obrázku č. \ref{model} môžme vidieť trojvrstvový model Java EE aplikácie:
+ \begin{figure}[htb]
+
+\begin{center}
+
+\includegraphics[scale=0.5]{model.jpg} 
+\caption{Trojvrstvový model Javy EE rozdelený na klientskú vrstvu, strednú vrstvu a najnižšiu vrstvu. Prevzaté z~ \cite{fitweb}.}
+\label{model}
+
+\end{center}
+
+\end{figure}
+Klient pristupuje k~Java EE aplikácií prostredníctvom webového prehliadača, alebo klientskej aplikácie, preto ho delíme nasledovne:
+\begin{itemize}
+    \item Tenký klient - pozostáva z webového prehliadača, ktorý zobrazuje stránky pozostávajúce z~rôzneho značkovacieho jazyka. Tenký klient sa dotazuje prostredníctvom Hypertext Transfer protokolu (HTTP), čo je internetový protokol pre výmenu hypertextových dokumentov, na webové komponenty na Java EE serveri.
+    \item Hrubý klient - môže byť reprezentovaný rozličnými Java technológiami pre tvorbu užívateľských rozhraní a môže sa priamo dotazovať podnikových komponentov a preskočiť tak komunikáciu s~webovými komponentami. 
+\end{itemize}
+Úlohou tejto vrstvy je zobrazenie dát pre klienta. Táto vrstva taktiež zabezpečuje spracovanie užívateľských vstupov a ich validáciu.
+
+ Stredná vrstva sa delí na webovú vrstvu, ktorá je prezentovaná technológiami JavaServer Faces a JavaServer Pages. Druhá časť strednej vrstvy, takzvaná podniková vrstva, býva reprezentovaná technológiu Enterprise JavaBeans. Webová vrstva je reprezentovaná webovými komponentami, ktoré spracovávajú požiadavky od užívateľa a generujú odpoveď, ktorú posielajú naspäť užívateľovi. Môžu pritom komunikovať aj s podnikovými komponentami pre zistenie dodatočných informácií (typicky informácií z~databáze). Podniková vrstva je reprezentovaná podnikovými komponentmi (beanami), ktoré tvoria logiku aplikácie. Tieto komponenty môžu prijímať požiadavky priamo od klienta alebo webovej vrstvy a následne generujú odpovede, pričom môžu komunikovať s~najnižšou vrstvou (napríklad komunikovať s~databázovým serverom). Celá vrstva beží na Java EE serveri.
+
+ Najnižšia vrstva predstavuje rozličné externé systémy, ktoré aplikácia môže využívať, či už sa jedná o~databázový systém, alebo iné systémy, typicky informačné. Vrstva býva označovaná skratkou EIS (External Information System).
+Úlohou tejto vrstvy je uchovanie, ukladanie a sprístupňovanie dát.
+
+
+
+
+
+\subsection{JavaServer Faces}\label{jsfkap}
+JavaServer Faces (JSF) je framework určený pre tvorbu užívateľských rozhraní webových aplikácií v jazyku Java \cite{jsfbook}.  Výsledné užívateľské rozhranie stavia zo základných grafických komponentov, ktoré framework obsahuje alebo pomocou vlastne definovaných komponentov. 
+ 
+Komponenty si udržujú svoj stav, napriek tomu, že tento framework pracuje s bezstavovým protokol HTTP. Tieto požiadavky sú obsluhované štandardnou cestou, ktorú nazývame životný cyklus spracovania požiadavky. Framework vytvára aplikácie na základe návrhového vzoru Model-View-Controller (MVC), ktorý oddeľuje logiku aplikácie od prezentačnej časti. MVC pracuje s nasledujúcimi princípmi: 
+\begin{itemize} 
+\item Model - špecifická reprezentácia dát, s~ktorými pracuje aplikácia 
+\item View - prevádza dáta aplikácie vhodné do podoby prezentácie užívateľa 
+\item Controller - reaguje na udalosti, typicky od klienta a zabezpečuje zmeny v~model alebo view 
+\end{itemize} 
+V JSF je controller implementovaný triedou FacesServlet, ktorá je súčasťou frameworku. Tá zabezpečuje spracovanie jednotlivých požiadavok, ktoré prichádzajú z URL adresy stránky aplikácie. Spracovanie požiadavky je dané životným cyklom spracovania požiadavky \cite{jsfbook}. 
+ 
+Model tvoria triedy, ktorých premenné a metódy sú zviazané s komponentami v prezentačnej časti. Tieto triedy majú meno prostredníctvom, ktorého sú adresované a rozsah ich životnosti v aplikácií. 
+ 
+Prezentačná vrstva je zložená zo stránok, ktoré sa označujú ako facelets. Tie určujú použité komponenty rozhrania a rovnako definujú mapovanie premenných a metód z modelu. 
+ 
+\subsubsection{Životný cyklus spracovania požiadavky} 
+Celý štandardný cyklus cyklus spracovania požiadavky a následne generovania odpovedi je popísaný na nasledujúcom obrázku: 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.7]{jsflifecycle.jpg}  
+\caption{Životný cyklus JSF aplikácie pri spracovaní požiadavky. Prevzaté z \cite{fitweb}. } 
+\label{lifecycle} 
+ 
+\end{center} 
+ 
+\end{figure} 
+Na obrázku č. \ref{lifecycle} môžme vidieť životný cyklus JSF aplikácie. Celý životný cyklus spracovania požiadavky sa zo 6 fáz: Restore View, Apply Request values, Process validation, Update model values, Invoke application, Render response.
+
+ Cyklus sa začína fázou Restore View, keď je kliknuté na tlačidlo alebo na odkaz sa vytvorí náhľad stránky, spoja sa všetky spracovania udalostí, validátory a komponenty sa uložia do inštancie FacesContext-u. V~ďalšej fáze Apply Request Values je vytvorený strom komponent zo stránky a sú získané nové hodnoty použitím metódy decode. Hodnoty sú potom uložené lokálne do komponent. Pokiaľ nastane chyba, tak je propagovaná a generovaná do FacesContext-u. Na konci tejto fáze sa vykoná znova dekódovanie. Vo fáze Process Validation sa spracujú všetky registrované validátory ku komponentom. Pokiaľ nastala chyba, tak je táto informácia uložená do FacesContext-u. Počas ďalšej fázy Update Model Values sa nastaví do komponent lokálne nové hodnoty. Počas predposlednej fáze Invoke Application sú spracované rozličné žiadosti ako potvrdzovanie formulára alebo odkaz na inú stránku. V~poslednej fáze Render Response dôjde k~žiadosti o vytvorenie stránky s~novými hodnotami v~kontajneri \cite{jsfbook}.
+ 
+
+\subsubsection{Facelets}
+Facelets označuje deklaratívny jazyk pre tvorbu prezentačnej časti. Táto technológia nahradila staršiu technológiu JavaServer Pages \cite{jspbook}. Výhodou je oddelenie prezentačnej časti od aplikačnej logiky, pričom pre tvorbu stránok je použitá technológia XHTML \cite{xhtmlbook}.
+
+Pri preložení aplikácie sa vytvorí zo stránky strom komponent, nad ktorými sú následne vykonávané operácie. Tieto komponenty sú typicky rozdelené podľa ich špecifickej funkcie do knižníc. Pred použitím komponenty z knižnice je potrebné definovať menný priestor knižnice, z ktorého komponenta pochádza. Pri preložení aplikácie dochádza k vygenerovaniu príslušnej komponenty na stránke, pričom typicky ide o HTML grafické komponenty alebo o komponenty definované v rámci knižnice daného menného priestoru.
+
+\subsubsection{Managed Beany}
+Managed Beany sú triedy, ktoré sú definované v súbore faces-config.xml alebo sú anotované anotáciu @ManagedBean. Tieto triedy zhromažďujú dáta z prezentačnej časti. Managed Beany sú definované ich menom a rozsahom platnosti. ManagedBean-a je spravovaná automaticky, teda v prípade, že na stránke nachádza výraz požadujúci hodnotu z modelu JavaServer Faces automaticky zabezpečí priradenie konkrétnej Managed Bean-e. Pre prepojenie prezentačnej časti a Managed Beany sa používa špeciálny jazyk, ktorý sa nazýva Expression Language (EL) \cite{jsfbook}. Tento jazyk zabezpečuje obojsmerné viazanie hodnôt medzi komponentami a Managed Beany. JSF zabezpečuje pravidelné aktualizácie hodnôt v Managed Bean-e v rámci fáze aktualizácie hodnôt.
+
+\subsection{Navigácia}
+Framework JSF definuje navigáciu medzi stránkami vytvorenými rôznymi značkovacími jazykmi po vykonaní nejakej akcie (napr. kliknutí na odkaz, tlačidlo) na základe sady navigačných pravidiel uložených v súbore faces-config.xml. Každé navigačné pravidlo definuje za akých podmienok má prebiehať navigácia z jednej stránky na stránku ďalšiu. Navigačné pravidlá sú aplikované na základe aktuálne zobrazenej stránky. Po vybratí navigačné pravidla je prístup na ďalšiu stránku závislý od invokačnej metódy komponenty a logického výsledku referencovaného komponentom.
+
+
+\lstset{
+    language=xml,
+    tabsize=2,
+    %frame=lines,
+    caption=Ukážka konfigurácie navigácie v súbore faces-config.xml,
+    label=navig,
+    frame=shadowbox,
+    rulesepcolor=\color{black},
+    xleftmargin=20pt,
+    framexleftmargin=15pt,
+    keywordstyle=\color{blue}\bf,
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=3pt,
+    breaklines=true,
+    showstringspaces=false,
+    basicstyle=\footnotesize,
+    emph={test},emphstyle={\color{magenta}}}
+
+    \lstinputlisting{rule.xml}
+
+Na obrázku č. \ref{navig} je ukážka navigačného pravidla uloženého v súbore faces-config.xml pre JSF aplikáciu:
+\begin{itemize}
+\item Na riadku č. 1 je uvedená párová značka <navigation-rule>, ktorá zaobaľuje 1 navigačné pravidlo. Takýchto navigačných pravidiel môže byť v súbore faces-config.xml viacero.
+\item Na riadku č. 2 je uvedená párová značka <from-view-id>, ktorá obsahuje reťazec /login.xhtml. Ten definuje,že navigačné pravidlo je aplikované pokiaľ je zobrazená stránka login.xhtml
+\item Na riadku č.3 je uvedená párová značka <navigation-case>. V jej obsahuje sú uvedený podmienky za akých sa vykoná navigácia, rovnako aj stránka, na ktorú vykoná navigácia
+\item Na riadku č. 4 je uvedená párová značka <from-action>, ktorá obsahuje reťazec LoginForm.login. Tá odkazuje na metódu login v beane LoginForm. Tá definuje, že navigácia bude realizovaná pri zachytení(stlačení odkazu/tlačidla) udalosti login
+\item Na riadku č.5 je uvedená párová značka <from-outcome>, ktorá obsahuje hodnotu success. Táto značka indikuje vykonanie navigácie pri úspešnom (bezchybnom) invokovaní metódy na riadku č. 4
+\item Na riadku č. 6 je uvedená značka párová <to-view-id>, ktorá obsahuje reťazec /storefront.xhtml. Obsah tejto značky definuje, na ktorú stránku bude realizovaná navigácia v prípade splnenia všetkých podmienok uvedených na riadku č.2, č.3, č.4, č.5
+
+
+
+\end{itemize}
+
+
+\section{Webová služba}\label{webkap}
+Webová služba je sotwarový systém navrhnutý na podporu inteoperability medzi rôznymi zariadeniami prostredníctvom počítačovej siete \cite{fitweb}. Komunikácia medzi zariadeniami prebehia prostredníctvom HTTP protokolu vymieňaním Extensible Markup language(XML) správ. XML je značkovací jazyk, ktorý definuje sadu pravidiel pre kódovanie dokumentu vo formáte zrozumiteľnom človeku prostredníctvom ľubovoľných značiek. 
+ 
+ Komunikácia prostredníctvom webovej služby sa delí na 2 účastníkov. Prvý účastník producent (producer), ktorý vytvára požiadavok a spotrebiteľ (consumer), ktorý prijíma požiadavok. Komunikácia prebieha medzi týmto dvoma účastníkmi výmenou správ. Webová služba môže byť technicky implementovaná rôznymi možnosťami a to prostredníctvom Big Web Service alebo Restful WebService, pričom v~princípe ide o~java triedy, ktoré obsahujú špeciálne definície metód a pri nasadení na Java EE server môžu byť vzdialene (po sieti) zavolané \cite{webserbook}.  
+ 
+ 
+ 
+\subsection{Big webová služba}\label{bigkap} 
+Big webová služba je druh webovej služby, ktorý pre svoju implementáciu používa API JAX-WS \cite{fitweb}. Tento typ webovej služby umožňuje vytvárať webové služby orientované na správy alebo na techniku vzdialeného volania procedúr (RPC). RPC je technológia, ktorá umožňuje volanie metód, ktoré sa nachádzajú na inom mieste, typicky inom mieste počítačovej siete.  
+ 
+Tento typ webovej služby využíva XML správy, spolu so Simple Object Acess Protocol (SOAP) a XML jazykom. SOAP definuje protokol pre výmenu správ založených na jazyku XML prostredníctvom siete a HTTP protokolu. SOAP správy sa skladajú z~hlavičky a tela správy, ktoré obsahuje odpoveď webovej služby alebo požiadavok na vyvolanie akcie webovej služby. 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.6]{webservice.jpg}  
+\caption{Ukážka komunikácie Big Webovej služby medzi klientom a službou. \newline Prevzaté z \cite{fitweb}. } 
+\label{com} 
+ 
+\end{center} 
+ 
+\end{figure} 
+Nasledujúci obrázok č. \ref{com} ukazuje spôsob komunikácie medzi klientom, ktorý sa nachádza v~ľavej časti obrázku a webovou službou, ktorá sa nachádza v pravej časti obrázku. Komunikácia prebieha prostredníctvom vymieňania SOAP správ.  
+ 
+ Tento typ webovej služby obsahuje definíciu vo formáte Web Service Description Language (WSDL). WSDL je definícia vo formáte XML, ktorá popisuje aké akcie webová služba poskytuje a spôsob ich volania, rovnako aj poskytovanú odpoveď. Správy volania a odpovedí webovej služby sú vymieňané prostredníctvom SOAP správ prostredníctvom HTTP protokolu.  
+ 
+ JAX-WS API je pomerne komplikované, preto celá komplexnosť je vývojárovi zakrytá a jediné, čo definuje vývojár sú metódy, ktoré je možné vzdialene volať. Rovnako vývojár nespracováva SOAP správy, ale celá táto problematika je riešená prostredníctvom prostredníctvom API. Čo sa týka vývoja webovej služby, tak sa jedná o~jednoduchú javovskú triedu, ktorá používa anotáciu javax.jws.WebService, konkrétne anotáciu @WebService, ktorá označuje, že sa jedná o~koncový bod webovej služby. Táto trieda následne definuje metódy, ktoré môžu byť vzdialené volané. Aby mohla byť metóda metódou webovej služby volaná vzdialene musí byť anotovaná prostredníctvom anotácie javax.jws.WebMethod @WebMethod \cite{webserbook}.
+ 
+
+
+\subsection{RESTful webová služba}\label{restkap}
+RESTful webová služba je druh webovej služby, ktorý pre svoju implementáciu používa API JAX-RS \cite{fitweb}. Tento druh webovej služby nevyžaduje striktné používanie XML formátu a doručovanie správ vo formáte SOAP ako Big webová služba \ref{bigkap}. Tento typ webovej služby je spristupňovaný na základe Uniform Resource Identifier (URI), ktorý predstavuje textový reťazec, ktorý slúži k~špecifikácií zdroja. K~tomuto je používaná anotácia @Path(), ktorej hodnota zabezpečí namapovanie a teda pomocou nej môžme pristupovať k~RESTful webovej službe. Keďže táto služba nemá presne stanovený formát správ, môžeme zvoliť z~formátov ako HTML, JSON, PDF, \ldots.  
+ 
+Tento typ služby je bezstavový, takže každý prístup musí obsahovať všetky potrebné informácie, pričom je možné ich označiť ako cachovateľné (uchovávajúce sa vo vyrovnávacej pamäti) kvôli zvýšeniu výkonnosti. Nevýhodou je, že pri vytváraní klienta a služby musí byť použité rovnaké rozhranie z~dôvodu explicitnej nepodporovateľnosti jednoznačného formátu správ pre komunikáciu \cite{webserbook}. Výhodou použitia tohto typu webovej služby je jednoduchosť implementácie producenta a spotrebiteľa.
+ 
+
+
+
+\section{Java Persistence API}\label{jpakap}
+Java Persistence API (JPA) je framework jazyku Java, ktorá poskytuje prístup a spravovanie relačných dát v~databáze pomocou prístupu objektovo-relačného mapovania \cite{jpabook}. Princíp objektovo-relačného mapovania predstavuje namapovanie javovskej triedy, ktorú nazývame entita na databázovú tabuľku. Entita je perzistentný doménový objekt (javovská trieda), ktorej inštancia reprezentuje riadok v databázovej tabuľke. Základný artefaktom v~programovaní je pre entity povinnosť obsahovať vlastnosti, ktoré priamo odpovedajú schéme vytvorenej databáze. Entitná trieda musí spĺňať nasledujúce vlastnosti: 
+\begin{itemize} 
+\item Entitná trieda musí byť anotovaná javax.persistence.Entity anotáciou 
+\item Entitná trieda musí mať parametrický konštruktor, aby bolo možné vytvárať nové entity (riadky v tabuľke) 
+\item Každá vlastnosť (položka) entitnej triedy musí spĺňať princíp Plain Old Java Object (POJO), čo znamená, že pre každú vlastnosť existuje metóda v~tvare getNázovVlastnosti, ktorá získa hodnotu vlastnosti a metóda v~tvare setNázovVlasnosti, ktorá nastaví danú hodnotu vlastnosti. Jednotlivé vlastnosti môžu byť dodatočne anotované napr. kvôli kontrole na hodnotu konkrétneho typu alebo špecifickú vlastnosť (nenulovosť, špeciálny formát, \ldots) 
+\item Každá entitná trieda musí mať mať unikátny identifikátor. Týmto identifikátorom chápeme primárny kľúč, čo je vlastnosť, ktorá dokáže v~databáze jednoznačne identifikovať záznam. Primárny kľúč býva anotovaný prostredníctvom anotácie \\javax.persistence.Id 
+\end{itemize} 
+ 
+Jednotlivé entity môžu byť vo vzťahu s~inými entitami. Vo vzťahu s databázovými tabuľkami je možné ho analogicky popísať tak, že nejaká tabuľka je závislá na inej. V~prípade, že vlastnosť entity je súčasťou vzťahu s~inou entitou používame niektorú z nasledujúcich anotácií podľa násobnosti vzťahu: @One-to-one, @One-to-many, @Many-to-one, @Many-to-Many. Následne je uvedená vlastnosť/vlastnosti druhej entity, ktoré sa podieľajú na vzťahu. Tieto vlastnosti anotujeme anotáciu javax.persistence.JoinColumn, v~ktorej parametroch uvedieme názvy vlastností druhej entity, ktoré sú súčasťou vzťahu \cite{jpabook}. 
+ 
+Pre prácu s jednotlivými entitami sa používa javax.persistence.EntityManager. EntityManager je trieda, ktorá dokáže vytvárať, odstraňovať entity, umožňuje ich vyhľadávať, rovnako aj vytvárať dotazy nad databázou. Dotazy, ktoré môžme vytvoriť pomocou JPA sa podobajú klasickému jazyky Structured Query Language (SQL), ktorý dokáže vytvárať dotazy nad databázou, avšak dotazovací jazyk jazyk JPA má niekoľko rozdielov. Tento jazyk sa nazýva Java Persistence Query Language (JPQL), čo je ako bolo spomenuté jazyk podobný SQL, pričom tento jazyk je reťazcovo založený a je nezávislý na zvolenej databázovej technológií a má objektové vlastnosti, čo znamená, že pri tvorbe dotazov používame názvy vlastností entitných tried a názvy entitný tried. Problém JPQL je typová nebezpečnosť, pretože vyžaduje pretypovanie výsledkov dotazu z~entity manager-a a to môže spôsobiť chyby, ktoré nemusia byť odchytené počas kompilácie.  
+ 
+JPA definuje ešte spôsob dotazovania, ktorý sa nazýva Criteria API, ktoré je využívané k~vytváraniu dotazov nad entitami a vzťahov, ktoré sú typovo bezpečné. Výhodou tohto API, pre použitie na dotazovanie je možnosť vytvárať dynamické dotazy, ktoré majú lepšiu výkonnosť ako JPQL.  
+ 
+Pre určenie, s ktorými entitami má EntityManager pracovať je používaný XML súbor persistence.xml. Tento súbor obsahuje 
+perzistentnú jednotku (persistence unit), čo je XML predpis, do ktorého uvedieme entitné triedy, odkaz na databázu po prípade ďalšie vlastnosti. Tento súbor predstavuje konfiguráciu, ktorá obsahuje okrem názvu entitných tried, s ktorými má EntityManager pracovať aj rôzne iné vlastnosti, napr. automatické vytvorenie schémy databáze z~entitných tried \cite{jpabook}. 
+ 
+JPA obsahuje API, ktoré je nezávislé nad použitou databázou technológiou, preto je možné vytvárať dotazy nad ľubovoľnou databázovou technológiou. Preto je pomerne jednoduché preniesť vytvorenú aplikáciu na iný typ databázovej technológie.
+ 
+
+
+\section{Enterprise JavaBeans}\label{ejbkap}
+Enterprise JavaBeans (EJB) je technológia, ktorá umožňuje vytvárať komponenty, ktoré sa nachádzajú v strednej podnikovej vrstve trojvrstvového aplikačného modelu \ref{kapapp} \cite{ejbbook}. Tieto komponenty sú modulárne, keďže je možné vytvoriť a spravovať viac ich inštancií. Cieľom týchto komponent je uchovávanie aplikačnej logiky. 
+
+Takéto komponenty komunikujú s~klientom alebo webovými komponentami a na druhej strane môžu komunikovať s~EIS vrstvou a vykonávajú/predávajú získané informácie. Na EJB sa môžme pozerať aj ako na API platformy Java EE, prostredníctvom, ktorého môžme vytvárať triedy, ktoré sú špeciálne anotované a obsahujú podnikovú logiku a sú nasadené na Java EE server. Triedy vytvorené týmto API sa nazývajú Enterprise Bean-y(EB).
+
+EB sa delia na 2 kategórie:
+\begin{itemize}
+\item Message-driven bean - Komponent pôsobí v~roli poslucháča  určitého typu správ, na ktorých príjem reaguje vykonaním určitých akcií \cite{fitweb}
+\item Session bean - Komponent vykoná úlohy pre klienta. Voliteľne môže implementovať webové služby \cite{fitweb}
+
+\end{itemize}
+
+
+\subsection{Message-driven Bean}\label{messagekap}
+Message-driven bean (MB) je typ EB, ktorá umožňuje aplikáciám asynchrónne spracovanie správ. Táto beana prijíma správy z~JMS fronty, ktoré následne analyzuje a vykonáva s nimi príslušné akcie \cite{jmsbook}. JMS je technológia, ktorá umožňuje komunikovať komponentom prostredníctvom správ. JMS fronty sú obyčajné fronty, do ktorých sa na jednom konci pri zavolaní MB vloží špecifická JMS správa a na druhej strane sú MB postupne tieto správy odoberané a spracované len raz.  
+ 
+ Zásadný rozdiel je oproti session beane v~tom, že sa k~takému typu beane nepristupuje prostredníctvom rozhrania a invokácie metód. Prístup k~takému typu EB sa deje prostredníctvom vytvorenia spojenia s~JMS frontou a vložení správou do fronty. Správy sú následne spracované na strane MB metódou onMessage, ktorá vyberá z~JMS fronty správu po správe \cite{ejbbook}. Výhodou MB je ekvivalentnosť MB, to znamená že správy môžu byť priradené na spracovanie jej ľubovoľnej inštancii. Výhodou je asynchrónne vyvolanie, ktoré nevyťažuje prostriedky servera.
+ 
+
+
+\subsection{Session Bean}\label{sessionkap}
+Session bean (SB) je typ EB, ktorá zapúzdruje podnikovú logiku, pričom môže byť vyvolaná lokálne alebo vzdialene. Prístup k~session bean je realizovaný prostredníctvom volania metód SB. SB následne vykoná kód metódy, po prípade vráti nejaký výsledok \cite{ejbbook}.
+
+SB delíme na 3 typy:
+\begin{itemize}
+\item Stateful Session Bean - Udržuje hodnoty premenných, pričom každá beana reprezentuje unikátny stav klienta/sedenia. Pokiaľ sa sedenie odstráni stav zmizne.
+\item Stateless Session Bean - Neudržuje stav komunikácie s~klientom. Počas invokácie metódy takejto beany môže inštancia obsahovať premenné, ktoré môžu obsahovať špecifický stav vzhľadom na klienta. Po ukončení stav zmizne, rovnako tento typ SB je možné použiť k~implementácií webovej služby.
+\item Singleton Session Bean - Tento typ beany je inštanciovaný len raz a pretrváva počas celého životného cyklu aplikácie. Využíva sa pri zdieľaní a súčasnom prístupe viacerých užívateľov.
+\end{itemize}
+
+
+
+
+\section{Možnosti spolupráce Javy EE s databázou}\label{mysqlkap}
+Java EE definuje nový spôsob prístupu k databáze a to objektovo relačné mapovanie, ktoré bolo vysvetlené v kapitole \ref{jpakap}. Java EE podporuje pre ukladanie a správu dát množstvo databázových technológií. Tieto technológie môžu byť relačné (MySQL, PostgreSQL) alebo nerelačné (MongoDB). MySQL predstavuje jednu z podporovaných možností spolupráce Javy EE s databázovou technológiou. Táto technológia je open source a je vhodná pre malé a stredne veľké aplikácie, pričom je vyvíjaná spoločnosťou Sun Microsystems. MySQL patrí medzi klient-server technológie, kde užívatelia predstavujú klientov, ktorý pristupujú k dátam a server tieto dáta sprístupňuje a rovnako vykonáva nad nimi databázové operácie \cite{mysqlbook}. Klient môže typicky bežať na rovnakom počítači ako server, alebo môže vzdialene (po sieti) pristupovať k databázovému serveru.
+
+Podporuje tvorbu databázových procedúr, databázových triggerov, rovnako ukladanie internacionálnych znakov.
+Ďalšími výhodami tejto technológie je jednoduchosť inštalácie a multiplatformosť, preto je možné ju nasadiť na systémy s~operačným systémom Windows, Linux alebo Mac Os. Medzi nevýhody tejto technológie patrí neefektívna práca s~databázovými transakciami a neefektívne ukladanie veľkého množstva dát \cite{mysqlbook}.
+
+\section{Seam}\label{seamkap}
+Seam je aplikačný framework pre Javu EE, ktorý definuje uniformný komponentný model pre podnikovú logiku aplikácie \cite{seambook}. Seam rieši integráciu EJB \ref{ejbkap} a JSF \ref{jsfkap} spolu. Medzi ďalšie výhodné vlastnosti tohto frameworku patrí integrácia Asynchronous JavaScript and XML (Ajax), rovnako aj vstavaná podpora javascriptu a efektívne spracovanie webových dotazov \cite{ajaxbook}.  
+ 
+Tento framework obsahuje množstvo modulov od zabezpečenia aplikácie až po prácu s emailovou komunikáciou. My sa zameriame na modul Seam Security a Seam Faces. Tieto moduly obsahujú mechanizmy na zabezpečenie enterprise aplikácie a overovanie užívateľa. 
+ 
+ 
+Základom bezpečnosti modulu Seam Security je autentifikácia, čo je proces vytvorenia alebo potvrdenia identity užívateľa. Užívateľ potvrdzuje svoju identitu prostredníctvom užívateľského meno a hesla. Seam Security poskytuje API prostredníctvom, ktorého je možné sa autentizovať z~rozličných zdrojov (databáze, \ldots) \cite{seambook}.  
+ 
+Ďalšou vlastnosťou je Identity Management, ktoré predstavuje množinu API pre správu užívateľov, skupín a užívateľských rol, ktorá je súčasťou Seam Security API. Identity Management je poskytovaný Seam komponentom PicketLink IDM, ktorá spravuje uloženie užívateľov v~rozličných bezpečnostných úložiskách.  
+ 
+ 
+ 
+ Základom autentifikácie je Identity Bean, čo je java trieda, ktorá reprezentuje identitu užívateľa a pri úspešnej autentifikácií je identita vložená do životného cyklu aktuálneho sedenia aplikácie. Týmto spôsobom (prítomnosťou triedy Identity Bean) sa overuje užívateľ. V~rámci autentifikácie sú definované v API metódy Login (prihlásenie) a Logout (odhlásenie). Potvrdenie identity užívateľa je realizovaná metódou authenticate, v~ktorej prebieha autentifikácia užívateľa. 
+ 
+Počas autentifikácie sa overí pravosť užívateľa a prostredníctvom metódy setStatus sa nastaví úspech (SUCESS) alebo neúspech (FAILURE) pri overení zadaných údajov. Po autentifikácií dôjde k~vloženiu identity užívateľa do životného cyklu aplikácie, ktorú je možné získať z~triedy triedy prostredníctvom anotácie @Inject triedy Identity \cite{seambook}. 
+ 
+ Na záver spomenieme modul Seam Faces. Tento modul obsahuje API na zabezpečenie prístupu k~HTML a XHTML stránkam. Túto funkčnosť nazývame Faces View Configuration. Ide vlastne o súbor, v ktorom je uvedené, ktorý užívateľ môže pristupovať, ku ktorej stránke.
+ 
+
+\section{Ostatné technológie pre tvorbu užívateľského rozhrania}\label{bootkap}\label{richkap}
+Výsledné užívateľské rozhranie bolo rozšírené o ďalšie prostriedky pre podporu AJAXU a interaktívnych grafických komponent s podporou prenositeľnosti na mobilné zariadenia \cite{ajaxbook}. Týmito technológiami je CSS framework Twitter Bootstrap a framework s podporou AJAX-u RichFaces. 
+ 
+Twitter Bootstrap je framework, ktorý obsahuje súbor nástrojov pre vytváranie webových stránok a webových aplikácií \cite{boot}. Ponúka podporu webových technológií HTML, CSS, JavaScript a mnohých grafických prvkov, ktoré je možné ľahko integrovať do stránky. Twitter Boostrap implementuje interaktívne prvky ako sú tlačidlá, boxy, menu a ďalšie grafické elementy. Pre použitie Boostrap-u je potrebné vložiť do HTML kódu odkaz na kaskádové štýly a javascriptový súbor. 
+ 
+Výhodou týchto nástrojov je jednoduché používanie a možnosť použitia aj na mobilných telefónoch.   
+ 
+Boostrap obsahuje rozšírenie Font Awesome, čo je CSS framework, ktorý obsahuje rôzne grafické ikony, ktoré je možné integrovať do HTML kódu. 
+ 
+RichFaces je open-source framework s~podporou Asynchrouns Javavascript and\\ XML(AJAX) \cite{ajaxbook}, ktorý predstavuje rozšírenie JSF frameworku \ref{jsfkap}. RichFaces obsahuje API, ktoré obsahuje grafické komponenty s~podporou AJAX-u. RichFaces podporuje množstvo preddefinovaných vzhľadov. Rovnako umožňuje definovať, ktoré JSF komponenty budú invokované na základe AJAX požiadavky, vrátane spôsobu invokácie a odpovede. Rovnako podporuje validáciu na strane klientského prehliadača.
+ 
+
+
+\section{Možnosti testovania v Jave EE}\label{testkap}
+Základom testovania je nástroj JUnit a nástroj Arquillian. 
+V~prvom rade sa budem venovať nástroju JUnit. JUnit je unit testovací nástroj pre programovací jazyk Java. JUnit sa používa pre typ testovania, ktorý sa nazýva test-driven development a je jedným z~kolekcie unit testovacích nástrojov \cite{testdevbook}. JUnit je súčasťou balíku org.junit \cite{junitbook}. Cieľom testovania prostredníctvom JUnit sú malé kúsky kódu, ako metódy alebo triedy.  
+ 
+Testovacie metódy sú anotované prostredníctvom @Test anotácie. JUnit rovnako umožňuje vykonať kód pred spustením testu a to docielime anotovaním metód @Before anotáciou alebo po spustení testu a to docielime anotáciou @After pred názvom metódy. V~testovacej metóde potom vykonáme nejaké kód a očakávaný výstup porovnáme s~nami očakávaným výsledok prostredníctvom metódy Assert.  
+ 
+ Nakoniec spomeniem nástroj Arquillian. Arquillian je testovací nástroj, ktorý vykonáva testy vo vnútri vzdialeného alebo vstavaného kontajneru alebo nasadí archív\\ (obsahujúci java triedy spolu s~testovacími triedami) na Java EE kontajner (JBoss, Tomcat, \ldots). Arquallian integruje aj ďalšie testovacie nástroje, napr. JUnit 4, TestNG 5, \ldots . Tento framework má zásadnú výhodu v~prenositeľnosti testov na rôzne podporované Java EE kontajnery. Nástroj pri spustení automaticky zabalí do archívu všetky potrebné prostriedky pre platformu \cite{arqbook}. Pre správny beh testov je potrebné nakonfigurovať XML súbor arquillian.xml.  
+V tomto súbore sa nastaví kontajner, na ktorý budú testy nasadené a spôsob spustenie testov. 
+ 
+ Písanie testov s~nástrojom Arquillian začína tvorbou javovskej triedy, ktorá vyzerá ako štandardná testovacia trieda vytvorená nástrojom JUnit.  
+  
+ Použitie nástroju Arquillian sa deje použitím anotácie @RunWith. Táto anotácia zabezpečí spustenie testov v Java EE kontajneri. Následne tento nástroj spustí kontajner a nasadí obsah testovacieho archívu, pričom musí byť anotovaný anotáciou @Deployment. Archív obsahuje testy so špecifickými triedami a knižnicami, ktoré potrebuje. Testy sa následne vykonajú vo vnútri kontajneru, preto je možné otestovať podnikové a webové komponenty za behu.
+ 
+
+
+
+
+\section{JBoss Aplikačný server}\label{jbossc}
+Aplikačný server (AS) je sotware, ktorý poskytuje vrstvu medzi operačným systémom a Java EE aplikáciami. AS poskytuje funkcionalitu aplikáciám (prístup k~súborovému systému, \ldots), konkrétne enterprise aplikáciám. Vytvára vrstvu, ktorá zjednodušuje vývoj enterprise aplikácií. Pomerne veľká skupina AS je vyvíjaná v~jazyku Java. Dôvodom pre tento jazyk je existencia štandardu Java EE.
+
+JBoss (JavaBeans Open Source) je aplikačný server, ktorý je založený na platforme Java a Java Enterprise Edition \cite{jbossbook}. Tento typ AS je open-source, preto je možné jeho stiahnutie spolu so zdrojovými kódmi. Základným stavebným kameňom JBoss AS je JBoss Microcontainer. JBoss Microcontainer je refaktorizácia JBoss JMX Microkernel, aby podporoval POJO nasadzovanie a samostatné použitie mimo aplikačného servera. Microcontainer registruje všetky použité služby. Služby, ktoré majú by prístupné sa registrujú v~podobe managed beany. Microcontainer spravuje a riadi beh týchto služieb \cite{jbossbook}.
+
+Používanie aplikačného servera JBoss je možné vykonať ručne prostredníctvom konzole a nájdením inštalačného adresára, ktorý obsahuje skript run.sh, ktorý spustí JBoss. Po spustení serveru je možné k~nemu implicitne pristupovať na localhost-e na porte 8080.
+
+
+
+\chapter{OptaPlanner}\label{optaplannerC}
+OptaPlanner je open source framework, ktorý rieši a optimalizuje rôzne plánovacie problémy, ktoré sú reprezentované XML definičným súborom pre daný problém. OptaPlanner využíva pri riešení problému, ktoré nemusí vždy nájsť, optimalizačné algoritmy a metaheuristické metódy s~využitím skóre. Skóre je hodnota, ktorá reprezentuje bodové hodnotenie optimálnosti dosiahnutého riešenia. Výsledným riešením je to riešenie, ktoré má najvyššie skóre a je reprezentované 1 výstupným súborom vo formáte XML. 
+ 
+ Tento framework neurčuje striktne akými algoritmami a metódami sa má daný problém vyriešiť, ale konfiguráciu ponecháva na strane užívateľa. OptaPlanner je určený pre jazyk Java, preto proces riešenia je riadený triedami v~tomto jazyku. Tieto triedy sú špecifické pre daný problém musia byť dodané spolu so zadaním problému, pričom  a musia byť schopné získať potrebné informácie z~definičného súboru problému, ktorý reprezentuje zadanie problému, musia byť schopné vykonávať postupné kroky vedúce k~riešeniu problému(napr. v~prípade problému N Dám presúvať dámy, tak aby sa vždy nachádzali vo validných pozíciách) a prostriedky, ktoré ohodnotia krok a prekalkulujú celkové skóre a na záver vrátiť najoptimálnejšie riešenie \cite{optabook}. 
+ 
+Postup riešenia problému a kalkulácie skóre sa opakuje pre rôzne scenáre (napr. v~prípade N Dám pre rôzne alternatívne kombinácie pohybov, ktoré sú rozpracované súčasne). OptaPlanner sa snaží vždy nájsť optimálne riešenie vzhľadom k~optimalizačným algoritmom a metaheuristickým metódam a dostupnému času, ale niekedy nie je schopný poskytnúť na predchádzajúce podmienky optimálne riešenie (riešenie je ukončené predčasne z~dôvodu vyčerpania dostupného času). Za podmienok vyčerpania dostupného času je vrátené doposiaľ najlepšie dosiahnuté riešenie. Výhodou tohto frameworku je možnosť aplikovania na rozličné plánovacie problémy, ktorých presné (analytické) riešenie neexistuje alebo je veľmi ťažké ich nájsť v dostupnom čase. Príkladom môže byť skupina problémov označovaných ako NP-úplné problémy, ktoré sa vyznačujú tým, že ich riešenie nie je možné nájsť v dostupnom čase.
+\section{Plánovací problém}\label{planprob}
+Plánovacím problémom môžme obecne označiť akýkoľvek problém, ktorý vyžaduje od nás zdroje a predikciu na priradenie zdrojov, nájdenie riešenia takého, aby výsledok bol v~konečnom dôsledku najlepší, cenovo aj časovo najprijateľnejší. 
+ 
+V~bežnom živote, rovnako ako ja v~podnikových sférach sa stretávame s~rôznymi plánovacími problémami. Môže ísť o~problémy ako správne naplánovať cestu vozidiel (áut, lodí, \ldots), aby sme ju spravili za čo najkratší čas, rovnako môžme požadovať aby cesta bola, čo finančne najprijateľnejšia. Rovnako môžme plánovať rozvrh práce zamestnancov vo firme, aby zbytočne nespomaľovali chod ostatných zamestnancov, ktorí sú na ich práci závislí a nemuseli zbytočne čakať. Plánovať môžme spúšťanie testovania aplikácií v~rámci vývojárskej firmy, aby niektoré úlohy boli otestované skôr ako iné, no musí byť čo najefektívnejšie vyváženie použitých zdrojov (procesorového času) a zbytočne prostriedkami nemrhali. Pokiaľ je problém dostatočne komplexný, potom je veľmi vhodné použiť Optaplanner.
+
+\begin{figure}[htb]
+
+\begin{center}
+
+\includegraphics[scale=0.8]{fig/useCaseOverview.jpg} 
+\caption{Ukážka problému rozvrhnutia práce. Prevzaté z~\cite{optabook}. }
+\label{obrazokUseCase}
+
+\end{center}
+
+\end{figure}
+Obrázok č. \ref{obrazokUseCase} zobrazuje typické použitie OptaPlanner-u. Môžme vidieť, že na~nasledujúcom obrázku vystupujú 4 osoby(označené obdĺžnikom modrej, žltej, zelenej a oranžovej farby), ktoré vykonávajú nejakú činnosť. Ich činnosť je špecifická a silne závisí od práce predchádzajúcich pracovníkov a teda nemôžu začať pracovať pokiaľ nie je dokončená práca predchádzajúceho pracovníka. V~prípade náročnosti zadania takého to problému je pomerne jednoduché naplánovať správne poradie činností. Problém nastáva, ak by v~danom obrázku bolo niekoľko násobne viac osôb. V~tomto prípade by štandardným prístupom  mohlo dôjsť k~neefektívnemu rozdeleniu práce a k~zbytočnému mrhaniu času. Preto je vhodné použiť OptaPlanner, ktorý sa snaží ich činnosti maximálne optimalizovať a jednotlivé činnosti zvoliť v~následnosti tak, aby výsledná práca bola spravená za najkratší možný čas vzhľadom na činnosti, ktoré sa optimalizujú.
+
+
+
+\section{Princíp}
+Princíp riešenia je založený na konfigurácií OptaPlanner-u prostredníctvom konfiguračného súboru vo formáte XML, v ktorom sa nastavujú optimalizačné algoritmy a metaheuristické metódy, ktoré sa snažia v~spolupráci s~triedami na riešenie vyberať vždy najlepšie kroky pri riešení. Rovnako sa vytvoria a v konfiguračnom súbore zadefinujú javovské triedy na získanie potrebných dát z~definičného súboru a prostriedky na kalkuláciu skóre. 
+ 
+ Riešenie problému sa začína tvorbou XML definičného problému špecifického pre daný problém. Následne sa vytvoria triedy pre získanie dát z~XML súboru, triedy pre vykonávanie krokov plánovania(napr. v~prípade N dám presúvanie dám na validné pozície) a prostriedky pre kalkuláciu skóre a nastaví sa konfiguračný súbor pre daný problém, ktorý bude bližšie popísaný v~nasledujúcej kapitole \ref{confopt}. Aby bolo jasné aké akcie(kroky plánovania) sú povolené pre daný problém sú definované v~triedach pre riešenie obmedzenia. Tie ovplyvňujú aj spôsob ohodnotenia skóre pre každý krok: \cite{optabook} 
+\begin{itemize} 
+\item Negatívne hard obmedzenie, ktoré nesmú byť porušené. Pri zistení tohto typu obmedzenia je krok ohodnotený záporným skóre (to indikuje nekorektnosť kroku vzhľadom k plánovaciemu problému)\label{hardobm} 
+\item Negatívne soft obmedzenie, ktoré by nemali byť porušené pokiaľ sa dá tomu vyhnúť. Pri zistení tohto typu obmedzenia je krok ohodnotený kladným skóre s nízkou hodnotou 
+\item Pozitívne soft obmedzenie, ktoré by mali splnené pokiaľ je to možné. Pri zistení tohto typu obmedzenia je krok ohodnotený kladným skóre s vysokou hodnotou 
+\end{itemize} 
+ 
+Pre každý rozpracovaný krok plánovacieho problému sa priebežne sčítava priebežné skóre s predchádzajúcim. Týmto spôsobom dostaneme viaceré riešenia s rozličným skóre. Kalkulácia skóre je vykonávaná špeciálnymi prostriedkami (triedami), pričom existujú 3 spôsoby, akým je skóre kalkulované: 
+\begin{itemize}\label{skorkal} 
+\item Jednoduchá kalkulácie skóre 1 metódou 
+\item Inkrementálna kalkulácie skóre prostredníctvom viacerých metód 
+\item Drools kalkulácia skóre - táto konfigurácia definuje vlastné pravidlá pre kalkulovanie skóre\label{drollskal} 
+\end{itemize} 
+Drools kalkulácia skóre využíva vlastnú DRL syntax a je daná súborom, ktorý obsahuje pravidlá \cite{droolsbook}. Každé pravidlo je dané svojim názvom a podmienkou, v~ktorej sa overuje priebežné riešenie problému (napr. v~prípade N Dám priebežné rozloženie dám), ktorá v~prípade splnenia upravuje skóre.
+
+
+
+
+ Spustenie riešenia je dané zavolaním hlavnej metódy solve z triedy Solver, ktorá spúšťa riešenie problému. 
+ Postup riešenia je nasledovný:
+\begin{enumerate}
+\item Overenie prostriedkov(definičného súboru, konfiguračného súboru (obsahuje spôsob kalkulácie, definičné triedy, použitie plánovacích algoritmov a metaheuristických metód) a prostriedkov na kalkuláciu skóre
+\item Načítanie definičného XML súboru 
+\item Vykonanie kroku podľa nastavenia plánovacích algoritmov
+\item Optimalizácia kroku v~prípade použitia metaheuristických metód
+\item Ohodnotenie kroku(v závislosti od použitia prostriedkov na kalkuláciu skóre \ref{skorkal})
+\item Vykonanie alternatívneho kroku (napr. v~prípade N Dám presunutie \\dámy na ľavú stranu šachovnice, miesto pravej)
+\item Optimalizácia alternatívneho kroku v~prípade použitia metaheuristických metód
+\item Ohodnotenie kroku(v závislosti od použitia prostriedkov na kalkuláciu skóre \ref{skorkal})
+\item Opakovanie krokov 3., 4., 5., 6. až dokým nie je dosiahnuté riešenie alebo plánovanie nie je predčasne ukončené (napr. kvôli vyčerpania dostupného času)
+\item Nájdenie riešenia alebo predčasné ukončenie plánovania vzhľadom na vysoké poskytnuté skóre (je možné použiť v~prípade, že riešenie problému nebolo nájdené v~dostupnom čase) a vrátenie najlepšieho riešenia vo formáte XML súboru
+
+\end{enumerate}
+
+OptaPlanner definuje akým spôsobom je povolené vykonanie kroku pri plánovaní, pričom definuje aj hodnotu skóre(kladnú alebo zápornú), ktorú udelí pri vykonaní konkrétneho typu kroku. Spôsob kalkulácie skóre môžu jednoduchého charakteru, rovnako môže ísť o komplexnejšie pravidlá, ktoré sú uvedené v samostatnom súbore. Tieto spôsoby kalkulácie skóre je možné ľubovoľne vzájomne kombinovať a pritom zlepšovať presnosť dosiahnutého riešenia.
+
+\section{Konfigurácia OptaPlanneru}\label{confopt}
+OptaPlanner je ovládaný konfiguračným súborom vo formáte XML, v ktorom užívateľ nastavuje aký plánovací problém bude riešený, rovnako aj spôsob akým sa bude riešiť a v poslednom rade nastaví podporované optimalizačné algoritmy a metaheuristické metódy, ktoré ovplyvňujú rýchlosť a spôsob dosiahnutia výsledku. Jednotlivé algoritmy a metódy je možné ľubovoľne kombinovať, rovnako je možné spustiť výpočet pre viacero scenárov optimalizačných algoritmov a metaheuristických metód \cite{optabook}. Konfigurácia OptaPlanneru má 3 povinné časti a 4. voliteľnú:
+\begin{itemize}
+\item Nastavanie definičných tried plánovacie problému a nastavenie tried zabezpečujúce plánovanie (Domain model configuration)
+\item Nastavenie definície skóre (Score Configuration)
+\item Nastavenie použitia plánovacích algoritmov (Optimalization algorithms configuration), ktoré voliteľne obsahuje nastavenie metaheurestických metód
+
+\end{itemize}
+
+Pre lepšiu prehľadnosť je uvedená ukážka konfiguračného súboru. 
+
+\lstset{
+    language=xml,
+    tabsize=2,
+    %frame=lines,
+    caption=Ukážka konfigurácie problému Cloud Balancing,
+    label=cloud,
+    frame=shadowbox,
+    rulesepcolor=\color{black},
+    xleftmargin=20pt,
+    framexleftmargin=15pt,
+    keywordstyle=\color{blue}\bf,
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=3pt,
+    breaklines=true,
+    showstringspaces=false,
+    basicstyle=\footnotesize,
+    emph={test},emphstyle={\color{magenta}}}
+
+    \lstinputlisting{cloudBalancingSolverConfig.xml}
+
+Nastavenie konfiguračného súboru(solver) pre riešenie problému vyváženia cloudu na obr. \ref{cloud} pozostáva z~viacerých častí: 
+\begin{itemize}
+\item Na riadku č.3 uvedená medzi značkami enviromentMode hodnota FAST\_ASSERT, ktorá umožňuje OptaPlanneru detekovať chyby v~implementácií
+\item Na riadku č.5 je uvedená medzi značkami solutionClass hodnota \\org.optaplanner.examples.cloudbalancing.domain.CloudBalance, ktorá odkazuje na definičnú triedu modelu problému vyváženia cloudu
+\item Na riadku č.6 je uvedená medzi značkami planningEntityClass hodnota \\org.optaplanner.examples.cloudbalancing.domain.CloudProcess, ktorá odkazuje na triedu, ktorá realizuje riešenie(plánovanie) problému
+\item Na riadku č.9 je uvedená medzi značkami scoreDefinition hodnota HARD\_SOFT, ktorá hovorí, že pri kalkulácií skóre použijeme len hard obmedzenia \ref{hardobm}
+\item na riadku č.10 je uvedená medzi značkami simpleScoreCalculatorClass hodnota \\org.optaplanner.examples.cloudbalancing.solver.score.\\CloudBalancingSimpleScoreCalculator, ktorá odkazuje na triedu, ktorá kalkuluje skóre pri riešení problému
+\item Na riadku č.11 je uvedená medzi značkami scoreDrl hodnot \\/org/optaplanner/examples/cloudbalancing/solver/cloudBalancingScoreRules.drl,\\ ktorá odkazuje na Drools definíciu kalkulácie skóre \ref{drollskal}
+\item na riadku č.15 je uvedená medzi značkami maximumSecondsSpend hodnota 120, ktorá hovorí, že riešenie musí byť nájdené do 120 sekúnd v~opačnom prípade dôjde k~ukončeniu riešeniu a vráteniu najlepšieho doposiaľ dosiahnutého riešenia
+\item Na riadku č.18 je uvedená medzi značkami constructionHeuresticType hodnota \\FIRST\_FIT\_DECREASING, ktorá označuje použitie plánovacieho algoritmu \\FIRST\_FIT\_DECREASING \cite{algibook}
+\item Na riadku č. 20 je uvedená medzi značkami pickEarlyType hodnota \\FIRST\_NON\_DETERIORATING\_SCORE, ktorá označuje použitie pri kalkulovaní skóre najprv nezhoršujúce sa skóre(použitie kladného skóre)
+\item Na riadku č. 25 je uvedená medzi značkami entityTabuSize hodnota entityTabuSize, ktorá značí použitie metaheuristickej metódy pri riešení TABU SEARCH, s~veľkosťou tabuľky 7 \cite{algibook}
+\item Na riadku č. 28 je uvedená medzi značkami acceptedCoundLimit hodnota 1000, ktorá označuje počet náhodných krokov, ktoré sú vyhodnotené počas 1 kroku riešenia problému
+\end{itemize}
+
+V tejto sekcii bol ukázaný konkrétny príklad nastavenia OptaPlanner-u, pričom boli ukázané nastavenia definície problému, kalkuláciu skóre, spôsoby ovplyvňovania procesu plánovania(napr. predčasné ukončenie) a nastavenie optimalizačných algoritmov a metaheuristických metód.
+
+
+
+\section{Výsledky plánovacieho problému}
+Výsledkom plánovania prostredníctvom OptaPlanner je jediný výstupný súbor vo formáte XML. Formát výsledného súboru je problémovo špecifický a odpovedá formátu súboru vstupného, napr. v prípade, že definičným súborom problému bol problém N Dám, ktorý obsahuje počiatočné rozostavenie dám na šachovnici, tak výsledok obsahuje rozostavenie dám na šachovnici, aby sa vzájomne neohrozovali. Ďalej typicky každý definičný súbor obsahuje zoznam prostriedkov(napr. v prípade N Dám šachovnicu) spolu s rozličnými vlastnosťami a najlepším dosiahnutým skóre. 
+  
+ Pre výstupný súbor plánovacieho problému neexistuje XSD schéma, ktorá by definovala jednotlivé elementy a ich prípustné hodnoty a vlastnosti \cite{optabook}. Výstupný súbor predstavuje na úrovni implementácie serializáciu objektov špecifického pre daný plánovací problém. Pokiaľ si zoberieme príklad N Dám, tak jednotlivé objekty predstavujú dámy na šachovnici, pričom objekty(dámy) majú vlastnosť ako riadok a stĺpec, kde sa nachádzajú. Postup serializácie sa realizuje pri zapisovaní výsledku (nájdení najlepšieho riešenia ) riešenia do výstupného súboru, kde sa objekty riešenia (napr. dámy na šachovnici) prevedú do XML formátu.
+
+
+\subsection{Ukážku výsledku plánovacieho problému}
+V nasledujúcej časti by som rád ukázal výstupný súbor pre problém 4 Dám. Počiatočným zadaním problému bolo rozostavenie Dám na 1.riadku šachovnice. 
+
+\newpage
+\lstset{
+    language=xml,
+    tabsize=2,
+    %frame=lines,
+    caption=Ukážka výsledného riešenia problému N Dám,
+    label=queen,
+    frame=shadowbox,
+    rulesepcolor=\color{black},
+    xleftmargin=20pt,
+    framexleftmargin=15pt,
+    keywordstyle=\color{blue}\bf,
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=2pt,
+    breaklines=true,
+    showstringspaces=false,
+    basicstyle=\footnotesize,
+    emph={test},emphstyle={\color{magenta}}}
+
+    \lstinputlisting{4queens.xml}
+
+Na obrázku č. \ref{queen} je ukázaný výstup OptaPlanneru pre problém 4 Dám. Každý element XML súboru obsahuje atribút ID, podľa ktorého je možného ho jednoznačne adresovať. Využitie tejto vlastnosti bude ukázané neskôr v texte. Celý súbor je zaobalený v párovej značke <NQueens>, ktorý značí že obsahom súboru je N Dám, pričom sa nachádza na riadku č.1. Dôležitou značkou je značka párová značka <n> na riadku č. 3, ktorej hodnota 4 značí počet Dám, ktoré sa budú na šachovnici nachádzať. Celý súbor môžeme rozdeliť na 4 časti: 
+\begin{itemize} 
+\item Definíciu stĺpcov šachovnice ohraničené značkou columnList na riadku č. 4 
+\item Definíciu riadkov šachovnice ohraničené značkou rowList na riadku č. 22 
+\item Definíciu pozície dám na šachovnici ohraničené značkami queenList na riadku č. 40 
+\item definíciu hodnoty skóre ohraničené značkou score na riadku č.63 
+\end{itemize} Definícia stĺpcov obsahuje zoznam stĺpcov šachovnice. Každý stĺpec je definovaný značkou <Column> , ktorá obsahuje značku <index>, ktorá definuje jeho relatívne poradie od začiatku šachovnice. Hodnoty týchto značiek nie sú jedinečné. Definícia riadkov obsahuje zoznam riadok šachovnice. Každý riadok je definovaný značkou <Row>, ktoré  obsahuje značku <index>, ktorá definuje jeho relatívne poradie od začiatku šachovnice. Hodnoty týchto značiek nie sú jedinečné. Definícia pozície dám obsahuje zoznam dám a ich výsledné rozostavenie na šachovnici. Každá dáma je označená značkou <Queen> s atribútom id k jeho jednoznačnej identifikácií. Každá dáma obsahuje značku <id> a značky <column> a <row> a s atribútmi reference. Hodnoty týchto atribútom obsahujú číselnú informáciu, ktorá značí číslo stĺpca a riadka, kde sa dáma nachádza. Odkazujú na hodnoty id atribútov značiek pre stĺpec a a pre riadok, kde sa dáma nachádza. Na riadku č. 62 je uvedená párová značka , ktorej hodnota značí skóre najlepšieho riešenia. Táto ukážka možného výstupu plánovania prostredníctvom OptaPlanneru nie je obecná pre všetky plánovacie problémy. 
+
+\subsection{Štatistiky}
+OptaPlanner rovnako podporuje tvorbu štatistík a výstupu v podobe grafu z výsledku plánovania. Základom je vytvorenie špeciálnej konfigurácie, ktorá ako podmnožinu obsahuje konfiguráciu uvedenú v kapitole \ref{confopt}. V tejto konfigurácií sa nastavuje typ podporovaného grafického výstupu, napr. celkové najlepšie dosiahnuté skóre pre 1 alebo viacero konfigurácií, výstup pre najhoršiu konfiguráciu, celkový čas strávený pri riešení problému, využitie pamäte pri vykonávaní jednotlivých krokov. 
+ 
+Na nasledujúcom obrázku je zobrazený grafický výstup z OptaPlanneru pre riešenie problému 4 Dám, 8 Dám, 16 Dám a 32 Dám. Pre každý problém boli použité rozličné optimalizačné algoritmy s cieľom nájsť najoptimálnejšie riešenie pre problém N Dám. 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.4]{score.jpg}  
+\caption{Ukážka grafického výstupu  z OptaPlanneru pre rôzne problém 4 Dám, 8 Dám, 16 Dám a 32 Dám s použitím rôznych plánovacích algoritmov. Prevzaté z \cite{optabook}. } 
+\label{statconf} 
+ 
+\end{center} 
+ 
+\end{figure} 
+ 
+Na obrázku č. \ref{statconf} je zobrazený grafický výstup z OptaPlanneru pre hodnoty skóre pre rôzne rozostavenia dám a rozličné optimalizačné algoritmy. Graf má na ose Y nanesené číselné hodnoty skóre a na ose X definičný súbor, pre ktorý bol vyprodukovaný daný grafický výstup. Pre každý použitý definičný súbor (4 Dám, 8 Dám, 16 Dám, 32 Dám) boli použité 3 optimalizačné algoritmy: tabuSearch-moveTabu (reprezentovaný stĺpcom červenej farby), tabuSerach-propertyTabu (reprezentovaný stĺpcom modrej farby) a simulatedAnnealing (reprezentovaný stĺpcom zelenej farby). Najlepšie skóre je také, ktorého hodnota je najväčšia (v tomto prípade, ktorá sa najviac blíži 0). Z daného grafického výstupu môžme usúdiť, že pre problém N Dám s počiatočným rozložením Dám na 1.riadku šachovnice (najvyššom) je najlepší optimalizačný algoritmus SimulatedAnnnealing. Takýto grafický výstup môžme dosiahnuť pre ľubovolný plánovací problém. Rovnako môžme dostať aj iný grafický výstup v závislosti od vlastnosti, ktoré chceme sledovať(napr. celkový čas strávený pri plánovaní, využitie pamäte).
