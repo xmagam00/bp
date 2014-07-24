@@ -464,3 +464,171 @@ Na nasledujúcom obrázku je zobrazený grafický výstup z OptaPlanneru pre rie
 \end{figure} 
  
 Na obrázku č. \ref{statconf} je zobrazený grafický výstup z OptaPlanneru pre hodnoty skóre pre rôzne rozostavenia dám a rozličné optimalizačné algoritmy. Graf má na ose Y nanesené číselné hodnoty skóre a na ose X definičný súbor, pre ktorý bol vyprodukovaný daný grafický výstup. Pre každý použitý definičný súbor (4 Dám, 8 Dám, 16 Dám, 32 Dám) boli použité 3 optimalizačné algoritmy: tabuSearch-moveTabu (reprezentovaný stĺpcom červenej farby), tabuSerach-propertyTabu (reprezentovaný stĺpcom modrej farby) a simulatedAnnealing (reprezentovaný stĺpcom zelenej farby). Najlepšie skóre je také, ktorého hodnota je najväčšia (v tomto prípade, ktorá sa najviac blíži 0). Z daného grafického výstupu môžme usúdiť, že pre problém N Dám s počiatočným rozložením Dám na 1.riadku šachovnice (najvyššom) je najlepší optimalizačný algoritmus SimulatedAnnnealing. Takýto grafický výstup môžme dosiahnuť pre ľubovolný plánovací problém. Rovnako môžme dostať aj iný grafický výstup v závislosti od vlastnosti, ktoré chceme sledovať(napr. celkový čas strávený pri plánovaní, využitie pamäte).
+
+
+\newpage
+
+
+\chapter{Analýza a návrh aplikácie}\label{impl}
+V~tejto kapitole postupne uvedieme požiadavky na aplikáciu, analýzu systému, návrh aplikácie, implementáciu. Rovnako si prejdeme rozdelenie systému plánovaniu na 2 časti a to grafické užívateľské rozhranie a plánovaciu časť optimalizovanú pre problémy N Dám, vyváženia cloudu a cestovateľského turnaja s možnosťou rozšírenia pre akýkoľvek plánovací problém. V kapitole je ukázaný dátový model aplikácie spolu s návrhom užívateľského rozhrania.
+
+\section{Špecifikácia požiadavkov}
+V~tejto kapitole postupne uvedieme požiadavky na aplikáciu, analýzu systému, návrh aplikácie, implementáciu, testovanie a nakoniec vyhodnotíme aplikáciu a navrhneme jej možné rozšírenia. Rovnako si prejdeme rozdelenie systému plánovaniu na 2 časti a to grafické užívateľské rozhranie a plánovaciu optimalizované pre problémy N Dám, vyváženia cloudu a cestovateľského turnaja s možnosťou rozšírenia pre akýkoľvek plánovací problém. V kapitole je ukázaný dátový model aplikácie spolu s návrhom užívateľského rozhrania. 
+ 
+\section{Špecifikácia požiadavkov} 
+V~tejto kapitole postupne rozoberieme požiadavky na systém monitorovania stavu úloh. Základnou úlohou systému je monitorovanie úloh. Na jednej strane bude systém schopný zobrazovať stav plánovacích úloh, na druhej strane bude môcť systém plánovacie úloh spúšťať/pozastaviť.  
+ 
+Úlohy bude možné triediť podla určitého kritéria, rovnako systém bude schopný aj úlohy vyhľadávať. Jednotlivé úlohy je možné aj mazať, alebo zmeniť definíciu plánovacieho problému \ref{planprob} a úlohu znovu spustiť. Novú úlohu bude možné do systému vložiť a následne stupiť. Bude možné vytvárať nové definície plánovacích problémov.  
+ 
+Úlohy bude môcť systém publikovať, čím sa myslí akcia, ktorá vytvorí pre úlohu špeciálne URL, na ktoré sa po kliknutí zobrazí stránku s~názvom úlohy a obsahom XML definičného súboru. Úlohu bude možné aj odpublikovať a po pristúpení k odpublikovanej úlohe sa vráti prázdny obsah. 
+  
+ Systém bude rozdelený podľa užívateľ do 3 užívateľských rolí(Administrátor, Plánovač, Čitateľ): 
+\begin{itemize} 
+\item Administrátor - má prístup ku všetkým úlohám v~systéme, úlohy môže editovať, vytvárať, mazať, publikovať, odpublikovať, môže vytvárať, mazať a editovať užívateľov, rovnaké možnosti má aj s~organizáciami 
+\item Plánovač - má prístup k~úlohám v~rámci svojej organizácie, môže ich vytvárať, editovať, mazať úlohy, publikovať a odpublikovať 
+\item Čitateľ - úlohy môže len zobrať v~rámci svojej organizácie, publikovať, odpublikovať 
+\end{itemize} 
+ 
+Užívatelia sú organizovaní do väčších celkov(organizácií). Preto systém bude schopný spravovať užívateľov, rovnako aj spravovať organizácie, ktoré bude schopný prehľadne zobrazovať, triediť a vyhľadávať podľa určitého kritéria. Užívateľov a organizácie je možné vytvárať.  
+ 
+ Každý užívateľ si bude môcť v systéme meniť svoj email a heslo. Vytvorený užívateľ sa do systému prihlasuje užívateľským menom a heslom, pričom po prihlásení je sprístupnená len časť systému podľa užívateľskej role prihláseného užívateľa. Aplikácia bude obsahovať bezpečnostné mechanizmy, ktoré zabezpečujú aplikáciu proti neautorizovanému prístup užívateľov. Vstupy do systému budú:
+ \begin{itemize} 
+\item Definičný súbor plánovacieho problému 
+\item Užívatelia systému, ktorý vykonávajú akcie v~systéme 
+\item Organizácie, do ktorých sú začleňovaní užívatelia 
+\end{itemize} 
+Výstupy zo systémy budú: 
+\begin{itemize} 
+\item Zoznam plánovacích úloh v~prehľadnej tabuľke 
+\item Zoznam užívateľov a organizácií, ktoré sa rovnako zobrazujú v~prehľadnej tabuľke 
+ 
+\end{itemize} 
+ 
+ V~predposlednom rade treba spomenúť, že výsledné grafické užívateľské rozhranie bude prenositeľné na mobilné telefóny.
+
+\section{Analýza}
+Výslednú aplikáciu môžme rozdeliť na 2 časti: 1. backend aplikácie, ktorý beží na Java EE serveri JBoss \ref{jbossc} a 2.frontend aplikácie grafické užívateľské rozhranie. 
+
+Zameriame sa najprv na grafické užívateľské rozhranie. Pri analýze grafického užívateľského rozhrania je potrebné vyriešiť problém jeho návrhu a možnosti jeho interakcie s užívateľov. Použitie technológie JSF \ref{jsfkap} je pomerne jednoznačné, keďže z Java EE technológií poskytuje jednoduchú interakciu a uchovávanie stavov jednotlivých komponent. Jej výhodou je jednoduchá integrácia s~aplikačným serverom JBoss.
+
+ Problémom, ktoré užívateľské rozhranie potrebuje vyriešiť je pravidelné obnovovanie obsahu tabuliek plánovacích úloh, organizácií a užívateľov, ktoré prostredníctvom technológie JSF je pomerne málo konfigurovateľné. Lepšie riešenie poskytuje použitie frameworku RichFaces \ref{richkap}, ktorý priamo integruje AJAX do všetkých jeho kompotent \cite{ajaxbook}. 
+
+ Posledným problémom, ktorý treba pri analýze grafického užívateľského rozhrania vyriešiť je prenositeľnosť na mobilné zaradenia. V~tom nám pomôže framework Twitter Bootstrap \ref{bootkap}. Prenositeľnosť je možná na mobilné rozhrania disponujúce ľubovoľne veľkou zobrazovacou jednotkou. Treba ale zdôrazniť, na ktorých webových prehliadačoch je možné aplikáciu bez problémov prehliadať:
+\begin{itemize}
+\item Na systéme Android: Chrome, Firefox
+\item Na systéme iOS: Chrome, Safari
+\item Na systéme Mac OS X: Chrome, Firefox, Opera, Safari
+\item Na systéme Windows: Chrome, Firefox, Internet Explorer(verzia 8 - 11), Opera, Safari
+\item Na systéme Linux: Chromium, Firefox
+\end{itemize}
+Podpora ostatných prehliadačov nie je odporúčaná z~dôvodu neočakávaného chovania.
+
+V~druhej časti sa zameriame na problémy backend-u aplikácie. Celá aplikácie potrebuje udržovať a spravovať dáta. Dátami sú mienené informácie o~úlohách, užívateľoch a organizáciach. Z~toho dôvodu bolo treba vyriešiť otázku voľby vhodnej databázovej technológie. Existuje niekoľko možností, ktoré sa dajú ľahko integrovať s~JBoss-om \ref{jbossc}. Keďže nároky na vyťaženosť prístupu k~dátam, rovnako aj množstvo uložených dát sú malého merítka bolo vhodné zvoliť k~tomu adekvátnu databázovú technológiu a tou technológiou je MySQL \ref{mysqlkap}.
+
+ Následne treba spomenúť problém komunikácie databáze s~užívateľským rozhraní. Grafické užívateľské rozhranie potrebuje komunikovať s~databázou odkiaľ získava aktuálne informácie o~úlohách, užívateľoch a organizáciách. Rovnako sa do databáze zapisujú priebežné informácie o~plánovaní. Vzhľadom na podmienku nezávislosti použitia databázovej technológie bola použitá technológia JPA \ref{jpakap}.
+
+Pre publikovanie bola zvolená jednoduchšia varianta webovej služby a to RESTful webová služba \ref{restkap}, ktorá bude namapovaná na URI task/parameter a parameter predstavuje ID úlohy, ktorý sa má zobraziť. Chovanie tejto služby je možné rozdeliť podľa prihláseného a neprihláseného užívateľa:
+\begin{itemize}
+\item Neprihlásený užívateľ - V prípade pokusu o prístupu k verejnej úlohe bude zobrazený jej názov a XML definičný súbor. V prípade pokusu k neverejnej službe bude vrátený prázdny obsah stránky.
+\item Prihlásený užívateľ podľa užívateľskej role:
+                             \begin{itemize}
+                            \item Administrátor - Má prístup k všetkým plánovacím úlohám
+                            \item Plánovač - Má prístup k úlohám v rámci organizácie, do ktorej patrí
+                            \item Čitateľ - Má prístup k úlohám v rámci organizácie, do ktorej patrí
+                            \end{itemize}
+
+
+\end{itemize}
+
+
+ Výsledné užívateľské rozhranie bolo potrebné zabezpečiť voči neautorizovanému prístupu. Existuje priamo zabezpečiť aplikáciu pomocou štandardného API Java EE, no bol zvolený framework Seam \ref{seamkap}, ktorý možno jednoducho integrovať pod JBossom.
+
+
+ Komunikácia s plánovacou častou je realizovaná prostredníctvom webovej služby \ref{webkap} prostredníctvom HTTP protokolu. Z~dôvodu použitia štandardných komunikačných protokolov a nižším nákladom na prevádzkovanie bola zvolená Big webová služba \ref{bigkap}. Užívateľské rozhranie predstavuje klienta, ktorý volá metódy na spustenie a pozastavenie plánovania. PlannerService predstavuje koncový bod webovej služby a zachytáva správy od klienta a zabezpečuje spúšťanie/pozastavenie výpočtu(plánovania).
+
+PlannerService je realizovaná v podobe session bean-y \ref{sessionkap}, ktorá reprezentuje webovú službu a obsahuje funkčnosť pre spustenie a zastavenie výpočtu. Pri spustení výpočtu sú informácie predávané message-driven bean-e \ref{messagekap}, ktorá zabezpečuje spúšťanie plánovania prostredníctvom OptaPlanner-u \ref{optaplannerC}.
+
+
+
+Rovnako boli použité štandardné prostriedky na otestovanie funkčnosti kódu pomocou JUnit testov a nástroju Arquillian \ref{testkap}.
+
+Kvôli závislosti časti systému PlannerService na entitných triedach, bola aplikácia užívateľského rozhrania rozdelená do viacerých modulov.
+
+
+\section{Návrh aplikácie}
+Výsledná aplikácia je rozdelená na 2 časti. Na časť reprezentujúci grafické užívateľského rozhranie s~podporou prihlasovania, užívateľských rol, zabezpečenia proti neautorizovanému prístupu. Rovnako je schopné zobrazovať úlohy, užívateľov a organizácie podľa užívateľskej role. Rozhranie pravidelne aktualizuje informácia o~úlohách, užívateľoch a organizáciach z~databáze. 
+ 
+ Pre spustenie výpočtu úlohy komunikuje pomocou webovej služby s~PlannerService\\(optimalizované pre riešenie problému N Dám, vyváženie cloudu a problém obchodného cestujúceho), ktorá implementuje spracovanie informácií. Pri požiadavke o~spustenie/pozastavenie výpočtu spracovania úlohy sa predá v~HTTP požiadavky ID úlohy. Webová služba následne zaradí požiadavok o~spustení do JMS fronty. Message-driven bean-a následne postupne odoberá požiadavky z~fronty a vyhodnocuje. Pritom najprv nájde potrebný XML definičný súbor v~databáze a spustí výpočet pomocou OptaPlanner. Priebežné informácie(čas do skončenia plánovania, pokrok vo výpočte) sú priebežne vkladané do databáze, čo umožňuje užívateľovi prostredníctvom rozhrania sledovať stav úlohy. K pozastaveniu úlohy dôjde prostredníctvom zmeny stavu vo webovej službe, čo pozastaví plánovanie. 
+ 
+ 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.6]{komunikacia.jpg}  
+\caption{Diagram komunikácie časti užívateľského rozhrania s plánovacou časťou systému} 
+\label{work} 
+ 
+\end{center} 
+ 
+\end{figure} 
+Na obrázku č.\ref{work} je popísané spôsob komunikácie užívateľského rozhrania s~PlannerService. Základom je vytvorenie a vloženie XML definičného súboru plánovacieho problému prostredníctvom užívateľského rozhrania a následne uloženie definície do databáze. Následne sa užívateľovi zobrazí nová pridaná úloha v tabuľke úloh, ktorú mu bude umožňovať spustiť/pozastaviť plánovanie prostredníctvom tlačidla vedľa úlohy. Po stlačení dôjde k zaslaniu žiadosti o spustenie plánovania úlohy s ID úlohy prostredníctvom HTTP protokolu webovej služby PlannerService(OptaPlanner), ktorá žiadosť spracuje. Táto webová služba získa z databáze potrebný XML definičný súbor podľa ID úlohy, ktorú obdržala. Následne zmení stav úlohy a spustí plánovanie. Priebežne pritom ukladá informácie o~pokroku úlohy, a čase ukončenia úlohy. Časť systému reprezentovaná užívateľským rozhraním pravidelne získava informácie o úlohách z databáze a zobrazuje ich v prehľadnej tabuľke. 
+ 
+Celý návrh aplikácie bol otestovaný prostredníctvom skupiny odborných a laických užívateľov s~cieľom zdôrazniť rýchlu učiacu sa krivku užívateľského rozhrania. Následne prebiehalo testovanie prostredníctvom užívateľov, ktorý testovali validáciu vstupov, prihlasovanie, správne vyhľadávanie jednotlivých entít(úloh, užívateľov, organizácií).
+
+\subsection{Návrh modelu databáze}
+Na nasledujúcom obrázku je ukázaný ER diagram, ktorý bol použitý pre databázu: 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.6]{BP.jpg}  
+\caption{ER diagram databáze pre systém monitorovania stavu plánovacích úloh. Zložený z tabuliek úloh, organizácií, užívateľov a typov úloh.} 
+\label{ER} 
+ 
+\end{center} 
+ 
+\end{figure} 
+ 
+Tento obrázok zobrazuje jednotlivé entity, ktoré sú potrebné v~databáze, každá z~nich ma určité položky. ER diagram sa skladá zo~4 entít: user - entita, ktorá reprezentuje užívateľa, task - entita, ktorá reprezentuje úlohu a organization - entita, ktorá reprezentuje organizáciu a tasktype - entita, ktorá reprezentuje typ problému. Výsledný návrh odpovedá skutočnosti, že každý užívateľ musí byť súčasťou organizácie, rovnako môže mať vytvorených 0 až N úloh. Taktiež pre zjednodušenie je každá úloha priradená priamo organizácií pre zlepšenie rýchlosti získania výsledku a zjednodušenia ich nájdenia. A nakoniec je každá úloha určitého typu. Každá entita obsahuje primárny kľúč(jedná sa o~silné entitné množiny), ktorý je odvodený od názvu a začína predponou id\_ a pokračuje názvom entity s~CamelCase notáciou(každé slovo začína veľkým písmenom a slová sú spojené dokopy). Poďme sa pozrieť bližšie na jednotlivé entity. Entitná množina tasktype obsahuje 3 položky a to idType, ktorá reprezentuje primárny kľúč, name, ktorý reprezentuje názov plánovacieho problému(napr. N Dám, problém vyváženia cloudu, \ldots) a configuration, ktorá reprezentuje XML konfiguráciu pre daný typ problému. 
+ 
+ 
+Entitná množina organization obsahuje 2 položky jednou z~nich je primárny klúč a ďalšou názov organizácia podľa, ktorej sú zaraďovaný jednotliví užívatelia a úlohy. Ďalej prejdime k~entitnej množine user. Táto entita má rovnako primárny kľúč. Ďalej obsahuje položku pre užívateľské meno(username), heslo(password), email, užívateľskú rolu(role) a cudzí kľúč organization, ktorý obsahuje na odkaz na organizáciu, ku ktorej je užívateľ priradený. Nakoniec prejdime k~entitnej množine task. Táto entitná množina obsahuje primárny kľúč, ďalej obsahuje XML súbor, ktorý reprezentuje danú úlohu, stav úlohy(stateOfTask, ktorý reprezentuje rôzne stavy úlohy), ktoré si podrobnejšie rozobereme. Úloha sa môže nachádzať v~jednom z~nasledujúcich stavov: 
+\begin{itemize} 
+\item NEW - úloha bola vytvorená 
+\item MODIFIED - XML súbor bol modifikovaný 
+\item WAITING - úloha čaká na spracovanie 
+\item IN\_PROGRESS - práve prebieha výpočet 
+\item PAUSED - úloha je pozastavená 
+\item COMPLETE - úloha je dokončená 
+\end{itemize} 
+Entitná množina task ďalej obsahuje položku, ktorá percentuálne hodnotí stav výpočtu úlohy(progressOfTask), čas do skončenia výpočtu úlohy(eta), nastavenie úlohy na privátnu alebo verejnú(permision), názov úlohy(name) a cudzie kľúče user, ktorý odkazuje na užívateľa, ktorým bola úloha vytvorená a organization, ktorá odkazuje na organizáciu užívateľa, ktorým bola vytvorená.
+
+\subsection{Návrh užívateľského rozhrania}
+Výsledné rozhranie kladie dôraz na jednoduchosť a prehľadnosť zobrazených úloh. Z~tohto dôvodu boli implementované mechanizmy vyhľadávania úloh, organizácií a užívateľov. Rovnako možnosti lexikografického triedenia. Jednotlivé možnosti práce so systémom sú zakomponované do rolovacích zoznamov, ktoré sa skladajú z položiek, v~ktorých je sprístupnená príslušná funkčnosť. Výsledné rozhranie je prenositeľné aj na mobilné zaradenie. Užívateľské rozhranie je popísané na nasledujúcom obrázku: 
+\begin{figure}[htb] 
+ 
+\begin{center} 
+ 
+\includegraphics[scale=0.3]{page.jpg}  
+\caption{Ukážka návrhu užívateľského rozhrania pre zobrazenie plánovacích úloh} 
+\label{rozhranie} 
+ 
+\end{center} 
+ 
+\end{figure} 
+Na obrázku č.\ref{rozhranie} môžme vidieť návrh užívateľského rozhrania. Rozhranie je rozdelené do 6 častí, ktoré môžme rozoznať na obrázku číslami od 1 do 6, ktoré sú aj ohraničené. Celé rozhranie môžme rozdeliť do nasledujúcich častí: 
+\begin{itemize} 
+\item Oblasť č.1 predstavuje navigačné menu, kde sú jednotlivé akcie rozdelené do rolovacích zoznamov. Pre kliknutí na príslušný zoznam dôjde k jeho odrolovaniu a zobrazeniu položiek. Po kliknutí na položku dôjde k zmenu obsahu stránky. 
+\item Oblasť č.2 obsahuje informáciu o~prihlásenom užívateľovi, rovnako obsahuje aj tlačidlo Logout, prostredníctvom ktorého sa môže užívateľ z~aplikácie odhlásiť 
+\item Oblasť č.3 predstavuje jednu z~funkčných možností. Jedná sa o~vyhľadávanie, ktoré je zložené zo vstupného prvku, do ktorého zadáme vyhľadávaný reťazec a druhá časť predstavuje menu, z ktorého zvolíme stĺpec podľa, ktorého bude prebiehať vyhľadávanie. Následne je možnosť realizovať tlačidlom Find, ktoré prekreslí obsah tabuľky nižšie a naplní ju nájdenými výsledkami. 
+\item Oblasť č.4 predstavuje tabuľku, ktorá je dynamicky obnovovaná a reaguje na asynchrónne ukladanie dát z~webovej služby. Tabuľka je rozdelená do stĺpcov. Názvy stĺpcov, ktoré sú označené modrou farbou sú zároveň odkazy, na ktoré je možné kliknúť. Po kliknutí na daný odkaz dôjde k~lexikografickému zoradeniu obsahu tabuľky podľa daného stĺpca striedavo vzostupne alebo zostupne. Rád by som upozornil na stĺpec progress, ktorý pre každú úlohu zobrazuje stav spracovania úlohy. Rovnako musím zdôrazniť stĺpec Permission, ktorý zobrazuje, či je úloha verejná alebo privátna. Pokiaľ je úloha verejná(Public), tak je tento odkaz zobrazený modrou farbou, čo znamená, že je to odkaz, preto je možné naň ho kliknúť. Po kliknutí sa zobrazí stránka s~informáciami o~názve úlohy a xml súbore. Tento odkaz je možné následne ľubovolne preposlať a pristupovať k~nemu. V~poslednom rade treba zdôrazniť stĺpec Actions, ktorý je najdôležitejší pre každú úlohu povoľuje sadu akcií. Jednotlivé akcie sú reprezentované tlačidlami, pritom odrážajú aktuálny stav spracovania úlohy spolu s~ďalšími informáciami o~úlohe. 
+\item Oblasť č.5 predstavuje komponentu na stránkovanie, aby pri rozsiahlom obsahu sa nezväčšoval neúmerne veľkosť stránky. 
+\item Oblasť č.6 predstavuje funkčnú oblasť. Táto oblasť je špecifická pre každú stránku, ktorá reprezentuje jej obsah. V~tej oblasti sú umiestnené typicky obsahy databázových tabuliek, nástroje na vyhľadávanie, rôzne akcie, ktoré je možné vykonávať s~dátami, rovnako aj možnosti na vytváranie entít. 
+ 
+\end{itemize} 
+ 
+Zvyšné návrhy rozhrania pre vytvorenie úlohy, editovanie úlohy, spravovanie užívateľov, spravovanie organizácií, zmenu hesla a prihlasovanie je možné dohľadať v~prílohe.  
+        Pre každú akciu ako je napr. vytvorenie úlohy, vytvorenie nového typu úlohy, zobrazenie užívateľov, plánovacích úloh, \ldots je vytvorená samostatná XHTML stránka, ktorá je obsluhovaná z hlavnej managed beany, ktorá realizuje všetky akcie a uchováva všetky potrebné stavy pre ďalšiu prácu.  
+ 
+Pre výsledné rozhranie je použitý framework Twitter Bootstrap \ref{bootkap}, z ktoré sú použité dostupné komponenty pre vytváranie menu, vyskakovacie okná a ikony.

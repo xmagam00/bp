@@ -1,4 +1,60 @@
-\chapter{Úvod}
+
+
+
+\chapter{Implementácia}\label{implc}
+Kapitola pojednáva o~oboch èastiach systému pre monitorovanie stavu plánovacích úloh. Najprv rozoberieme èas» systému pre u¾ívateµské rozhranie \ref{approz} a následne èas» plánovania (PlannerService) \ref{plannerapp}, ktorá zabezpeèuje rie¹enie plánovacích úloh. Pozrieme sa na problematiku spojenú s prihlasovaním a prípadnú validáciu údajov a navigáciu po úspe¹nom prihlásení. Rovnako bude rozobratý princíp komunikácie èasti u¾ívateµského rozhrania s plánovacou èas»ou systému prostredníctvom webovej slu¾by na úrovni implementácie. Na záver uvedieme postup testovania systému monitorovania spolu s vyhodnotením a jej mo¾ným roz¹írením.
+ 
+ 
+\section{Aplikácie pre u¾ívateµské rozhranie}\label{approz} 
+Aplikácie pre u¾ívateµské rozhranie, ktorá je schopná zobrazova» informácie o~úlohách, u¾ívateµoch a organizáciach a umo¾òova» ich správu. Aplikácia je rozdelená do 2 modulov kvôli závislosti plánovacej èasti systému na 1 z modulov: 
+\begin{itemize} 
+\item Rodièovský modul, ktorý je rozdelený do 5 balíkov.
+\item Modul Entities, ktorý je rozdelený do 1 balíka a obsahuje entitné triedy pre objektovo-relaèné mapovanie databáze. Obsahuje triedy, ktorých názvy odpovedajú názvom databázových tabuliek. 
+\end{itemize} 
+Rodièovský modul sa delí na nasledujúce balíky: 
+\begin{itemize} 
+\item org.jboss.optaplanner.controller.database - balík obsahuje triedu, ktorá zabezpeèuje operácie pre vytvorenie, mazanie, editáciu alebo vyhµadanie dát v databáze 
+\item org.jboss.optaplanner.controller.beans - balík obsahuje managed beany, ktoré zabezpeèujú uchovávanie dát a vykonanie akcií spojených s prihlasovaním a hlavnú managed bean-u(AdministratorBean), ktorá realizuje v¹etky operácie od zobrazenia u¾ívateµov, organizácií, plánovacích úloh a¾ po ich editáciu, mazanie a vytváranie 
+\item org.jboss.optaplanner.controller.service - tento balík obsahuje triedy, ktoré zabezpeèujú komunikáciu s plánovacou èas»ou systému
+\item org.jboss.optaplanner.controller.restservice - balík obsahuje triedu pre vytvorenie RESTful webovej slu¾by, ktorá slú¾i k zverejòovaniu informácií o plánovacích úlohách 
+\item org.jboss.optaplanner.controller.model - balík obsahuje triedy, ktoré mapujú príslu¹né entitné triedy, ktoré dopåòajú o ïal¹ie informácie 
+\end{itemize} 
+ 
+Komunikácia s databázou je realizovaná prostredníctvom aplikaèného servera. Základom je správne nastavený súbor persistence.xml, v ktorom sú uvedené informácie o entitných triedach a odkaz na datasource aplikaèného servera(¹peciálna definícia v rámci aplikaèného servera, ktorá obsahuje informácie o databáze a prihlasovacie údaje).
+	
+
+\subsection{Prihlasovanie}
+Základom prihlasovania sú komponenty na stránke Login.xhtml pre zadanie mena a hesla u¾ívateµa. Údaje sú následné spracované v~managed bean-e(triede) s~názvom LoginBean, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.beans. Táto trieda rovnako obsahuje aj validátory(metódy validateUsername/validatePassword), ktoré kontrolujú existenciu u¾ívateµa a validitu hesla. V prípade, ¾e u¾ívateµ neexistuje alebo je zadané nevalidné heslo je zobrazená komponenta h:outputText, ktorá zabezpeèí zobrazenie príslu¹nej informácie. 
+ 
+  
+V~prípade, ¾e validácia prebehne úspe¹ne zavolá sa metóda authenticate z moduly Seam Security. Táto metóda získa u¾ívateµskú rolu zadaného u¾ívateµa a ID u¾ívateµa, ktorú následne vlo¾í do ¾ivotného cyklu aplikácie pomocou metódy setUser, ktorá je súèas» balíku org.picketlink.idm.api.User. 
+
+Úspe¹né prihlásenie je dané nastavením metódy setStatus na hodnotu SUCCESS, v~prípade, ¾e validácia údajov neprebehne úspe¹ne sa nastaví metóda setStatus na hodnotu FAILURE. Po uspe¹nom prihlásení je mo¾né identitu u¾ívateµa získa» nainjektovaním(uvedením anotácie @Inject) pred triedu Identity, z~ktorej je mo¾né získa» prihlasovacie meno u¾ívateµa, ktoré sa zobrazuje na stránke. 
+ 
+Po prihlásení u¾ívateµa je realizovaná navigácia u¾ívateµa na stránku Tasks.xhtml. Navigácia je implementovaná pomocou pravidla v súbore faces-config.xml. Rozlí¹enie u¾ívateµskej role pri prihlasovaní je dané zobrazovaním polo¾iek v menu aplikácie prostredníctvom, ktorého je mo¾né vykonáva» akcie. 
+ 
+Problematika odhlasovania úzko súvisí s~prihlasovaním. Menu aplikácie obsahuje komponentu h:commandButton, ktorá v~atribúte action volá metódu logout. Tá spôsobí zavolanie metódy identity.logout, ktorá odobere identitu daného u¾ívateµa(zamedzí mu opätovnú prístup k~stránke podµa jeho role) a presmeruje ho na prihlasovaciu stránku(Login.xhtml).
+
+\subsection{Komunikácia s~PlannerService}
+Základom komunikácie s~plánovacou èas»ou systém (PlannerService) je vygenerovanie klienta z~WSDL súboru webovej slu¾by. Preto bolo potrebné vykona» nasledovné kroky:
+\begin{itemize}
+\item Nasadenie PlannerService na JBoss
+\item Zavolanie skriptu wsconsume.sh, ktorý je súèas»ou aplikaèného serveru JBoss s~prepínaèom -k a cestou k~WSDL súboru
+\item Skopírovanie vygenerovaných tried do aplikácie pre u¾ívateµské rozhranie do balíku org.jboss.optaplanner.controller.service
+\end{itemize}
+
+Na stránke Tasks.xhtml je zobrazená tabuµka úloh, ktorá pre daný stav úlohy povoµuje rôzne akcie. Jedným z tých akcií je spustenie/pozastavenie behu plánovania úlohy. Pri stlaèení tlaèidla na spustenie úlohy/pozastavenie je zavolaná metóda runTask/pauseTask z triedy AdministratorBean. Táto metóda vytvorí in¹tanciu webovej slu¾by a zavolá jej metódu runTask/pauseTask, ktoré sú súèas»ou koncového bodu webovej slu¾by PlannerService. Tieto metódy sú volané s argumentom ID, ktorý odpovedá ID úlohy, ktorá má by» pozastavená/spustená.
+
+\subsection{Implementácia rozhrania}
+Pre implementáciu rozhrania bola pou¾itá technológia XHTML stránok. Pre ka¾dú u¾ívateµskú rolu sú sprístupnené rovnaké stránky a¾ na to, ¾e do ka¾dej stránky je vlo¾ené menu a to stránkou template.xhtml, prièom polo¾ky menu sú zobrazované podµa u¾ívateµskej role. Stránka template.xhtml obsahuje menu, ktoré je rozdelené do kategórií. V~pravej hornej èasti sa nachádza informácia o~prihlásenom u¾ívateµovi vrátane tlaèidla na odhlásenie.   
+ 
+ 
+Pri kliknutí na danú kategóriu sa vyroluje zoznam, ktorý obsahuje rôzne polo¾ky v závislosti od kategórie. Polo¾ky View Tasks, View Users a View Organition obsahujú komponenty h:datatable z~kni¾nice JSF pre zobrazenie dát úloh, u¾ívateµov a organizácií. Tieto dáta sú pravidelné obnovované z~databáze, èo zabezpeèuje ich aktuálnos» prostredníctvom komponenty a4j:poll, ktorá je vytvorená pre ka¾dú tabuµku a pravidelne volá metódu, ktorá získava údaje z~databáze. Rovnako ka¾dá stránka obsahuje pole pre vyhµadávanie, prièom je mo¾né zvoli» podµa, ktorého ståpca sa bude vyhµadáva». Výsledky sa zobrazia do rovnakej tabuµky (reprezentované komponent h:datatable) prièom zobrazené polo¾ky budú odpoveda» nájdeným výsledkom. Pri vyhµadávaní sa preru¹í obnovovanie obsahu tabuliek a zobrazí sa informácia o~vyhµadávanom re»azci a èasovom razítku kedy bolo vyhµadávanie realizované. S~vyhµadanými polo¾kami je rovnako mo¾né realizova» v¹etky akcie ako s obnovovanými dátami, ktorých obsah je pravidelne obnovovaný. 
+ 
+ Pri ka¾dej polo¾ke v~tabuµke je mo¾né vykonáva» isté akcie ako je vymaza» danú entitu (task, user, organization), po prípade ju editova», alebo vykonáva» mno¾stvo iných akcií. V¹etky akcie je mo¾né vykonáva» prostredníctvom komponenty h:commandButton, ktoré volajú príslu¹né metódy z AdministratorBean. Jednotlivé tlaèidlá reflektujú individuálny stav danej entity (úlohy, u¾ívateµa alebo organizácie). Rovnako je mo¾né jednotlivé entity (organizácie, úlohy, u¾ívateµov) vytvára» prostredníctvom stránok Create Task/Organization/User. Tie zavolajú metódu z triedy AdministratorBean, ktorá zabezpeèí jej vytvorenie a ulo¾enie do databáze. 
+ 
+ Ka¾dú tabuµke je mo¾né aj radi». Radenie prebieha kliknutím na názov ståpca tabuµky (zvýraznený modrou farbou), prièom danú ståpec implementuje funkciu radenia pre daný ståpec. Pri kliknutí na názov ståpca dôjde k~zavolanie metódy(napr. pre ståpec ID sa zavolá metóda sortById), ktorá je daná atribútom action v komponente h:commandLink. Metóda radenia je implementovaná prostredníctvom triedy Collections, ktorá obsahuje metódu sort, ktoré triedia model (trieda, ktorá obsahuje polo¾ky tabuµky) danej entity, ktorá vytvorí komparátor, ktorý porovná 2 polo¾ky daného modelu a upraví ich poradie. 
+ \chapter{Úvod}
 V poslednej dobe sa pre tvorbu rozsiahlych aplikácií, ktoré kladú dôraz na rýchlos», bezpeènos» a transakèné spracovanie pou¾íva trojvrstvový model. Komplexným rie¹ením pre vývoj rozsiahlych informaèných systémov s vyu¾itím trojvrstvového modelu je platforma Java Enterprise Edition, ktorá zahàòa mno¾stvo technológií pre prístup k relaèným databázam, pre podporu webových slu¾ieb, pre vývoj zdieµanej podnikovej logiky, \ldots .
 
 Cieµom tejto práce bolo vytvorenie systému monitorovania stavu plánovacích úloh, ktorý bol zadaný spoloènos»ou Red Hat. Tento systém je schopný rie¹i» rozlièné plánovacie problémy reprezentované definièným súborom vo formáte XML. Rie¹enie takto zadaných plánovacích problémov je realizované frameworkom OptaPlanner, ktorý na základe pravidiel a definièného súboru pre danú úlohu sa pokúsi nájs» najlep¹ie rie¹enie na základe plánovania problému, ktoré poskytne ako výsledok vo forme XML súboru, ktoré reprezentuje najlep¹ie dosiahnuté rie¹enie. Rovnako je proces analýzy a vývoja výsledného systému obsahom tejto správy.
@@ -531,11 +587,11 @@ Pre publikovanie bola zvolená jednoduch¹ia varianta webovej slu¾by a to RESTful 
 \begin{itemize}
 \item Neprihlásený u¾ívateµ - V prípade pokusu o prístupu k verejnej úlohe bude zobrazený jej názov a XML definièný súbor. V prípade pokusu k neverejnej slu¾be bude vrátený prázdny obsah stránky.
 \item Prihlásený u¾ívateµ podµa u¾ívateµskej role:
-							 \begin{itemize}
-							\item Administrátor - Má prístup k v¹etkým plánovacím úlohám
-							\item Plánovaè - Má prístup k úlohám v rámci organizácie, do ktorej patrí
-							\item Èitateµ - Má prístup k úlohám v rámci organizácie, do ktorej patrí
-							\end{itemize}
+                             \begin{itemize}
+                            \item Administrátor - Má prístup k v¹etkým plánovacím úlohám
+                            \item Plánovaè - Má prístup k úlohám v rámci organizácie, do ktorej patrí
+                            \item Èitateµ - Má prístup k úlohám v rámci organizácie, do ktorej patrí
+                            \end{itemize}
 
 
 \end{itemize}
@@ -632,80 +688,17 @@ Zvy¹né návrhy rozhrania pre vytvorenie úlohy, editovanie úlohy, spravovanie u¾ív
         Pre ka¾dú akciu ako je napr. vytvorenie úlohy, vytvorenie nového typu úlohy, zobrazenie u¾ívateµov, plánovacích úloh, \ldots je vytvorená samostatná XHTML stránka, ktorá je obsluhovaná z hlavnej managed beany, ktorá realizuje v¹etky akcie a uchováva v¹etky potrebné stavy pre ïal¹iu prácu.  
  
 Pre výsledné rozhranie je pou¾itý framework Twitter Bootstrap \ref{bootkap}, z ktoré sú pou¾ité dostupné komponenty pre vytváranie menu, vyskakovacie okná a ikony.
-
-
-\chapter{Implementácia}\label{implc}
-Kapitola pojednáva o~oboch èastiach systému pre monitorovanie stavu plánovacích úloh. Najprv rozobereme aplikáciu pre u¾ívateµské rozhranie \ref{approz} a následne PlannerService \ref{plannerapp}, ktorá zabezpeèuje rie¹enie plánovacích úloh. Pozrieme na problematiku spojenú s prihlasovaním a prípadnú validáciu údajov a navigáciu po úspe¹nom prihlásení. Rovnako bude rozobratý princíp komunikácie èasti u¾ívateµského rozhrania s plánovacou èas»ou systému prostredníctvom webovej slu¾ny na úrovni implementácie. Na záver uvedieme postup testovania systému monitorovania spolu s vyhodnotením a jej mo¾ným roz¹írením.
  
- 
-\section{Aplikácie pre u¾ívateµské rozhranie}\label{approz} 
-Aplikácie pre u¾ívateµské rozhranie, ktorá je schopná zobrazova» informácie o~úlohách, u¾ívateµoch a organizáciach a umo¾òova» ich správu. Aplikácia je rozdelená do 2 modulov kvôli závislosti èasti systému na 1 z modulov: 
-\begin{itemize} 
-\item Rodièovský modul, ktorý je rozdelený do 5 balíkov 
-\item Modul Entities, ktorý obsahuje entitné triedy pre objektovo-relaèné mapovanie databáze. Obsahuje triedy, ktorých názvy odpovedajú názvom databázových tabuliek. 
-\end{itemize} 
-Rodièovský modul sa delí na nasledujúce balíky: 
-\begin{itemize} 
-\item org.jboss.optaplanner.controller.database - balík obsahuje triedu, ktorá zabezpeèuje operácie pre vytvorenie, mazanie, editáciu alebo vyhµadanie dát v databáze 
-\item org.jboss.optaplanner.controller.beans - balík obsahuje managed beany, ktoré obsluhujú uchovávanie dát o prihlasovaní a vykonávanie v¹etkých akcií spojených s týmto problémom, ïalej obsahuje hlavnú managed bean-u(AdministratorBean), ktorá realizuje v¹etky operácie od zobrazenia u¾ívateµov, organizácií, plánovacích úloh a¾ po ich editáciu, mazanie a vytváranie 
-\item org.jboss.optaplanner.controller.service - tento balík obsahuje triedy, ktoré zabezpeèujú komunikáciu s plánovacou èas»ou 
-\item org.jboss.optaplanner.controller.restservice - balík obsahuje triedu pre vytvorenie RESTful webovej slu¾by, ktorá slú¾i k zverejòovaniu informácií o plánovacích úlohách 
-\item org.jboss.optaplanner.controller.model - balík obsahuje triedy, ktoré mapujú príslu¹né entitné triedy, ktoré dopåòajú o ïal¹ie informácie 
-\end{itemize} 
- 
-Komunikácia s databázou je realizovaná prostredníctvom aplikaèného servera. Základom je správne nastavený súbor persistence.xml, v ktorom sú uvedený informácie o entitných triedach a odkaz na datasource aplikaèného servera(¹peciálna definícia v rámci aplikaèného servera, ktorá obsahuje informácie o databáze a prihlasovacích údajov, prièom zabezpeèí jej sprístupnenie).
-	
-
-\subsection{Prihlasovanie}
-Základom prihlasovania sú komponenty na stránke Login.xhtml pre zadanie mena a hesla u¾ívateµa. Údaje sú následné spracované v~managed bean-e(triede) s~názvom LoginBean, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.beans. Táto trieda rovnako obsahuje aj validátory(metódy validateUsername/validatePassword), ktoré kontrolujú existenciu u¾ívateµa a validitu hesla. V prípade, ¾e u¾ívateµ neexistuje alebo je zadané nevalidné heslo je zobrazená komponenta h:outputText, ktorá zabezpeèí zobrazenie príslu¹nej informácie. 
- 
-  
- 
-V~prípade, ¾e validácia prebehne úspe¹ne zavolá sa metóda authenticate z moduly Seam Security. Táto metóda získa u¾ívateµskú rolu zadaného u¾ívateµa a ID u¾ívateµa, ktorú následne vlo¾í do ¾ivotného cyklu aplikácie pomocou metódy setUser, ktorá je súèas» balíku org.picketlink.idm.api.User. 
- 
-Po prihlásení u¾ívateµa je realizovaná navigácia u¾ívateµa na stránku Tasks.xhtml. Navigácia je implementovaná pomocou pravidla v súbore faces-config.xml. 
- 
-Úspe¹né prihlásenie je dané nastavením metódy setStatus na hodnotu SUCCESS, v~prípade, ¾e validácia údajov neprebehne úspe¹ne sa nastaví metóda setStatus na hodnotu FAILURE. Po uspe¹nom prihlásení je mo¾né identitu u¾ívateµa získa» nainjektovaním(uvedením anotácie @Inject) pred triedu Identity, z~ktorej je mo¾né získa» prihlasovacie meno u¾ívateµa, ktoré sa zobrazuje na stránke. 
- 
-Rozlí¹enie u¾ívateµskej role pri prihlasovaní je dané zobrazovaním polo¾iek v menu aplikácie prostredníctvom, ktorého je mo¾né vykonáva» akcie. 
- 
- 
- 
-Problematika odhlasovania úzko súvisí s~prihlasovaním. Menu aplikácie obsahuje komponentu h:commandButton, ktorá v~atribúte action volá metódu logout. Tá spôsobí zavolanie metódy identity.logout, ktorá odobere identitu daného u¾ívateµa(zamedzí mu opätovnú prístup k~stránke podµa jeho role) a presmeruje ho na prihlasovacie stránku(Login.xhtml).
-
-\subsection{Komunikácia s~PlannerService}
-Základom komunikácie s~výpoètou èas»ou systému PlannerService je vygenerovanie klienta z~WSDL súboru webovej slu¾by. Preto bolo potrebné vykona» nasledovné kroky:
-\begin{itemize}
-\item Nasadenie PlannerService na JBoss
-\item Zavolanie skriptu wsconsume.sh, ktorý je súèas»ou aplikaèného serveru s~prepínaèom -k a cestou k~WSDL súboru
-\item Skopírovanie vygenerovaných tried do aplikácie pre u¾ívateµské rozhranie do balíku org.jboss.optaplanner.controller.service
-\end{itemize}
-
-Na stránke Tasks.xhtml je zobrazená tabuµka, ktorá pre daný stav úlohy povoµuje rôzne akcie. Jedným z tých akcií je spustenie/pozastavenie behu plánovania úlohy. Pri stlaèení tlaèidla na spustenie úlohy/pozastavenie je zavolaná metóda runTask/pauseTask z triedy AdministratorBean. Táto metóda vytvorí in¹tanciu webovej slu¾by a zavolá jej metódu runTask/pauseTask, ktoré sú súèas»ou koncového bodu webovej slu¾by PlannerService. Tieto metódy sú volané s argumentom ID, ktorý odpovedá ID úlohy, ktorá má by» pozastavená/spustená.
-
-\subsection{Implementácia rozhrania}
-Pre implementáciu rozhrania bola pou¾itá technológia XHTML stránok. Pre ka¾dú u¾ívateµskú rolu sú sprístupnené rovnaké stránky a¾ na to, ¾e do ka¾dej stránky je vlo¾ené menu a to stránkou template.xhtml, prièom polo¾ky menu sú zobrazované podµa u¾ívateµskej role. Stránka template.xhtml obsahuje menu, ktoré je rozdelené do kategórií. V~pravej hornej èasti sa nachádza informácia o~prihlásenom u¾ívateµovi vrátane tlaèidla na odhlásenie.   
- 
- 
-Pri kliknutí na danú kategóriu sa vyroluje zoznam, ktorý obsahuje rôzne polo¾ky v závislosti od kategórie. Polo¾ky View Tasks, View Users a View Organition obsahujú komponenty h:datatable z~kni¾nice JSF pre zobrazenie dát. Tieto dáta sú pravidelné obnovované z~databáze, èo zabezpeèuje ich aktuálnos» prostredníctvom komponenty a4j:poll, ktorá je vytvorená pre ka¾dú tabuµku a pravidelne volá metódu, ktorá získava údaje z~databáze. Rovnako ka¾dá stránka obsahuje pole pre vyhµadávanie, prièom je mo¾né zvoli» podµa, ktorého ståpca sa bude vyhµadáva». Výsledky sa zobrazia do tabuµky(h:datatable) prièom zobrazené polo¾ky budú odpoveda» nájdeným výsledkom. Pri vyhµadávaní sa preru¹í obnovovanie obsahu tabuliek a zobrazí sa informácia o~vyhµadávanom re»azci a èasovom razítku kedy bolo vyhµadávanie realizované. S~vyhµadanými polo¾kami je rovnako mo¾né realizova» v¹etky akcie ako s dátami, ktorých obsah je pravidelne obnovovaný. Po vyhµadávaní treba stlaèi» tlaèidlo Cancel vedµa tlaèidla Find. Toto tlaèidlo spôsobí pre danú tabuµku(users,taks,organizations) získanie aktuálnych dát z~databáze zavolaním metódy z~triedy database, ktorá vytvorí dotaz na získanie aktuálnych dát z~databáze. Tieto dáta sú predané príslu¹nej tabuµke a zároveò sa obnoví obnovovanie obsahu tabuliek. 
- 
- Pri ka¾dej polo¾ke v~tabuµke je mo¾né vykonáva» isté akcie ako je vymaza» danú entitu(task,user,organization), po prípade ju editova», alebo vykonáva» mno¾stvo iných akcií. Akcie pritom reflektujú individuálny stav danej entity. Rovnako je mo¾né jednotlivé entity(organizácie, úlohy, u¾ívateµov) vytvára» prostredníctvom stránok Create Task/Organization/User. Tie zavolajú metódu z triedy AdministratorBean, ktorá zabezpeèí jej vytvorenie a ulo¾enie do databáze. 
- 
- Ka¾dú tabuµke je mo¾né aj radi». Radenie prebieha kliknutím na názov ståpca tabuµky(zvýraznený modrou farbou), prièom danú ståpec implementuje funkciu radenia pre daný ståpec. Pri kliknutí na názov ståpca dôjde k~zavolanie metódy(napr. pre ståpec ID sa zavolá metóda sortById), ktorá je daná atribútom action v komponente h:commandLink. Metóda radenia je implementovaná prostredníctvom triedy Collections, ktorá obsahuje metódu sort, ktoré triedia model(trieda, ktorá obsahuje rovnaké polo¾ky ako príslu¹ná databázová tabuµka) danej entity, ktorá vytvorí komparátor, ktorý porovná 2 polo¾ky daného modelu a upraví ich poradie. 
- 
- 
-Vytváranie úloh(taskov) je zaradené do samostatnej zálo¾ky kvôli lep¹ej prehµadnosti. U¾ívateµ vyplní názov a prostredníctvom komponenty na nahrávanie súboru z~kni¾nice Rich Faces nahrá obsah do databáze. Rovnako zvolí typ plánovacieho problému. Ïalej rozoberme stránku change password, ktorá umo¾òuje si pre daného u¾ívateµa zmeni» heslo, vyplní pritom heslo a potvrdenie heslo a heslo sa zmení. Pre zadanie hesla sú implementované komponenty h:inputSecret, ktoré obsahujú aj validáciu. Po zadaní hesiel dôjde k ich overeniu a následnej zmene.
-
 \subsection{Publikovanie úloh}
-Ïal¹ou podstatnou èas»ou aplikácie pre u¾ívateµské rozhranie je mo¾nos» \\publikova»/odpublikova» úlohu(task). Túto akciu je mo¾né realizova» prostredníctvom tlaèidla v~tabuµke Publish Task/Unpublish Task na stránke Tasks.xhtml. Tieto tlaèidlá nie sú v¾dy prístupné, podmienkou je, ¾e úloha je nastavená ako privátna a nachádza v~stave MODIFIED alebo COMPLETE. Naopak odpublikovanie úlohy je mo¾né kedykoµvek podmienkou je, aby úloha bola nastavená ako verejná(public). 
+Ïal¹ou podstatnou èas»ou aplikácie pre u¾ívateµské rozhranie je mo¾nos» \\publikova»/odpublikova» úlohu (task). Túto akciu je mo¾né realizova» prostredníctvom tlaèidla v~tabuµke úloh Publish Task/Unpublish Task na stránke Tasks.xhtml. Tieto tlaèidlá nie sú v¾dy prístupné, podmienkou je, ¾e úloha je nastavená ako privátna a nachádza v~stave MODIFIED alebo COMPLETE. Naopak odpublikovanie úlohy je mo¾né kedykoµvek podmienkou je, aby úloha bola nastavená ako verejná (public). 
  
- Publikovanie je realizované zavolaním metódy publishTask z managed bean-y. V~tejto metóde dôjde k~zmene stavu úlohy na verejnú, prièom informácia sa ulo¾í do databáze. Následne sa v~ståpci permission zobrazí text Public modrou farbou, ktorý po kliknutí zobrazí názov úlohy a XML súbor plánovacej úlohy. Prièom po kliknutí sa prejde na odkaz url aplikácie/task/id úlohy. Na èas» URL task/id je namapovaná RESTFul webová slu¾ba, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.restservice, kde sa nachádza trieda RESTPublishTask, ktorá reprezentuje práve túto slu¾bu starajúcu sa o~publikovanie úloh. Táto úloha obsahuje v~anotácií @Path() len znak /,èo znamená ¾e sa namapuje na akékoµvek URL, ale namapovanie na re»azec task sa realizuje v~súbore web.xml.  
+ Publikovanie je realizované zavolaním metódy publishTask z triedy AdministratorBean. V~tejto metóde dôjde k zavolaniu metódy changePermission z balíka org.jboss.optaplanner.controller.database. Zavolaním tejto metódy dôjde k zmenu stavu úlohy v databáze na verejnú. Informácia sa spropaguje do tabuµke úloh a následne sa v~ståpci permission zobrazí text Public modrou farbou, ktorý po kliknutí zobrazí názov úlohy a XML súbor plánovacej úlohy. Po kliknutí na odkaz sa zavolá RESTFul webová slu¾ba s parametrom ID úlohy. Na èas» URL task/id je namapovaná RESTFul webová slu¾ba, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.restservice, kde sa nachádza trieda RESTPublishTask, ktorá reprezentuje práve túto slu¾bu starajúcu sa o~publikovanie úloh.
  
- Táto slu¾ba obsahuje 1 metóda getUserById, ktorá dostane ako parameter ID úlohy. Toto id úlohy získa zo zadaného URL. Dôle¾itou anotáciu je anotácia @Produces(), ktorá obsahuje hodnotu text/html, ktorá hovorí, ¾e vrátená odpoveï metódy bude HTML súbor a teda výsledok bude zobrazený v~prehliadaèi. Táto metóda na svojom zaèiatku vytiahne informácie o~úlohe(názov, XML súbor a povolenie). Na základe povolenia urèí, èi je úloha nastavená ako verejná, ak nie je vráti prázdnu stránku. V~prípade, ¾e je úloha verejná vráti stránku, ktorá obsahuje informáciu o~názvu úlohy a XML súbor. Prístup k~tomuto k~tejto slu¾be nie je podmienený prihlásením.
+ Táto slu¾ba obsahuje 1 metóda getUserById, ktorá dostane ako parameter ID úlohy. Toto ID úlohy je získavané zo zadaného URL. Dôle¾itou anotáciu je anotácia @Produces(), ktorá obsahuje hodnotu text/html, ktorá hovorí, ¾e vrátená odpoveï metódy bude HTML súbor a teda výsledok bude zobrazený v~prehliadaèi. Táto metóda na svojom zaèiatku vytiahne informáciu o~úlohe (názov, XML súbor, povolenie a u¾ívateµa spolu s organizáciou, do ktorej je zaradený). Na základe povolenia urèí, èi je úloha nastavená ako verejná, ak nie je vráti prázdnu stránku. V~prípade, ¾e je úloha verejná vráti stránku, ktorá obsahuje informáciu o~názvu úlohy a XML súbor. Prístup k~tomuto k~tejto slu¾be nie je podmienený prihlásením.
 
 
 \subsection{Validácia}
-V¹etky grafické komponenty obsahujú validáciu na neprázdne, niektoré aj na nevalidné údaje(napr. validná emailová adresa). V¹etky komponenty, do ktorých sa zadáva nejaká informácia sú realizované grafickou komponentou h:inputText, ktoré spracovávajú u¾ívateµské vstupy. Ka¾dá komponenta obsahuje atribút required nastavenú na hodnotu true, ktorá spôsobí automatickú validáciu v~prípade nezadanej hodnoty. Ka¾dá komponenta obsahuje aj atribút requiredMessage, ktorý ako hodnotu obsahuje re»azec, ktorý sa zobrazí v~prípade, ¾e nie je zadaná hodnota. Rovnako obsahuje aj atribút ID s~nejakou jedineènou hodnotou pre identifikáciu komponenty. Aby informácia o~nezadaní bola zobrazená je potrebné vytvori» komponentu h:message, ktorá obsahuje atribút for, ktorý obsahuje id h:inputText komponenty, pre ktorú má by» správa zobrazená. Niektoré komponenty(napr. validácia prihlásenia) sú validované na základe validátorov, èo sú metódy. Tento typ validácie je pou¾itý pre stránku Login.xhtml. Takáto metóda nastavia zobrazenie komponenty h:outputText prostredníctvom nastavenia atribútu rendered na hodnotu true, prièom táto komponenta obsahuje text podµa danej situácie(napr. neznámy u¾ívateµ, nevalidné heslo). V~opaènom prípade je komponenta skrytá, teda hodnota atribútu je nastavená na hodnotu false.
+V¹etky grafické komponenty obsahujú validáciu na neprázdne, niektoré aj na nevalidné údaje (napr. validná emailová adresa). V¹etky komponenty, do ktorých sa zadáva nejaká informácia sú realizované grafickou komponentou h:inputText, ktoré spracovávajú u¾ívateµské vstupy. Ka¾dá komponenta obsahuje atribút required nastavenú na hodnotu true, ktorá spôsobí automatickú validáciu v~prípade nezadanej hodnoty. Ka¾dá komponenta obsahuje aj atribút requiredMessage, ktorý ako hodnotu obsahuje re»azec, ktorý sa zobrazí v~prípade, ¾e nie je zadaná hodnota. Rovnako obsahuje aj atribút ID s~nejakou jedineènou hodnotou pre identifikáciu komponenty. Aby informácia o~nezadaní bola zobrazená je potrebné vytvori» komponentu h:message, ktorá obsahuje atribút for, ktorý obsahuje id h:inputText komponenty, pre ktorú má by» správa zobrazená. Niektoré komponenty (napr. validácia prihlásenia) sú validované na základe validátorov, èo sú metódy, ktoré sú zavolá e¹te pred vykonaním akcie tlaèidla. Tento typ validácie je pou¾itý pre stránku Login.xhtml. Takáto metóda nastavia zobrazenie komponenty h:outputText prostredníctvom nastavenia atribútu rendered na hodnotu true, prièom táto komponenta obsahuje text podµa danej situácie(napr. neznámy u¾ívateµ, nevalidné heslo). V~opaènom prípade je komponenta skrytá, teda hodnota atribútu je nastavená na hodnotu false.
 
 
 
@@ -714,7 +707,7 @@ V¹etky grafické komponenty obsahujú validáciu na neprázdne, niektoré aj na neval
 PlannerService predstavuje èas» systému, ktorá zabezpeèuje spracovanie po¾iadavok na plánovanie od aplikácie z~u¾ívateµského rozhrania.  
 Aplikácia vyu¾íva ako závislos» modul Entites z èasti systému u¾ívateµského rozhrania. Aplikácia je rozdelená do nasledovných balíkov: 
 \begin{itemize} 
-\item org.jboss.optaplanner.service - balík obsahuje triedu pre vytvorenie koncového bodu webovej slu¾nu spolu s príslu¹nými metódami na spustenie/pozastavenie plánovania a triedu, v ktorej prebieha samotné plánovanie 
+\item org.jboss.optaplanner.service - balík obsahuje triedu pre vytvorenie koncového bodu webovej slu¾by spolu s príslu¹nými metódami na spustenie/pozastavenie plánovania a triedu, v ktorej prebieha plánovanie 
 \item org.jboss.optaplanner.solver - balík obsahuje triedu, ktorá implementuje metódy na získanie dát, spustenie/pozastavenie èinnosti plánovacieho frameworku 
 \item org.jboss.optaplanner.util - balík obsahuje triedu, ktorej úlohou je deserializácia informácií z XML definièného súboru plánovacieho problému 
  
@@ -722,48 +715,46 @@ Aplikácia vyu¾íva ako závislos» modul Entites z èasti systému u¾ívateµského rozh
 \end{itemize} 
 Komunikácia s databázou je realizovaná prostredníctvom aplikaèného servera. Základom je správne nastavení súbor persistence.xml, v ktorom sú uvedené informácie o entitných triedach a odkaz na datasource aplikaèného servera. 
  
-Základom je trieda OptaPlanerWebService, ktorá predstavuje Big webovú slu¾bu, ktorá je súèas»ou balíku org.jboss.optaplanner.service.server. Táto trieda obsahuje metódy startTask(long id), ktorá má parameter ID úlohy, ktorú má spusti» a pauseTask(long id), ktorá má parameter ID úlohy, ktorej plánovanie má pozastavi». 
+Základom je trieda OptaPlanerWebService, ktorá predstavuje Big webovú slu¾bu, ktorá je súèas»ou balíku org.jboss.optaplanner.service.server. Táto trieda obsahuje metódy startTask (long id), ktorá má parameter ID úlohy, ktorú má spusti» a pauseTask (long id), ktorá má parameter ID úlohy, ktorej plánovanie má pozastavi». 
  
-Metóda runTask vytvorí spojenie s frontou Optaplanner, do ktorej sa vkladajú ID úloh, ktoré majú by» naplánované, pomocou príkazu \uv{sender = session.createProducer(queue)}. Týmto  savytvorí spojenie a príkazom sender.send(message) sa vlo¾í správa do JMS fronty. 
+Metóda runTask vytvorí spojenie s frontou Optaplanner, do ktorej sa vkladajú ID úloh, ktoré majú by» naplánované, pomocou príkazu \uv{sender = session.createProducer (queue)}. Týmto  sa vytvorí spojenie a príkazom sender.send (message) sa vlo¾í správa do JMS fronty. 
  
-V ïal¹ej èasti vstupuje trieda OptaPlannerMessageBean, ktorá reprezentuje Message-bean-u pre príjem správ a ich následné spracovanie. Základom triedy je metóda onMessage(Message message), ktorá asynchrónne spracováva správy vo fronte. Základom je získanie úlohy z databáze, to je realizované príkazom Task task = em.find(Task.class, new Long(msg)). Metóda získa informácie o úlohe a príkazom execute spustí plánovanie. 
+V ïal¹ej èasti vstupuje trieda OptaPlannerMessageBean, ktorá reprezentuje Message-bean-u pre príjem správ a ich následné spracovanie. Základom triedy je metóda onMessage (Message message), ktorá asynchrónne spracováva správy vo fronte. Základom je získanie úlohy z databáze, to je realizované príkazom Task task = em.find(Task.class, new Long(msg)). Metóda získa informácie o úlohe a príkazom execute spustí plánovanie. 
  
-Základom plánovania je cyklus, ktorý testuje korektnos» stavu na RUNNING(be¾iaci) a prebiehajúce plánovanie. V cykle sa z triedy ProblemSolver získava informácia o skóre a kalkulujú a ukladajú sa nové informácie o pokroku a èase do skonèenia do databáze. 
+Základom plánovania je cyklus, ktorý testuje korektnos» stavu na RUNNING (be¾iaci) a prebiehajúce plánovanie. V cykle sa z triedy ProblemSolver získava informácia o skóre a kalkulujú a ukladajú sa nové informácie o pokroku a èase do skonèenia do databáze. 
  
-Po skonèení je z triedy ProblemSolver získané rie¹enie s najlep¹ím skóre metódou getBestSolution(), ktoré sa ulo¾í do databáze. Spolu s ním sa ulo¾í informácie o ukonèení plánovania(zmenu stavu, nastavenie pokroku na 100\%). 
+Po skonèení je z triedy ProblemSolver získané rie¹enie s najlep¹ím skóre metódou getBestSolution (), ktoré sa ulo¾í do databáze. Spolu s ním sa ulo¾í informácie o ukonèení plánovania (zmenu stavu, nastavenie pokroku na 100\%). 
  
  
-Metóda pauseTask(long id) pracuje v princípe veµmi jednoducho. Jej základom je príkaz setStatus(TaskStatus.PAUSED), ktorý zmení stav úlohy na pozastavený. V plánovacom cykle dôjde k poru¹eniu podmienky a ukonèeniu jej priebehu. Pozastavenú úlohu je mo¾né znova spusti» opätovným zavolaním metódy startTask(long id).
+Metóda pauseTask (long id) pracuje v princípe veµmi jednoducho. Jej základom je príkaz setStatus (TaskStatus.PAUSED), ktorý zmení stav úlohy na pozastavený. V plánovacom cykle dôjde k poru¹eniu podmienky a ukonèeniu jej priebehu. Pozastavenú úlohu je mo¾né znova spusti» opätovným zavolaním metódy startTask (long id).
 	
  
 \section{Testovanie systému plánovania}
-Testovanie prebiehalo na serveri JBoss AS 7.1.1 Final najprv prostredníctvom JUnit testov, ktoré mali overi» komplikovanú funkènos» metód. Následne sa pre overenie funkènosti databáze pou¾il framework Arqullian, ktorý umo¾òuje nasadenie tried priamo do kontajneru, èo zjednodu¹uje testovanie. Prostredníctvom tohto frameworku sa testovala celková funkènos» aplikácie.  Postupným budovaním aplikácie sa pristupovalo k~testovaniu navrhnutých èastí. Junit testy boli postupne skon¹truované pre jednoduch¹ie metódy, ako je overenie funkènosti vyhµadávania entít, mazanie entít, pridanie entít do zoznamu úloh.  
+Testovanie prebiehalo na serveri JBoss AS 7.1.1 Final najprv prostredníctvom JUnit testov, ktoré mali overi» komplikovanú funkènos» metód. Následne sa pre overenie funkènosti databáze pou¾il framework Arquillian, ktorý umo¾òuje nasadenie tried priamo do kontajneru, èo zjednodu¹uje testovanie. Prostredníctvom tohoto frameworku sa testovala celková funkènos» aplikácie.  Postupným budovaním aplikácie sa pristupovalo k~testovaniu navrhnutých èastí. Junit testy boli postupne skon¹truované pre jednoduch¹ie metódy, ako je overenie funkènosti vyhµadávania entít, mazanie entít a pridanie entít do zoznamu úloh.  
  
  
-V~ïal¹ej èastie prebiehalo testovanie medzi konkrétnymi u¾ívateµmi. I¹lo o~4 informaticky skúsených u¾ívateµov a 4 laikov. U¾ívatelia testovali celkovú funkènos» aplikácie a hµadali prípadné chyby, ktoré neodhalilo predo¹lé testovanie. Aplikácia bola vlo¾ená na cloudovú slu¾bu OpenShift, ktorá umo¾nila prístup k~aplikácií prostredníctvom internetu. Následne bol skupine u¾ívateµov predlo¾ený odkaz na nasadenú aplikáciu a prihlasovacie údaje k~u¾ívateµom s~rolami Administrátor, Plánovaè a Èitateµ. 
+V~ïal¹ej èasti prebiehalo testovanie medzi konkrétnymi u¾ívateµmi. I¹lo o~4 informaticky skúsených u¾ívateµov a 4 laikov. U¾ívatelia testovali celkovú funkènos» aplikácie a hµadali prípadné chyby, ktoré neodhalilo predo¹lé testovanie. Aplikácia bola vlo¾ená na cloudovú slu¾bu OpenShift, ktorá umo¾nila prístup k~aplikácií prostredníctvom internetu. Následne bol skupine u¾ívateµov predlo¾ený odkaz na nasadenú aplikáciu a prihlasovacie údaje k~u¾ívateµom s~rolami Administrátor, Plánovaè a Èitateµ. 
  
 U¾ívatelia následne testovali vytváranie u¾ívateµov, organizácií, úloh. Následne mohli sledova» stav spracovania plánovacích úloh. Aplikáciu otestovali pod 2 prehliadaèmi a to Google Chrome vo verzii 34.0 a Mozilla Firefox verzie 28.0. Bol pou¾itý operaèný systém linux 3.13.0-24-generic s~operaèným systémom Kubuntu 14.04. Aplikácia sa správala pod obomi rovnako a korektne. Po odhalení chýb boli chyby ohlásené a odstránené a aplikácia bola následne opä» nasadená. Tento postup sa opakoval a¾ dokým neboli odhalené v¹etky chyby. Na záver zhrniem testy, ktoré boli u¾ívateµmi realizované: 
 \begin{itemize} 
 \item Overenie funkènosti prihlasovania s~validnými/nevalidnými údajmi 
-\item Overenie fukènosti zálo¾ky task(úloh) - mazanie úloh, editovanie úloh, vyhµadávanie úloh vrátanie validácie, publikovanie/odpublikovanie úloh, navigácia medzi stránkami úloh, pri editovaní úlohy sa overovalo skrytie zálo¾ky edit task pri kliknutí na inú zálo¾ku, radenie úloh podµa v¹etkých ståpcov 
-\item Overovanie funkènosti zálo¾ky user(u¾ívateµ) - vytváranie nového u¾ívateµa s~validnými/nevalidnými údajmi, vyhµadávanie u¾ívatelov vrátanie zadania nevalidaných údajov, mazanie u¾ívateµov, editovanie informácií o~u¾ívateµoch, zmena hesla u¾ívateµovi 
-\item Overenie funkènosti zálo¾ky organization(organizácia) - vytváranie organizácie, vrátane vyhµadávania s~validnými/nevalidnými údajmi, radenie organizácii, mazanie organizácií, editovanie názvu organizácie 
-\item Overenie funkènosti zálo¾ky changepassword(zmena hesla) - zmenu hesla s~validnými/nevalidnými údajmi pre aktuálne prihláseného u¾ívateµa 
+\item Overenie funkènosti zálo¾ky task (úloh) - mazanie úloh, editovanie úloh, vyhµadávanie úloh vrátanie validácie, publikovanie/odpublikovanie úloh, navigácia medzi stránkami úloh, pri editovaní úlohy sa overovalo skrytie zálo¾ky edit task pri kliknutí na inú zálo¾ku, radenie úloh podµa v¹etkých ståpcov 
+\item Overovanie funkènosti zálo¾ky user (u¾ívateµ) - vytváranie nového u¾ívateµa s~validnými/nevalidnými údajmi, vyhµadávanie u¾ívateµov vrátanie zadania nevalidaných údajov, mazanie u¾ívateµov, editovanie informácií o~u¾ívateµoch, zmena hesla u¾ívateµovi 
+\item Overenie funkènosti zálo¾ky organization (organizácia) - vytváranie organizácie, vrátane vyhµadávania s~validnými/nevalidnými údajmi, radenie organizácii, mazanie organizácií, editovanie názvu organizácie 
+\item Overenie funkènosti zálo¾ky changepassword (zmena hesla) - zmenu hesla s~validnými/nevalidnými údajmi pre aktuálne prihláseného u¾ívateµa 
 \item Testovanie u¾ívateµskej prívetivosti rozhrania skúsenými a laickými u¾ívateµmi, rovnako otestovanie u¾ívateµského rozhrania na mobilnom telefóne 
 \end{itemize} 
  
-Rovnako boli u¾ívateµom predlo¾ené XML súbory pre rie¹enie problému plánovanie cluodu, N Dám a problém obchodného cestujúceho. U¾ívatelia nahrali tieto súbory do systému a sledovali priebeh rie¹enia plánovacieho problému. 
+Rovnako boli u¾ívateµom predlo¾ené XML súbory pre rie¹enie problému plánovanie cluodu, N Dám, vyvá¾enia cloudu a cestovateµského turnaja. U¾ívatelia nahrali tieto súbory do systému a sledovali priebeh rie¹enia plánovacieho problému. 
  
 U¾ívateµské rozhranie bolo otestované pre mobilné telefóny na zariadení HUAWEI Honour 2 s~prehliadaèom Google Chrome 35.0, v~ktorom sa zobrazovalo korektne.
 
-
-
 \section{Vyhodnotenie aplikácie}
-Po testovacej fáze nasledovala fáza vyhodnotenia aplikácie. Cieµovej skupine bol po opravení chýb aplikácie predlo¾ený dotazník, do ktorého výpåòali rôzne informácie, kde dávali spätnú väzby, chyby v~návrhu, rovnako aj v~intuitívnosti ovládania. Cieµovou skupinou aplikácie sú u¾ívatelia bez akejkoµvek predchádzajúcej skúsenosti s~touto aplikáciou s~vekovým rozsahom medzi 20 - 40 rokov. Preto bola aplikácia predlo¾ená najprv u¾ívateµom skúseným, ktorým bol poskytnutý predchádzajúci styk s~aplikáciou a laickým u¾ívateµom, ktorí nemali ¾iadny predchádzajúci styk. Výsledkom zistenia, rovnako vyplývajúce z~výsledku dotazníka je ¾e u¾ívateµské rozhrania a¾ na niektoré èasti je veµmi intuitívne. U¾ívatelia sa ihneï vedeli zorientova» a vykona» danú akciu, vytvori» u¾ívateµa, organizáciu, úlohu. Poèiatoèným problémom bolo zorientovanie sa v tlaèidlách, ktoré neobsahovali popisok. Ten sa mi zobrazil a¾ premiestnení kurzora nad dané tlaèidlo. Po zistení tohto faktu, rovnako aj po zistení faktu pou¾itia kon¹tantných typov ikon pre vkladanie nových údajov, mazanie a vyhµadávanie bolo pre u¾ívateµov veµmi rýchle vykona» danú akciu. Rovnako ocenili rozdelenie tlaèidiel do mrie¾ky, kde rovnaké akcie le¾ali pod sebou, èo im e¹te urýchµovalo celý proces práce s nimi. 
+Po testovacej fáze nasledovala fáza vyhodnotenia aplikácie. Cieµovej skupine bol po opravení chýb aplikácie predlo¾ený dotazník, do ktorého vypåòali rôzne informácie, kde dávali spätnú väzby, chyby v~návrhu, rovnako aj chyby v~intuitívnosti ovládania. Cieµovou skupinou aplikácie sú u¾ívatelia bez akejkoµvek predchádzajúcej skúsenosti s~touto aplikáciou s~vekovým rozsahom medzi 20 - 40 rokov. Preto bola aplikácia predlo¾ená najprv u¾ívateµom skúseným, ktorým bol poskytnutý predchádzajúci styk s~aplikáciou a laickým u¾ívateµom, ktorí nemali ¾iadny predchádzajúci styk. Výsledkom zistenia, rovnako vyplývajúce z~výsledku dotazníka je ¾e u¾ívateµské rozhrania a¾ na niektoré èasti je veµmi intuitívne. U¾ívatelia sa ihneï vedeli zorientova» a vykona» danú akciu, vytvori» u¾ívateµa, organizáciu, úlohu. Poèiatoèným problémom bolo zorientovanie sa v tlaèidlách, ktoré neobsahovali popis. Ten sa mi zobrazil a¾ premiestnení kurzora nad dané tlaèidlo. Po zistení tohto faktu, rovnako aj po zistení faktu pou¾itia kon¹tantných typov ikon pre vkladanie nových údajov, mazanie a vyhµadávanie bolo pre u¾ívateµov veµmi rýchle vykona» danú akciu. Rovnako ocenili rozdelenie tlaèidiel do mrie¾ky, kde rovnaké akcie le¾ali pod sebou, èo im e¹te urýchµovalo celý proces práce s nimi. 
  
  
  
- Rovnako oceòovali mo¾nos» zobrazovanie tlaèidla Save Changes pri editovaní tabuµky vedµa polo¾ky, ktorá je práve editovaná v~danom riadku spolu s tlaèidlom Drop Changes na zahodenie vykonaných zmien. Pri vyhµadávaní ocenili u¾ívatelia zachovanie zadaných informácií pre vyhµadávanie. U¾ívatelia by ocenili pri úlohách ma» mo¾nos» informácie o~èasovom razítku vytvorení úlohy. Prehliadania pomocou tabuliek im pri¹lo ako veµmi vhodné rovnako aj pou¾itie stránkovania. U¾ívateµom chýbala mo¾nos» vyhµadáva» poïla viacerých kritérií súèasne. 
+ Rovnako oceòovali mo¾nos» zobrazovanie tlaèidla Save Changes pri editovaní tabuµky vedµa polo¾ky, ktorá je práve editovaná v~danom riadku spolu s tlaèidlom Drop Changes na zahodenie vykonaných zmien. Pri vyhµadávaní ocenili u¾ívatelia zachovanie zadaných informácií pre vyhµadávanie. U¾ívatelia by ocenili pri úlohách ma» mo¾nos» informácie o~èasovom razítku vytvorení úlohy. Prehliadania pomocou tabuliek im pri¹lo ako veµmi vhodné rovnako aj pou¾itie stránkovania. U¾ívateµom chýbala mo¾nos» vyhµadáva» podla viacerých kritérií súèasne. 
  
  
  
