@@ -1,10 +1,9 @@
-
- \chapter{Úvod}
+\chapter{Úvod}
 V~poslednej dobe sa pre tvorbu rozsiahlych aplikácií, ktoré kladú dôraz na rýchlos», bezpeènos» a transakèné spracovanie pou¾íva trojvrstvový model. Komplexným rie¹ením pre vývoj rozsiahlych informaèných systémov s~vyu¾itím trojvrstvového modelu je platforma Java Enterprise Edition, ktorá zahàòa mno¾stvo technológií pre prístup k~relaèným databázam, pre podporu webových slu¾ieb, pre vývoj zdieµanej podnikovej logiky, \ldots .
 
-Cieµom tejto práce bolo vytvorenie systému monitorovania stavu plánovacích úloh, ktorý bol zadaný spoloènos»ou Red Hat. Tento systém je schopný rie¹i» rozlièné plánovacie problémy reprezentované definièným súborom plánovacieho problému vo formáte XML. Rie¹enie takto zadaných plánovacích problémov je realizované frameworkom OptaPlanner, ktorý na základe pravidiel a definièného súboru pre daný problém sa pokúsi nájs» najlep¹ie rie¹enie na základe plánovania problému, ktoré poskytne ako výsledok vo forme XML súboru, ktoré reprezentuje najlep¹ie dosiahnuté rie¹enie. Rovnako je proces analýzy a vývoja výsledného systému obsahom tejto správy.
+Cieµom tejto práce bolo vytvorenie systému monitorovania stavu plánovacích úloh, ktorý bol zadaný spoloènos»ou Red Hat. Tento systém je schopný rie¹i» rozlièné plánovacie problémy reprezentované definièným súborom plánovacieho problému vo formáte XML. Rie¹enie takto zadaných plánovacích problémov je realizované frameworkom OptaPlanner, ktorý na základe pravidiel a definièného súboru pre daný problém sa pokúsi nájs» najoptimálnej¹ie rie¹enie na základe plánovania problému, ktoré poskytne ako výsledok vo forme XML súboru, ktoré reprezentuje najlep¹ie dosiahnuté rie¹enie. Rovnako je proces analýzy a vývoja výsledného systému obsahom tejto správy.
 
- Nasledujúca kapitola \ref{JavaEE} sa venuje Java Enterprise Edition platforme, rovnako jej trojvrstvovému modelu spolu s~pou¾itými technológiami. \newline \indent V~tretej kapitole \ref{optaplannerC} sa pojednáva postupne od základov problematiky plánovania a¾ po bli¾¹ie vysvetlenie pojmu plánovací problém. V~tejto kapitole sa e¹te oboznámime s~princípom plánovania prostredníctvom frameworku OptaPlanner, rovnako aj jeho konfiguráciou.  \newline \indent V~¹tvrtej kapitole \ref{impl} je prezentovaná ¹pecifikácia po¾iadaviek, rovnako ako aj analýza plánovacieho systému spolu s~návrhom u¾ívateµského rozhrania a databázovej schémy. V~predposlednej kapitole \ref{implc} je uvedená implementácia výsledného systému. Na záver kapitoly sú uvedené metódy a postupy testovania grafického u¾ívateµského rozhrania. V~závereènej kapitole \ref{zaver} je zhrnutý obsah celej práce, sú zhodnotené jej prínosy a mo¾nosti ïal¹ieho roz¹írenia.\newline \indent  V~prílohách nájdeme postup na in¹taláciu a spustenie aplikácie rovnako ako aj kompletný prehµad navrhnutého rozhrania.
+ Nasledujúca kapitola \ref{JavaEE} sa venuje Java Enterprise Edition platforme, rovnako jej trojvrstvovému modelu spolu s~pou¾itými technológiami. \newline \indent V~tretej kapitole \ref{optaplannerC} sa pojednáva postupne od základov problematiky plánovania a¾ po bli¾¹ie vysvetlenie pojmu plánovací problém. V~tejto kapitole sa e¹te oboznámime s~princípom plánovania prostredníctvom frameworku OptaPlanner, rovnako aj jeho konfiguráciou.  \newline \indent V~¹tvrtej kapitole \ref{impl} je prezentovaná ¹pecifikácia po¾iadaviek, rovnako ako aj analýza plánovacieho systému spolu s~návrhom u¾ívateµského rozhrania a databázovej schémy. V~predposlednej kapitole \ref{implc} je uvedená implementácia výsledného systému. Na záver kapitoly sú uvedené metódy a postupy testovania grafického u¾ívateµského rozhrania. V~závereènej kapitole \ref{zaver} je zhrnutý obsah celej práce, sú zhodnotené jej prínosy a mo¾nosti ïal¹ieho roz¹írenia.\newline \indent  V~prílohách nájdeme postup na in¹taláciu systému monitorovania stavu plánovacích úloh a spustenie aplikácie rovnako ako aj kompletný prehµad navrhnutého rozhrania.
 
 
 \chapter{Java Enterprise edition 6}\label{JavaEE}
@@ -12,17 +11,17 @@ Táto kapitola poskytuje prehµad o~platforme Java Enterprise Edition 6 (Java EE 6
 
 
 \section{©pecifikácia platformy}
-Java EE je platforma, ktorá zastre¹uje viaceré technológie a definuje prostriedky urèené pre zjednodu¹enie vývoja podnikových aplikácií \cite{fitweb}. Tieto aplikácie sú rozsiahle, komplexné a kladú dôraz na bezpeènos» a spoµahlivos». Z~dôvodu prehµadnej¹ieho návrhu, implementácie a jednoduch¹ej údr¾by sú tieto aplikácie rozdelené do vrstiev. Týmito vrstvami sú: klient, Java EE Server a databázový server. Rovnako je súèas»ou tejto platformy kolekcia ¹pecifikácií od Sun/Oracle pre vývoj webových aplikácií, podporu webových slu¾ieb, \ldots, ktoré zjednodu¹ujú a zefektívòujú výsledný vývoj. Základom Javy EE je ¹pecifikácia Java SE, ktorá je vyvíjaná prostredníctvom Java Community Process \cite{javase}. Ten predstavuje spoluprácu viacerých firiem, ktoré sa podieµajú na výsledných ¹pecifikáciách platformy.
+Java EE je platforma, ktorá zastre¹uje viaceré technológie a definuje prostriedky urèené pre zjednodu¹enie vývoja podnikových aplikácií \cite{fitweb}. Tieto aplikácie sú rozsiahle, komplexné a kladú dôraz na bezpeènos» a spoµahlivos». Z~dôvodu prehµadnej¹ieho návrhu, implementácie a jednoduch¹ej údr¾by sú tieto aplikácie rozdelené do vrstiev. Týmito vrstvami sú: klient, Java EE Server a externé systémy (napr. databázový server). Rovnako je súèas»ou tejto platformy kolekcia ¹pecifikácií od Sun/Oracle pre vývoj webových aplikácií, podporu webových slu¾ieb, \ldots, ktoré zjednodu¹ujú a zefektívòujú výsledný vývoj. Základom Javy EE je ¹pecifikácia Java SE, ktorá je vyvíjaná prostredníctvom Java Community Process \cite{javase}. Ten predstavuje spoluprácu viacerých firiem, ktoré sa podieµajú na výsledných ¹pecifikáciách platformy.
 
 \section{Trojvrstvový model}\label{kapapp}
 Java EE definuje rozdelenie aplikácie do vrstiev, ktoré medzi sebou komunikujú. Toto rozdelenie sprehµadòuje a uµahèuje vývojové cykly jednotlivých èastí aplikácie \cite{fitweb}. Ka¾dá vrstva je reprezentovaná komponentami, ktoré odpovedajú zodpovednosti danej vrstvy a sú vytvorené technológiami z~platformy Java EE:  
 \begin{itemize} 
 \item Klientská vrstva sa skladá z~klientských komponentov, ktoré be¾ia na klientskom poèítaèi. Táto vrstva sa stará o~spracovanie u¾ívateµských vstupov a ich poslanie na spracovanej strednej vrstve. 
-\item Stredná vrstva sa skladá z~webových a podnikových komponentov, ktoré be¾ia na Java EE serveri, ktorý predstavuje prostredie pre nasadenie, spravovanie a beh podnikových a webových komponent Java EE aplikácie. Táto vrstva definuje logiku systému, keï na jednu stranu pracuje s~u¾ívateµskými vstupmi a na strane druhej ukladá/získava informácie z~najni¾¹ej vrstvy. 
+\item Stredná vrstva sa skladá z~webových a podnikových komponentov, ktoré be¾ia na Java EE serveri, ktorý predstavuje prostredie pre nasadenie, spravovanie a beh podnikových a webových komponentov Java EE aplikácie. Táto vrstva definuje logiku systému, keï na jednu stranu pracuje s~u¾ívateµskými vstupmi a na strane druhej ukladá/získava informácie z~najni¾¹ej vrstvy. 
 \item Najni¾¹ia vrstva predstavuje externé systémy vyu¾ívané Java EE aplikáciou. Typicky sa jedná o~databázový server alebo externé systémy, ktoré oznaèujeme názvom Enterprise Information System (EIS). Úlohou tejto vrstvy je ukladanie a sprístupòovanie dát.
 \end{itemize} 
  
-Na obrázku è. \ref{model} mô¾me vidie» trojvrstvový model Java EE aplikácie:
+
  \begin{figure}[htb]
 
 \begin{center}
@@ -34,17 +33,16 @@ Na obrázku è. \ref{model} mô¾me vidie» trojvrstvový model Java EE aplikácie:
 \end{center}
 
 \end{figure}
-Klient pristupuje k~Java EE aplikácií prostredníctvom webového prehliadaèa, alebo klientskej aplikácie, preto ho delíme nasledovne:
+Na obrázku è. \ref{model} mô¾eme vidie» trojvrstvový model Java EE aplikácie. Klient pristupuje k~Java EE aplikácií prostredníctvom webového prehliadaèa, alebo klientskej aplikácie, preto ho delíme nasledovne:
 \begin{itemize}
     \item Tenký klient - pozostáva z~webového prehliadaèa, ktorý zobrazuje stránky pozostávajúce z~rôzneho znaèkovacieho jazyka. Tenký klient sa dotazuje prostredníctvom Hypertext Transfer protokolu (HTTP), èo je internetový protokol pre výmenu hypertextových dokumentov, na webové komponenty na Java EE serveri.
-    \item Hrubý klient - mô¾e by» reprezentovaný rozliènými Java technológiami pre tvorbu u¾ívateµských rozhraní a mô¾e sa priamo dotazova» podnikových komponentov a preskoèi» tak komunikáciu s~webovými komponentami. 
+    \item Hrubý klient - mô¾e by» reprezentovaný rozliènými Java SE technológiami pre tvorbu u¾ívateµských rozhraní a mô¾e sa priamo dotazova» podnikových komponentov a preskoèi» tak komunikáciu s~webovými komponentami. 
 \end{itemize}
 Úlohou tejto vrstvy je zobrazenie dát pre klienta. Táto vrstva taktie¾ zabezpeèuje spracovanie u¾ívateµských vstupov a ich validáciu.
 
- Stredná vrstva sa delí na webovú vrstvu, ktorá je prezentovaná technológiami JavaServer Faces a JavaServer Pages. Druhá èas» strednej vrstvy, takzvaná podniková vrstva, býva reprezentovaná technológiu Enterprise JavaBeans. Webová vrstva je reprezentovaná webovými komponentami, ktoré spracovávajú po¾iadavky od u¾ívateµa a generujú odpoveï, ktorú posielajú naspä» u¾ívateµovi. Mô¾u pritom komunikova» aj s~podnikovými komponentami pre zistenie dodatoèných informácií (typicky informácií z~databáze). Podniková vrstva je reprezentovaná podnikovými komponentami (beanami), ktoré tvoria logiku aplikácie. Tieto komponenty mô¾u prijíma» po¾iadavky priamo od klienta alebo webovej vrstvy a následne generujú odpovede, prièom mô¾u komunikova» s~najni¾¹ou vrstvou (napríklad komunikova» s~databázovým serverom). Celá vrstva be¾í na Java EE serveri.
+ Stredná vrstva sa delí na webovú vrstvu, ktorá je prezentovaná technológiami JavaServer Faces a JavaServer Pages. Druhá èas» strednej vrstvy, takzvaná podniková vrstva, býva reprezentovaná technológiou Enterprise JavaBeans. Webová vrstva je reprezentovaná webovými komponentami, ktoré spracovávajú po¾iadavky od u¾ívateµa a generujú odpoveï, ktorú posielajú naspä» u¾ívateµovi. Mô¾u pritom komunikova» aj s~podnikovými komponentami pre zistenie dodatoèných informácií (typicky informácií z~databáze). Podniková vrstva je reprezentovaná podnikovými komponentami (beanami), ktoré tvoria logiku aplikácie. Tieto komponenty mô¾u prijíma» po¾iadavky priamo od klienta alebo webovej vrstvy a následne generujú odpovede, prièom mô¾u komunikova» s~najni¾¹ou vrstvou (napríklad komunikova» s~databázovým serverom). Celá vrstva be¾í na Java EE serveri.
 
- Najni¾¹ia vrstva predstavuje rozlièné externé systémy, ktoré aplikácia mô¾e vyu¾íva», èi u¾ sa jedná o~databázový systém, alebo iné systémy, typicky informaèné. Vrstva býva oznaèovaná skratkou EIS (External Information System).
-Úlohou tejto vrstvy je uchovanie, ukladanie a sprístupòovanie dát.
+ Najni¾¹ia vrstva predstavuje rozlièné externé systémy, ktoré aplikácia mô¾e vyu¾íva», èi u¾ sa jedná o~databázový systém, alebo iné systémy, typicky informaèné. Vrstva býva oznaèovaná skratkou EIS (External Information System). Úlohou tejto vrstvy je ukladanie a sprístupòovanie dát.
 
 
 
@@ -53,20 +51,20 @@ Klient pristupuje k~Java EE aplikácií prostredníctvom webového prehliadaèa, aleb
 \subsection{JavaServer Faces}\label{jsfkap}
 JavaServer Faces (JSF) je framework urèený pre tvorbu u¾ívateµských rozhraní webových aplikácií v~jazyku Java \cite{jsfbook}.  Výsledné u¾ívateµské rozhranie stavia zo základných grafických komponentov, ktoré framework obsahuje alebo pomocou vlastne definovaných komponentov. 
  
-Komponenty si udr¾ujú svoj stav, napriek tomu, ¾e tento framework pracuje s~bezstavovým protokolom HTTP. Tieto po¾iadavky sú obsluhované ¹tandardnou cestou, ktorú nazývame ¾ivotný cyklus spracovania po¾iadavky. Framework vytvára aplikácie na základe návrhového vzoru Model-View-Controller (MVC), ktorý oddeµuje logiku aplikácie od prezentaènej èasti. MVC pracuje s~nasledujúcimi princípmi: 
+Komponenty si udr¾ujú svoj stav, napriek tomu, ¾e tento framework pracuje s~bezstavovým protokolom HTTP. Tieto po¾iadavky sú obsluhované ¹tandardnou cestou, ktorú nazývame ¾ivotný cyklus spracovania po¾iadavky \cite{jsfbook}. Framework vytvára aplikácie na základe návrhového vzoru Model-View-Controller (MVC), ktorý oddeµuje logiku aplikácie od prezentaènej èasti. MVC pracuje s~nasledujúcimi princípmi: 
 \begin{itemize} 
 \item Model - ¹pecifická reprezentácia dát, s~ktorými pracuje aplikácia 
 \item View - prevádza dáta aplikácie vhodné do podoby prezentácie u¾ívateµa 
 \item Controller - reaguje na udalosti, typicky od klienta a zabezpeèuje zmeny v~model alebo view 
 \end{itemize} 
-V~JSF je controller implementovaný triedou FacesServlet, ktorá je súèas»ou frameworku. Tá zabezpeèuje spracovanie jednotlivých po¾iadavok, ktoré prichádzajú z~URL adresy stránky aplikácie. Spracovanie po¾iadavky je dané ¾ivotným cyklom spracovania po¾iadavky \cite{jsfbook}. 
+V~JSF je controller implementovaný triedou FacesServlet, ktorá je súèas»ou frameworku. Tá zabezpeèuje spracovanie jednotlivých po¾iadavok, ktoré prichádzajú z~URL adresy stránky aplikácie.
  
 Model tvoria triedy, ktorých premenné a metódy sú zviazané s~komponentami v~prezentaènej èasti. Tieto triedy majú meno prostredníctvom, ktorého sú adresované a rozsah ich ¾ivotnosti v~aplikácií. 
  
 Prezentaèná vrstva je zlo¾ená zo stránok, ktoré sa oznaèujú ako facelets. Tie urèujú pou¾ité komponenty rozhrania a rovnako definujú mapovanie premenných a metód z~modelu. 
- 
+ \newpage
 \subsubsection{®ivotný cyklus spracovania po¾iadavky} 
-Celý ¹tandardný cyklus cyklus spracovania po¾iadavky a následne generovania odpovedi je popísaný na nasledujúcom obrázku: 
+Celý ¹tandardný cyklus spracovania po¾iadavky a následné generovanie odpovedi je popísaný na nasledujúcom obrázku. 
 \begin{figure}[htb] 
  
 \begin{center} 
@@ -78,20 +76,20 @@ Celý ¹tandardný cyklus cyklus spracovania po¾iadavky a následne generovania odpo
 \end{center} 
  
 \end{figure} 
-Na obrázku è. \ref{lifecycle} mô¾me vidie» ¾ivotný cyklus JSF aplikácie. Celý ¾ivotný cyklus spracovania po¾iadavky sa zo 6 fáz: Restore View, Apply Request values, Process validation, Update model values, Invoke application, Render response.
+Na obrázku è. \ref{lifecycle} mô¾eme vidie» ¾ivotný cyklus JSF aplikácie. Celý ¾ivotný cyklus spracovania po¾iadavky sa skladá zo 6 fáz: Restore View, Apply Request values, Process validation, Update model values, Invoke application, Render response.
 
- Cyklus sa zaèína fázou Restore View, keï je kliknuté na tlaèidlo alebo na odkaz sa vytvorí náhµad stránky, spoja sa v¹etky spracovania udalostí, validátory a komponenty sa ulo¾ia do in¹tancie FacesContext-u. V~ïal¹ej fáze Apply Request Values je vytvorený strom komponentov zo stránky a sú získané nové hodnoty pou¾itím metódy decode. Hodnoty sú potom ulo¾ené lokálne do komponentov. Pokiaµ nastane chyba, tak je propagovaná a generovaná do FacesContext-u. Na konci tejto fáze sa vykoná znova dekódovanie. Vo fáze Process Validation sa spracujú v¹etky registrované validátory ku komponentom. Pokiaµ nastala chyba, tak je táto informácia ulo¾ená do FacesContext-u. Poèas ïal¹ej fázy Update Model Values sa nastaví do komponentov lokálne nové hodnoty. Poèas predposlednej fáze Invoke Application sú spracované rozlièné ¾iadosti ako potvrdzovanie formulára alebo odkaz na inú stránku. V~poslednej fáze Render Response dôjde k~¾iadosti o~vytvorenie stránky s~novými hodnotami v~kontajneri \cite{jsfbook}.
+ Cyklus sa zaèína fázou Restore View, keï je kliknuté na tlaèidlo alebo na odkaz vytvorí sa náhµad stránky, spoja sa v¹etky spracovania udalostí, validátory a komponenty sa ulo¾ia do in¹tancie FacesContext-u. V~ïal¹ej fáze Apply Request Values je vytvorený strom komponentov zo stránky a sú získané nové hodnoty pou¾itím metódy decode. Hodnoty sú potom ulo¾ené lokálne do komponentov. Pokiaµ nastane chyba, tak je propagovaná a generovaná do FacesContext-u. Na konci tejto fáze sa vykoná znova dekódovanie. Vo fáze Process Validation sa spracujú v¹etky registrované validátory ku komponentom. Pokiaµ nastala chyba, tak je táto informácia ulo¾ená do FacesContext-u. Poèas ïal¹ej fázy Update Model Values sa nastavia do komponentov lokálne nové hodnoty. Poèas predposlednej fáze Invoke Application sú spracované rozlièné ¾iadosti ako potvrdzovanie formulára alebo odkaz na inú stránku. V~poslednej fáze Render Response dôjde k~¾iadosti o~vytvorenie stránky s~novými hodnotami v~kontajneri \cite{jsfbook}.
  
 
 \subsubsection{Facelets}
 Facelets oznaèuje deklaratívny jazyk pre tvorbu prezentaènej èasti. Táto technológia nahradila star¹iu technológiu JavaServer Pages \cite{jspbook}. Výhodou je oddelenie prezentaènej èasti od aplikaènej logiky, prièom pre tvorbu stránok je pou¾itá technológia XHTML \cite{xhtmlbook}.
 
-Pri prelo¾ení aplikácie sa vytvorí zo stránky strom komponent, nad ktorými sú následne vykonávané operácie. Tieto komponenty sú typicky rozdelené podµa ich ¹pecifickej funkcie do kni¾níc. Pred pou¾itím komponentu z~kni¾nice je potrebné definova» menný priestor kni¾nice, z~ktorého komponenta pochádza. Pri prelo¾ení aplikácie dochádza k~vygenerovaniu príslu¹ného komponentu na stránke, prièom typicky ide o~HTML grafické komponenty alebo o~komponenty definované v~rámci kni¾nice daného menného priestoru.
+Pri prelo¾ení aplikácie sa vytvorí zo stránky strom komponentov, nad ktorými sú následne vykonávané operácie. Tieto komponenty sú typicky rozdelené podµa ich ¹pecifickej funkcie do kni¾níc. Pred pou¾itím komponentu z~kni¾nice je potrebné definova» menný priestor kni¾nice, z~ktorého komponent pochádza. Pri prelo¾ení aplikácie dochádza k~vygenerovaniu príslu¹ného komponentu na stránke, prièom typicky ide o~HTML grafické komponenty alebo o~komponenty definované v~rámci kni¾nice daného menného priestoru.
 
 \subsubsection{Managed Beany}
-Managed Beany sú triedy, ktoré sú definované v~súbore faces-config.xml alebo sú anotované anotáciu @ManagedBean. Tieto triedy zhroma¾ïujú dáta z~prezentaènej èasti. Managed Beany sú definované ich menom a rozsahom platnosti. ManagedBean-a je spravovaná automaticky, teda v~prípade, ¾e na stránke nachádza výraz po¾adujúci hodnotu z~modelu JavaServer Faces automaticky zabezpeèí priradenie konkrétnej Managed Bean-e. Pre prepojenie prezentaènej èasti a Managed Beany sa pou¾íva ¹peciálny jazyk, ktorý sa nazýva Expression Language (EL) \cite{jsfbook}. Tento jazyk zabezpeèuje obojsmerné viazanie hodnôt medzi komponentami a Managed Beany. JSF zabezpeèuje pravidelné aktualizácie hodnôt v~Managed Bean-e v~rámci fáze aktualizácie hodnôt.
+Managed Beany sú triedy, ktoré sú definované v~súbore faces-config.xml alebo sú anotované anotáciou @ManagedBean. Tieto triedy zhroma¾ïujú dáta z~prezentaènej èasti. Managed Beany sú definované ich menom a rozsahom platnosti. ManagedBean-a je spravovaná automaticky, teda v~prípade, ¾e na stránke nachádza výraz po¾adujúci hodnotu z~modelu JavaServer Faces automaticky zabezpeèí priradenie konkrétnej Managed Bean-e. Pre prepojenie prezentaènej èasti a Managed Beany sa pou¾íva ¹peciálny jazyk, ktorý sa nazýva Expression Language (EL) \cite{jsfbook}. Tento jazyk zabezpeèuje obojsmerné viazanie hodnôt medzi komponentami a Managed Beany. JSF zabezpeèuje pravidelné aktualizácie hodnôt v~Managed Bean-e v~rámci fáze aktualizácie hodnôt (Update Model Values).
 
-\subsection{Navigácia}
+\subsubsection{Navigácia}
 Framework JSF definuje navigáciu medzi stránkami vytvorenými rôznymi znaèkovacími jazykmi po vykonaní nejakej akcie (napr. kliknutí na odkaz, tlaèidlo) na základe sady navigaèných pravidiel ulo¾ených v~súbore faces-config.xml. Ka¾dé navigaèné pravidlo definuje za akých podmienok má prebieha» navigácia z~jednej stránky na stránku ïal¹iu. Navigaèné pravidlá sú aplikované na základe aktuálne zobrazenej stránky. Po vybratí navigaèné pravidla je prístup na ïal¹iu stránku závislý od invokaènej metódy komponentu a logického výsledku referencovaného komponentom.
 
 
@@ -120,12 +118,12 @@ Framework JSF definuje navigáciu medzi stránkami vytvorenými rôznymi znaèkovacím
 
 Na obrázku è. \ref{navig} je uká¾ka navigaèného pravidla ulo¾eného v~súbore faces-config.xml pre JSF aplikáciu:
 \begin{itemize}
-\item Na riadku è. 1 je uvedená párová znaèka <navigation-rule>, ktorá zaobaµuje 1 navigaèné pravidlo. Takýchto navigaèných pravidiel mô¾e by» v~súbore faces-config.xml viacero.
-\item Na riadku è. 2 je uvedená párová znaèka <from-view-id>, ktorá obsahuje re»azec /login.xhtml. Ten definuje,¾e navigaèné pravidlo je aplikované pokiaµ je zobrazená stránka login.xhtml
-\item Na riadku è.3 je uvedená párová znaèka <navigation-case>. V~jej obsahuje sú uvedený podmienky za akých sa vykoná navigácia, rovnako aj stránka, na ktorú vykoná navigácia
-\item Na riadku è. 4 je uvedená párová znaèka <from-action>, ktorá obsahuje re»azec LoginForm.login. Tá odkazuje na metódu login v~beane LoginForm. Tá definuje, ¾e navigácia bude realizovaná pri zachytení(stlaèení odkazu/tlaèidla) udalosti login
-\item Na riadku è.5 je uvedená párová znaèka <from-outcome>, ktorá obsahuje hodnotu success. Táto znaèka indikuje vykonanie navigácie pri úspe¹nom (bezchybnom) invokovaní metódy na riadku è. 4
-\item Na riadku è. 6 je uvedená znaèka párová <to-view-id>, ktorá obsahuje re»azec /storefront.xhtml. Obsah tejto znaèky definuje, na ktorú stránku bude realizovaná navigácia v~prípade splnenia v¹etkých podmienok uvedených na riadku è.2, è.3, è.4, è.5
+\item Na riadku è. 1 je uvedená párová znaèka $<navigation-rule>$, ktorá zaobaµuje 1 navigaèné pravidlo. Takýchto navigaèných pravidiel mô¾e by» v~súbore faces-config.xml viacero.
+\item Na riadku è. 2 je uvedená párová znaèka $<from-view-id>$, ktorá obsahuje re»azec /login.xhtml. Ten definuje,¾e navigaèné pravidlo je aplikované pokiaµ je aktuálne zobrazená stránka login.xhtml.
+\item Na riadku è.3 je uvedená párová znaèka $<navigation-case>$. V~jej obsahu sú uvedené podmienky za akých sa vykoná navigácia, rovnako aj stránka, na ktorú sa vykoná navigácia.
+\item Na riadku è. 4 je uvedená párová znaèka $<from-action>$, ktorá obsahuje re»azec LoginForm.login. Tá odkazuje na metódu login v~beane LoginForm. Tá definuje, ¾e navigácia bude realizovaná pri zachytení udalosti (stlaèení odkazu/tlaèidla) metódy login.
+\item Na riadku è.5 je uvedená párová znaèka $<from-outcome>$, ktorá obsahuje hodnotu success. Táto znaèka indikuje vykonanie navigácie pri úspe¹nom (bezchybnom) invokovaní metódy login na riadku è. 4.
+\item Na riadku è. 6 je uvedená znaèka párová $<to-view-id>$, ktorá obsahuje re»azec /storefront.xhtml. Obsah tejto znaèky definuje, na ktorú stránku bude realizovaná navigácia v~prípade splnenia v¹etkých podmienok uvedených na riadku è.2, è.4, è.5.
 
 
 
@@ -133,7 +131,7 @@ Na obrázku è. \ref{navig} je uká¾ka navigaèného pravidla ulo¾eného v~súbore face
 
 
 \section{Webová slu¾ba}\label{webkap}
-Webová slu¾ba je sotwarový systém navrhnutý na podporu inteoperability medzi rôznymi zariadeniami prostredníctvom poèítaèovej siete \cite{fitweb}. Komunikácia medzi zariadeniami prebehia prostredníctvom HTTP protokolu vymieòaním Extensible Markup language(XML) správ. XML je znaèkovací jazyk, ktorý definuje sadu pravidiel pre kódovanie dokumentu vo formáte zrozumiteµnom èloveku prostredníctvom µubovoµných znaèiek. 
+Webová slu¾ba je softwarový systém navrhnutý na podporu inteoperability medzi rôznymi zariadeniami prostredníctvom poèítaèovej siete \cite{fitweb}. Komunikácia medzi zariadeniami prebiehia prostredníctvom HTTP protokolu vymieòaním Extensible Markup language(XML) správ. XML je znaèkovací jazyk, ktorý definuje sadu pravidiel pre kódovanie dokumentu vo formáte zrozumiteµnom èloveku prostredníctvom µubovoµných znaèiek. 
  
  Komunikácia prostredníctvom webovej slu¾by sa delí na 2 úèastníkov. Prvý úèastník producent (producer), ktorý vytvára po¾iadavku a spotrebiteµ (consumer), ktorý prijíma po¾iadavku. Komunikácia prebieha medzi týmto dvoma úèastníkmi výmenou správ. Webová slu¾ba mô¾e by» technicky implementovaná rôznymi mo¾nos»ami a to prostredníctvom Big Web Service alebo Restful WebService, prièom v~princípe ide o~java triedy, ktoré obsahujú ¹peciálne definície metód a pri nasadení na Java EE server mô¾u by» vzdialene (po sieti) zavolané \cite{webserbook}.  
  
@@ -142,7 +140,7 @@ Webová slu¾ba je sotwarový systém navrhnutý na podporu inteoperability medzi rôz
 \subsection{Big webová slu¾ba}\label{bigkap} 
 Big webová slu¾ba je druh webovej slu¾by, ktorý pre svoju implementáciu pou¾íva API JAX-WS \cite{fitweb}. Tento typ webovej slu¾by umo¾òuje vytvára» webové slu¾by orientované na správy alebo na techniku vzdialeného volania procedúr (RPC). RPC je technológia, ktorá umo¾òuje volanie metód, ktoré sa nachádzajú na inom mieste, typicky inom mieste poèítaèovej siete.  
  
-Tento typ webovej slu¾by vyu¾íva XML správy, spolu so Simple Object Acess Protocol (SOAP) a XML jazykom. SOAP definuje protokol pre výmenu správ zalo¾ených na jazyku XML prostredníctvom siete a HTTP protokolu. SOAP správy sa skladajú z~hlavièky a tela správy, ktoré obsahuje odpoveï webovej slu¾by alebo po¾iadavku na vyvolanie akcie webovej slu¾by. 
+Tento typ webovej slu¾by vyu¾íva XML správy spolu so Simple Object Access Protocol (SOAP) protokolom. SOAP definuje protokol pre výmenu správ zalo¾ených na jazyku XML prostredníctvom siete a HTTP protokolu. SOAP správy sa skladajú z~hlavièky a tela správy, ktoré obsahuje odpoveï webovej slu¾by alebo po¾iadavku na vyvolanie akcie webovej slu¾by. 
 \begin{figure}[htb] 
  
 \begin{center} 
@@ -154,16 +152,16 @@ Tento typ webovej slu¾by vyu¾íva XML správy, spolu so Simple Object Acess Protoc
 \end{center} 
  
 \end{figure} 
-Nasledujúci obrázok è. \ref{com} ukazuje spôsob komunikácie medzi klientom, ktorý sa nachádza v~µavej èasti obrázku a webovou slu¾bou, ktorá sa nachádza v~pravej èasti obrázku. Komunikácia prebieha prostredníctvom vymieòania SOAP správ.  
+Nasledujúci obrázok è. \ref{com} ukazuje spôsob komunikácie medzi klientom, ktorý sa nachádza v~µavej èasti obrázku a webovou slu¾bou, ktorá sa nachádza v~pravej èasti obrázku. Komunikácia prebieha prostredníctvom vymieòania SOAP správ. Na klientovi aj na webovej slu¾by be¾í JAX-WS API, ktoré zabezpeèuje spracovanie SOAP správy. Pri poslaní po¾iadavku od klienta je po¾iadavok zaobalený do SOAP správy a poslaný prostredníctvom HTTP protokolu. Webová slu¾na prevezme SOAP správu a pomocou JAX-WS API skontroluje jej validity a získa údaje odoslané od klienta.
  
- Tento typ webovej slu¾by obsahuje definíciu vo formáte Web Service Description Language (WSDL). WSDL je definícia vo formáte XML, ktorá popisuje aké akcie webová slu¾ba poskytuje a spôsob ich volania, rovnako aj poskytovanú odpoveï. Správy volania a odpovedí webovej slu¾by sú vymieòané prostredníctvom SOAP správ prostredníctvom HTTP protokolu.  
+ Tento typ webovej slu¾by obsahuje definíciu vo formáte Web Service Description Language (WSDL). WSDL je definícia vo formáte XML, ktorá popisuje aké akcie webová slu¾ba poskytuje a spôsob ich volania, rovnako aj poskytovanú odpoveï. 
  
- JAX-WS API je pomerne komplikované, preto celá komplexnos» je vývojárovi zakrytá a jediné, èo definuje vývojár sú metódy, ktoré je mo¾né vzdialene vola». Rovnako vývojár nespracováva SOAP správy, ale celá táto problematika je rie¹ená prostredníctvom prostredníctvom API. Èo sa týka vývoja webovej slu¾by, tak sa jedná o~jednoduchú javovskú triedu, ktorá pou¾íva anotáciu javax.jws.WebService, konkrétne anotáciu @WebService, ktorá oznaèuje, ¾e sa jedná o~koncový bod webovej slu¾by. Táto trieda následne definuje metódy, ktoré mô¾u by» vzdialené volané. Aby mohla by» metóda metódou webovej slu¾by volaná vzdialene musí by» anotovaná prostredníctvom anotácie javax.jws.WebMethod @WebMethod \cite{webserbook}.
+ JAX-WS API je pomerne komplikované, preto celá komplexnos» je vývojárovi zakrytá a jediné, èo definuje vývojár sú metódy, ktoré je mo¾né vzdialene vola». Rovnako vývojár nespracováva SOAP správy, ale celá táto problematika je rie¹ená prostredníctvom prostredníctvom API. Èo sa týka vývoja webovej slu¾by, tak sa jedná o~jednoduchú javovskú triedu, ktorá pou¾íva anotáciu javax.jws.WebService, ktorá oznaèuje, ¾e sa jedná o~koncový bod webovej slu¾by. Táto trieda následne definuje metódy, ktoré mô¾u by» vzdialené volané. Aby mohla by» metóda metódou webovej slu¾by volaná vzdialene musí by» anotovaná prostredníctvom anotácie javax.jws.WebMethod \cite{webserbook}.
  
 
 
 \subsection{RESTful webová slu¾ba}\label{restkap}
-RESTful webová slu¾ba je druh webovej slu¾by, ktorý pre svoju implementáciu pou¾íva API JAX-RS \cite{fitweb}. Tento druh webovej slu¾by nevy¾aduje striktné pou¾ívanie XML formátu a doruèovanie správ vo formáte SOAP ako Big webová slu¾ba \ref{bigkap}. Tento typ webovej slu¾by je spristupòovaný na základe Uniform Resource Identifier (URI), ktorý predstavuje textový re»azec, ktorý slú¾i k~¹pecifikácií zdroja. K~tomuto je pou¾ívaná anotácia @Path(), ktorej hodnota zabezpeèí namapovanie a teda pomocou nej mô¾me pristupova» k~RESTful webovej slu¾be. Keï¾e táto slu¾ba nemá presne stanovený formát správ, mô¾eme zvoli» z~formátov ako HTML, JSON, PDF, \ldots.  
+RESTful webová slu¾ba je druh webovej slu¾by, ktorý pre svoju implementáciu pou¾íva API JAX-RS \cite{fitweb}. Tento druh webovej slu¾by nevy¾aduje striktné pou¾ívanie XML formátu a doruèovanie správ vo formáte SOAP ako Big webová slu¾ba \ref{bigkap}. Tento typ webovej slu¾by je spristupòovaný na základe Uniform Resource Identifier (URI), ktorý predstavuje textový re»azec, ktorý slú¾i k~¹pecifikácií zdroja. K~tomuto je pou¾ívaná anotácia @Path (), ktorej hodnota zabezpeèí namapovanie a teda pomocou nej mô¾eme pristupova» k~RESTful webovej slu¾be. Keï¾e táto slu¾ba nemá presne stanovený formát správ, mô¾eme zvoli» z~formátov ako HTML, JSON, PDF, \ldots.  
  
 Tento typ slu¾by je bezstavový, tak¾e ka¾dý prístup musí obsahova» v¹etky potrebné informácie, prièom je mo¾né ich oznaèi» ako cachovateµné (uchovávajúce sa vo vyrovnávacej pamäti) kvôli zvý¹eniu výkonnosti. Nevýhodou je, ¾e pri vytváraní klienta a slu¾by musí by» pou¾ité rovnaké rozhranie z~dôvodu explicitnej nepodporovateµnosti jednoznaèného formátu správ pre komunikáciu \cite{webserbook}. Výhodou pou¾itia tohto typu webovej slu¾by je jednoduchos» implementácie producenta a spotrebiteµa.
  
@@ -179,23 +177,23 @@ Java Persistence API (JPA) je framework jazyku Java, ktorá poskytuje prístup a s
 \item Ka¾dá entitná trieda musí ma» ma» unikátny identifikátor. Týmto identifikátorom chápeme primárny kµúè, èo je vlastnos», ktorá doká¾e v~databáze jednoznaène identifikova» záznam. Primárny kµúè býva anotovaný prostredníctvom anotácie \\javax.persistence.Id 
 \end{itemize} 
  
-Jednotlivé entity mô¾u by» vo vz»ahu s~inými entitami. Vo vz»ahu s~databázovými tabuµkami je mo¾né ho analogicky popísa» tak, ¾e nejaká tabuµka je závislá na inej. V~prípade, ¾e vlastnos» entity je súèas»ou vz»ahu s~inou entitou pou¾ívame niektorú z~nasledujúcich anotácií podµa násobnosti vz»ahu: @One-to-one, @One-to-many, @Many-to-one, @Many-to-Many. Následne je uvedená vlastnos»/vlastnosti druhej entity, ktoré sa podieµajú na vz»ahu. Tieto vlastnosti anotujeme anotáciu javax.persistence.JoinColumn, v~ktorej parametroch uvedieme názvy vlastností druhej entity, ktoré sú súèas»ou vz»ahu \cite{jpabook}. 
+Jednotlivé entity mô¾u by» vo vz»ahu s~inými entitami. Vo vz»ahu s~databázovými tabuµ\\kami je mo¾né ho analogicky popísa» tak, ¾e nejaká tabuµka je závislá na inej. V~prípade, ¾e vlastnos» entity je súèas»ou vz»ahu s~inou entitou pou¾ívame niektorú z~nasledujúcich anotácií podµa násobnosti vz»ahu: @One-to-one, @One-to-many, @Many-to-one, @Many-to-Many. Následne je uvedená vlastnos»/vlastnosti druhej entity, ktoré sa podieµajú na vz»ahu. Tieto vlastnosti anotujeme anotáciou javax.persistence.JoinColumn, v~ktorej parametroch uvedieme názvy vlastností druhej entity, ktoré sú súèas»ou vz»ahu \cite{jpabook}. 
  
 Pre prácu s~jednotlivými entitami sa pou¾íva javax.persistence.EntityManager. EntityManager je trieda, ktorá doká¾e vytvára», odstraòova» entity, umo¾òuje ich vyhµadáva», rovnako aj vytvára» dotazy nad databázou. Dotazy, ktoré mô¾me vytvori» pomocou JPA sa podobajú klasickému jazyky Structured Query Language (SQL), ktorý doká¾e vytvára» dotazy nad databázou, av¹ak dotazovací jazyk jazyk JPA má niekoµko rozdielov. Tento jazyk sa nazýva Java Persistence Query Language (JPQL), èo je ako bolo spomenuté jazyk podobný SQL, prièom tento jazyk je re»azcovo zalo¾ený a je nezávislý na zvolenej databázovej technológií a má objektové vlastnosti, èo znamená, ¾e pri tvorbe dotazov pou¾ívame názvy vlastností entitných tried a názvy entitný tried. Problém JPQL je typová nebezpeènos», preto¾e vy¾aduje pretypovanie výsledkov dotazu z~entity manager-a a to mô¾e spôsobi» chyby, ktoré nemusia by» odchytené poèas kompilácie.  
  
-JPA definuje e¹te spôsob dotazovania, ktorý sa nazýva Criteria API, ktoré je vyu¾ívané k~vytváraniu dotazov nad entitami a vz»ahov, ktoré sú typovo bezpeèné. Výhodou tohto API, pre pou¾itie na dotazovanie je mo¾nos» vytvára» dynamické dotazy, ktoré majú lep¹iu výkonnos» ako JPQL.  
+JPA definuje e¹te spôsob dotazovania, ktorý sa nazýva Criteria API, ktoré je vyu¾ívané k~vytváraniu dotazov nad entitami a vz»ahov, ktoré sú typovo bezpeèné. Výhodou tohto API, pre pou¾itie na dotazovanie je mo¾nos» vytvára» dynamické dotazy, ktoré majú lep¹iu výkonnos» ako JPQL.
  
 Pre urèenie, s~ktorými entitami má EntityManager pracova» je pou¾ívaný XML súbor persistence.xml. Tento súbor obsahuje 
 perzistentnú jednotku (persistence unit), èo je XML predpis, do ktorého uvedieme entitné triedy, odkaz na databázu po prípade ïal¹ie vlastnosti. Tento súbor predstavuje konfiguráciu, ktorá obsahuje okrem názvu entitných tried, s~ktorými má EntityManager pracova» aj rôzne iné vlastnosti, napr. automatické vytvorenie schémy databáze z~entitných tried \cite{jpabook}. 
  
-JPA obsahuje API, ktoré je nezávislé nad pou¾itou databázou technológiou, preto je mo¾né vytvára» dotazy nad µubovoµnou databázovou technológiou. Preto je pomerne jednoduché prenies» vytvorenú aplikáciu na iný typ databázovej technológie.
+JPA obsahuje API, ktoré je nezávislé nad pou¾itou databázovou technológiou, preto je mo¾né vytvára» dotazy nad µubovoµnou databázovou technológiou. Preto je pomerne jednoduché prenies» vytvorenú aplikáciu na iný typ databázovej technológie.
  
 
 
 \section{Enterprise JavaBeans}\label{ejbkap}
-Enterprise JavaBeans (EJB) je technológia, ktorá umo¾òuje vytvára» komponenty, ktoré sa nachádzajú v~strednej podnikovej vrstve trojvrstvového aplikaèného modelu \ref{kapapp} \cite{ejbbook}. Tieto komponenty sú modulárne, keï¾e je mo¾né vytvori» a spravova» viac ich in¹tancií. Cieµom týchto komponent je uchovávanie aplikaènej logiky. 
+Enterprise JavaBeans (EJB) je technológia, ktorá umo¾òuje vytvára» komponenty, ktoré sa nachádzajú v~strednej podnikovej vrstve trojvrstvového aplikaèného modelu \ref{kapapp} \cite{ejbbook}. Tieto komponenty sú modulárne, keï¾e je mo¾né vytvori» a spravova» viac ich in¹tancií. Cieµom týchto komponentov je uchovávanie aplikaènej logiky. 
 
-Takéto komponenty komunikujú s~klientom alebo webovými komponentami a na druhej strane mô¾u komunikova» s~EIS vrstvou a vykonávajú/predávajú získané informácie. Na EJB sa mô¾me pozera» aj ako na API platformy Java EE, prostredníctvom, ktorého mô¾me vytvára» triedy, ktoré sú ¹peciálne anotované a obsahujú podnikovú logiku a sú nasadené na Java EE server. Triedy vytvorené týmto API sa nazývajú Enterprise Bean-y(EB).
+Takéto komponenty komunikujú s~klientom alebo webovými komponentami a na druhej strane mô¾u komunikova» s~EIS vrstvou a vykonávajú/predávajú získané informácie. Na EJB sa mô¾eme pozera» aj ako na API platformy Java EE, prostredníctvom, ktorého mô¾me vytvára» triedy, ktoré sú ¹peciálne anotované a obsahujú podnikovú logiku a sú nasadené na Java EE server. Triedy vytvorené týmto API sa nazývajú Enterprise Bean-y(EB).
 
 EB sa delia na 2 kategórie:
 \begin{itemize}
@@ -232,12 +230,12 @@ Podporuje tvorbu databázových procedúr, databázových triggerov, rovnako ukladani
 Ïal¹ími výhodami tejto technológie je jednoduchos» in¹talácie a multiplatformos», preto je mo¾né ju nasadi» na systémy s~operaèným systémom Windows, Linux alebo Mac Os. Medzi nevýhody tejto technológie patrí neefektívna práca s~databázovými transakciami a neefektívne ukladanie veµkého mno¾stva dát \cite{mysqlbook}.
 
 \section{Seam}\label{seamkap}
-Seam je aplikaèný framework pre Javu EE, ktorý definuje uniformný komponentný model pre podnikovú logiku aplikácie \cite{seambook}. Seam rie¹i integráciu EJB \ref{ejbkap} a JSF \ref{jsfkap} spolu. Medzi ïal¹ie výhodné vlastnosti tohto frameworku patrí integrácia Asynchronous JavaScript and XML (Ajax), rovnako aj vstavaná podpora javascriptu a efektívne spracovanie webových dotazov \cite{ajaxbook}.  
+Seam je aplikaèný framework pre Javu EE, ktorý definuje uniformný komponentný model pre podnikovú logiku aplikácie \cite{seambook}. Seam rie¹i integráciu EJB \ref{ejbkap} a JSF \ref{jsfkap} spolu. Medzi ïal¹ie výhodné vlastnosti tohto frameworku patrí integrácia Asynchronous JavaScript and XML (AJAX), rovnako aj vstavaná podpora javascriptu a efektívne spracovanie webových dotazov \cite{ajaxbook}.  
  
 Tento framework obsahuje mno¾stvo modulov od zabezpeèenia aplikácie a¾ po prácu s~emailovou komunikáciou. My sa zameriame na modul Seam Security a Seam Faces. Tieto moduly obsahujú mechanizmy na zabezpeèenie enterprise aplikácie a overovanie u¾ívateµa. 
  
  
-Základom bezpeènosti modulu Seam Security je autentifikácia, èo je proces vytvorenia alebo potvrdenia identity u¾ívateµa. U¾ívateµ potvrdzuje svoju identitu prostredníctvom u¾ívateµského meno a hesla. Seam Security poskytuje API prostredníctvom, ktorého je mo¾né sa autentizova» z~rozlièných zdrojov (databáze, \ldots) \cite{seambook}.  
+Základom bezpeènosti modulu Seam Security je autentifikácia, èo je proces vytvorenia alebo potvrdenia identity u¾ívateµa. U¾ívateµ potvrdzuje svoju identitu prostredníctvom u¾ívateµského meno a hesla. Seam Security poskytuje API prostredníctvom, ktorého je mo¾né sa autentizova» z~rozlièných zdrojov (napr. z databázi, \ldots) \cite{seambook}.  
  
 Ïal¹ou vlastnos»ou je Identity Management, ktoré predstavuje mno¾inu API pre správu u¾ívateµov, skupín a u¾ívateµských rol, ktorá je súèas»ou Seam Security API. Identity Management je poskytovaný Seam komponentom PicketLink IDM, ktorá spravuje ulo¾enie u¾ívateµov v~rozlièných bezpeènostných úlo¾iskách.  
  
@@ -245,7 +243,7 @@ Základom bezpeènosti modulu Seam Security je autentifikácia, èo je proces vytvor
  
  Základom autentifikácie je Identity Bean, èo je java trieda, ktorá reprezentuje identitu u¾ívateµa a pri úspe¹nej autentifikácií je identita vlo¾ená do ¾ivotného cyklu aktuálneho sedenia aplikácie. Týmto spôsobom (prítomnos»ou triedy Identity Bean) sa overuje u¾ívateµ. V~rámci autentifikácie sú definované v~API metódy Login (prihlásenie) a Logout (odhlásenie). Potvrdenie identity u¾ívateµa je realizovaná metódou authenticate, v~ktorej prebieha autentifikácia u¾ívateµa. 
  
-Poèas autentifikácie sa overí pravos» u¾ívateµa a prostredníctvom metódy setStatus sa nastaví úspech (SUCESS) alebo neúspech (FAILURE) pri overení zadaných údajov. Po autentifikácií dôjde k~vlo¾eniu identity u¾ívateµa do ¾ivotného cyklu aplikácie, ktorú je mo¾né získa» z~triedy triedy prostredníctvom anotácie @Inject triedy Identity \cite{seambook}. 
+Poèas autentifikácie sa overí pravos» u¾ívateµa a prostredníctvom metódy setStatus sa nastaví úspech (SUCCESS) alebo neúspech (FAILURE) pri overení zadaných údajov. Po autentifikácií dôjde k~vlo¾eniu identity u¾ívateµa do ¾ivotného cyklu aplikácie, ktorú je mo¾né získa» z~triedy triedy prostredníctvom anotácie @Inject triedy Identity \cite{seambook}. 
  
  Na záver spomenieme modul Seam Faces. Tento modul obsahuje API na zabezpeèenie prístupu k~HTML a XHTML stránkam. Túto funkènos» nazývame Faces View Configuration. Ide vlastne o~súbor, v~ktorom je uvedené, ktorý u¾ívateµ mô¾e pristupova», ku ktorej stránke.
  
@@ -269,8 +267,8 @@ V~prvom rade sa budem venova» nástroju JUnit. JUnit je unit testovací nástroj pr
  
 Testovacie metódy sú anotované prostredníctvom @Test anotácie. JUnit rovnako umo¾òuje vykona» kód pred spustením testu a to docielime anotovaním metód @Before anotáciou alebo po spustení testu a to docielime anotáciou @After pred názvom metódy. V~testovacej metóde potom vykonáme nejaké kód a oèakávaný výstup porovnáme s~nami oèakávaným výsledok prostredníctvom metódy Assert.  
  
- Nakoniec spomeniem nástroj Arquillian. Arquillian je testovací nástroj, ktorý vykonáva testy vo vnútri vzdialeného alebo vstavaného kontajneru alebo nasadí archív\\ (obsahujúci java triedy spolu s~testovacími triedami) na Java EE kontajner (JBoss, Tomcat, \ldots). Arquallian integruje aj ïal¹ie testovacie nástroje, napr. JUnit 4, TestNG 5, \ldots . Tento framework má zásadnú výhodu v~prenositeµnosti testov na rôzne podporované Java EE kontajnery. Nástroj pri spustení automaticky zabalí do archívu v¹etky potrebné prostriedky pre platformu \cite{arqbook}. Pre správny beh testov je potrebné nakonfigurova» XML súbor arquillian.xml.  
-V~tomto súbore sa nastaví kontajner, na ktorý budú testy nasadené a spôsob spustenie testov. 
+ Nakoniec spomeniem nástroj Arquillian. Arquillian je testovací nástroj, ktorý vykonáva testy vo vnútri vzdialeného alebo vstavaného kontajneru alebo nasadí archív (obsahujúci java \\triedy spolu s~testovacími triedami) na Java EE kontajner (JBoss, Tomcat, \ldots). Arquallian integruje aj ïal¹ie testovacie nástroje, napr. JUnit 4, TestNG 5, \ldots . Tento framework má zásadnú výhodu v~prenositeµnosti testov na rôzne podporované Java EE kontajnery. Nástroj pri spustení automaticky zabalí do archívu v¹etky potrebné prostriedky pre platformu \cite{arqbook}. Pre správny beh testov je potrebné nakonfigurova» XML súbor arquillian.xml.  
+V~tomto súbore sa nastaví kontajner, na ktorý budú testy nasadené a spôsob spustenia testov. 
  
  Písanie testov s~nástrojom Arquillian zaèína tvorbou javovskej triedy, ktorá vyzerá ako ¹tandardná testovacia trieda vytvorená nástrojom JUnit.  
   
@@ -285,7 +283,7 @@ Aplikaèný server (AS) je software, ktorý poskytuje vrstvu medzi operaèným systém
 
 JBoss (JavaBeans Open Source) je aplikaèný server, ktorý je zalo¾ený na platforme Java a Java Enterprise Edition \cite{jbossbook}. Tento typ AS je open-source, preto je mo¾né jeho stiahnutie spolu so zdrojovými kódmi. Základným stavebným kameòom JBoss AS je JBoss Microcontainer. JBoss Microcontainer je refaktorizácia JBoss JMX Microkernel, aby podporoval POJO nasadzovanie a samostatné pou¾itie mimo aplikaèného servera. Microcontainer registruje v¹etky pou¾ité slu¾by. Slu¾by, ktoré majú by prístupné sa registrujú v~podobe managed beany. Microcontainer spravuje a riadi beh týchto slu¾ieb \cite{jbossbook}.
 
-Pou¾ívanie aplikaèného servera JBoss je mo¾né vykona» ruène prostredníctvom konzole a nájdením in¹talaèného adresára, ktorý obsahuje skript run.sh, ktorý spustí JBoss. Po spustení serveru je mo¾né k~nemu implicitne pristupova» na localhost-e na porte 8080.
+Pou¾ívanie aplikaèného servera JBoss je mo¾né vykona» ruène prostredníctvom konzoly a nájdením in¹talaèného adresára, ktorý obsahuje skript run.sh, ktorý spustí JBoss. Po spustení serveru je mo¾né k~nemu implicitne pristupova» na localhost-e na porte 8080.
 
 
 
@@ -298,7 +296,7 @@ Postup rie¹enia problému a kalkulácie skóre sa opakuje pre rôzne scenáre (napr. 
 \section{Plánovací problém}\label{planprob}
 Plánovacím problémom mô¾eme obecne oznaèi» akýkoµvek problém, ktorý vy¾aduje od nás zdroje a predikciu na priradenie zdrojov, nájdenie rie¹enia takého, aby výsledok bol v~koneènom dôsledku najlep¹í, cenovo aj èasovo najprijateµnej¹í. 
  
-V~be¾nom ¾ivote rovnako ako ja v~podnikových sférach sa stretávame s~rôznymi plánovacími problémami. Mô¾e ís» o~problémy ako správne naplánova» cestu vozidiel (áut, lodí, \ldots), aby sme ju spravili za èo najkrat¹í èas, rovnako mô¾eme po¾adova» aby cesta bola, èo finanène najprijateµnej¹ia. Rovnako mô¾eme plánova» rozvrh práce zamestnancov vo firme, aby zbytoène nespomaµovali chod ostatných zamestnancov, ktorí sú na ich práci závislí a nemuseli zbytoène èaka». Plánova» mô¾me spú¹»anie testovania aplikácií v~rámci vývojárskej firmy, aby niektoré úlohy boli otestované skôr ako iné, no musí by» èo najefektívnej¹ie vyvá¾enie pou¾itých zdrojov (procesorového èasu) a zbytoène prostriedkami nemrhali. Pokiaµ je problém dostatoène komplexný, potom je veµmi vhodné pou¾i» Optaplanner.
+V~be¾nom ¾ivote rovnako ako ja v~podnikových sférach sa stretávame s~rôznymi plánovacími problémami. Mô¾e ís» o~problémy ako správne naplánova» cestu vozidiel (áut, lodí, \ldots), aby sme ju spravili za èo najkrat¹í èas, rovnako mô¾eme po¾adova» aby cesta bola, èo finanène najprijateµnej¹ia. Rovnako mô¾eme plánova» rozvrh práce zamestnancov vo firme, aby zbytoène nespomaµovali chod ostatných zamestnancov, ktorí sú na ich práci závislí a nemuseli zbytoène èaka». Plánova» mô¾eme spú¹»anie testovania aplikácií v~rámci vývojárskej firmy, aby niektoré úlohy boli otestované skôr ako iné, no musí by» èo najefektívnej¹ie vyvá¾enie pou¾itých zdrojov (procesorového èasu) a zbytoène prostriedkami nemrhali. Pokiaµ je problém dostatoène komplexný, potom je veµmi vhodné pou¾i» Optaplanner.
 
 \begin{figure}[htb]
 
@@ -311,7 +309,7 @@ V~be¾nom ¾ivote rovnako ako ja v~podnikových sférach sa stretávame s~rôznymi plá
 \end{center}
 
 \end{figure}
-Obrázok è. \ref{obrazokUseCase} zobrazuje typické pou¾itie OptaPlanner-u. Mô¾me vidie», ¾e na~nasledujúcom obrázku vystupujú 4 osoby(oznaèené obdå¾nikom modrej, ¾ltej, zelenej a oran¾ovej farby), ktoré vykonávajú nejakú èinnos». Ich èinnos» je ¹pecifická a silne závisí od práce predchádzajúcich pracovníkov a teda nemô¾u zaèa» pracova» pokiaµ nie je dokonèená práca predchádzajúceho pracovníka. V~prípade nároènosti zadania takého to problému je pomerne jednoduché naplánova» správne poradie èinností. Problém nastáva, ak by v~danom obrázku bolo niekoµko násobne viac osôb. V~tomto prípade by ¹tandardným prístupom  mohlo dôjs» k~neefektívnemu rozdeleniu práce a k~zbytoènému mrhaniu èasu. Preto je vhodné pou¾i» OptaPlanner, ktorý sa sna¾í ich èinnosti maximálne optimalizova» a jednotlivé èinnosti zvoli» v~následnosti tak, aby výsledná práca bola spravená za najkrat¹í mo¾ný èas vzhµadom na èinnosti, ktoré sa optimalizujú.
+Obrázok è. \ref{obrazokUseCase} zobrazuje typické pou¾itie OptaPlanner-u. Mô¾eme vidie», ¾e na~nasledujúcom obrázku vystupujú 4 osoby(oznaèené obdå¾nikom modrej, ¾ltej, zelenej a oran¾ovej farby), ktoré vykonávajú nejakú èinnos». Ich èinnos» je ¹pecifická a silne závisí od práce predchádzajúcich pracovníkov a teda nemô¾u zaèa» pracova» pokiaµ nie je dokonèená práca predchádzajúceho pracovníka. V~prípade nároènosti zadania takéhoto problému je pomerne jednoduché naplánova» správne poradie èinností. Problém nastáva, ak by v~danom obrázku bolo niekoµko násobne viac osôb. V~tomto prípade by ¹tandardným prístupom  mohlo dôjs» k~neefektívnemu rozdeleniu práce a k~zbytoènému mrhaniu èasu. Preto je vhodné pou¾i» OptaPlanner, ktorý sa sna¾í ich èinnosti maximálne optimalizova» a jednotlivé èinnosti zvoli» v~následnosti tak, aby výsledná práca bola spravená za najkrat¹í mo¾ný èas vzhµadom na èinnosti, ktoré sa optimalizujú.
 
 
 
@@ -339,7 +337,7 @@ Drools kalkulácia skóre vyu¾íva vlastnú DRL syntax a je daná súborom, ktorý obsa
  Spustenie rie¹enia je dané zavolaním hlavnej metódy solve z~triedy Solver, ktorá spú¹»a rie¹enie problému. 
  Postup rie¹enia je nasledovný:
 \begin{enumerate}
-\item Overenie prostriedkov(definièného súboru, konfiguraèného súboru (obsahuje spôsob kalkulácie, definièné triedy, pou¾itie plánovacích algoritmov a metaheuristických metód) a prostriedkov na kalkuláciu skóre
+\item Overenie prostriedkov(definièného súboru, konfiguraèného súboru (obsahuje spôsob kalkulácie, definièné triedy, pou¾itie plánovacích algoritmov a metaheuristických metód) a prostriedkov na kalkuláciu skóre)
 \item Naèítanie definièného XML súboru 
 \item Vykonanie kroku podµa nastavenia plánovacích algoritmov
 \item Optimalizácia kroku v~prípade pou¾itia metaheuristických metód
@@ -364,7 +362,7 @@ OptaPlanner je ovládaný konfiguraèným súborom vo formáte XML, v~ktorom u¾ívateµ 
 \end{itemize}
 
 Pre lep¹iu prehµadnos» je uvedená uká¾ka konfiguraèného súboru. 
-
+\newpage
 \lstset{
     language=xml,
     tabsize=2,
@@ -416,7 +414,7 @@ Výsledkom plánovania prostredníctvom OptaPlanner je jediný výstupný súbor vo for
 \subsection{Uká¾ku výsledku plánovacieho problému}
 V~nasledujúcej èasti by som rád ukázal výstupný súbor pre problém 4 Dám. Poèiatoèným zadaním problému bolo rozostavenie Dám na 1.riadku ¹achovnice. 
 
-\newpage
+
 \lstset{
     language=xml,
     tabsize=2,
@@ -440,13 +438,13 @@ V~nasledujúcej èasti by som rád ukázal výstupný súbor pre problém 4 Dám. Poèiato
 
     \lstinputlisting{4queens.xml}
 
-Na obrázku è. \ref{queen} je ukázaný výstup OptaPlanneru pre problém 4 Dám. Ka¾dý element XML súboru obsahuje atribút ID, podµa ktorého je mo¾ného ho jednoznaène adresova». Vyu¾itie tejto vlastnosti bude ukázané neskôr v~texte. Celý súbor je zaobalený v~párovej znaèke <NQueens>, ktorý znaèí ¾e obsahom súboru je N Dám, prièom sa nachádza na riadku è.1. Dôle¾itou znaèkou je znaèka párová znaèka <n> na riadku è. 3, ktorej hodnota 4 znaèí poèet Dám, ktoré sa budú na ¹achovnici nachádza». Celý súbor mô¾eme rozdeli» na 4 èasti: 
+Na obrázku è. \ref{queen} je ukázaný výstup OptaPlanneru pre problém 4 Dám. Ka¾dý element XML súboru obsahuje atribút ID, podµa ktorého je mo¾ného ho jednoznaène adresova». Vyu¾itie tejto vlastnosti bude ukázané neskôr v~texte. Celý súbor je zaobalený v~párovej znaèke <NQueens>, ktorý znaèí ¾e obsahom súboru je N Dám, prièom sa nachádza na riadku è.1. Dôle¾itou znaèkou je znaèka párová znaèka $<n>$ na riadku è. 3, ktorej hodnota 4 znaèí poèet Dám, ktoré sa budú na ¹achovnici nachádza». Celý súbor mô¾eme rozdeli» na 4 èasti: 
 \begin{itemize} 
 \item Definíciu ståpcov ¹achovnice ohranièené znaèkou columnList na riadku è. 4 
 \item Definíciu riadkov ¹achovnice ohranièené znaèkou rowList na riadku è. 22 
 \item Definíciu pozície dám na ¹achovnici ohranièené znaèkami queenList na riadku è. 40 
 \item definíciu hodnoty skóre ohranièené znaèkou score na riadku è.63 
-\end{itemize} Definícia ståpcov obsahuje zoznam ståpcov ¹achovnice. Ka¾dý ståpec je definovaný znaèkou <Column> , ktorá obsahuje znaèku <index>, ktorá definuje jeho relatívne poradie od zaèiatku ¹achovnice. Hodnoty týchto znaèiek nie sú jedineèné. Definícia riadkov obsahuje zoznam riadok ¹achovnice. Ka¾dý riadok je definovaný znaèkou <Row>, ktoré  obsahuje znaèku <index>, ktorá definuje jeho relatívne poradie od zaèiatku ¹achovnice. Hodnoty týchto znaèiek nie sú jedineèné. Definícia pozície dám obsahuje zoznam dám a ich výsledné rozostavenie na ¹achovnici. Ka¾dá dáma je oznaèená znaèkou <Queen> s~atribútom id k~jeho jednoznaènej identifikácií. Ka¾dá dáma obsahuje znaèku <id> a znaèky <column> a <row> a s~atribútmi reference. Hodnoty týchto atribútom obsahujú èíselnú informáciu, ktorá znaèí èíslo ståpca a riadka, kde sa dáma nachádza. Odkazujú na hodnoty id atribútov znaèiek pre ståpec a a pre riadok, kde sa dáma nachádza. Na riadku è. 62 je uvedená párová znaèka , ktorej hodnota znaèí skóre najlep¹ieho rie¹enia. Táto uká¾ka mo¾ného výstupu plánovania prostredníctvom OptaPlanneru nie je obecná pre v¹etky plánovacie problémy. 
+\end{itemize} Definícia ståpcov obsahuje zoznam ståpcov ¹achovnice. Ka¾dý ståpec je definovaný znaèkou $<Column>$ , ktorá obsahuje znaèku $<index>$, ktorá definuje jeho relatívne poradie od zaèiatku ¹achovnice. Hodnoty týchto znaèiek nie sú jedineèné. Definícia riadkov obsahuje zoznam riadok ¹achovnice. Ka¾dý riadok je definovaný znaèkou $<Row>$, ktoré  obsahuje znaèku $<index>$, ktorá definuje jeho relatívne poradie od zaèiatku ¹achovnice. Hodnoty týchto znaèiek nie sú jedineèné. Definícia pozície dám obsahuje zoznam dám a ich výsledné rozostavenie na ¹achovnici. Ka¾dá dáma je oznaèená znaèkou $<Queen>$ s~atribútom id k~jeho jednoznaènej identifikácií. Ka¾dá dáma obsahuje znaèku $<id>$ a znaèky $<column>$ a $<row>$ a s~atribútmi reference. Hodnoty týchto atribútov obsahujú èíselnú informáciu, ktorá znaèí èíslo ståpca a riadka, kde sa dáma nachádza. Odkazujú na hodnoty id atribútov znaèiek pre ståpec a a pre riadok, kde sa dáma nachádza. Na riadku è. 62 je uvedená párová znaèka , ktorej hodnota znaèí skóre najlep¹ieho rie¹enia. Táto uká¾ka mo¾ného výstupu plánovania prostredníctvom OptaPlanneru nie je obecná pre v¹etky plánovacie problémy. 
 
 \subsection{©tatistiky}
 OptaPlanner rovnako podporuje tvorbu ¹tatistík a výstupu v~podobe grafu z~výsledku plánovania. Základom je vytvorenie ¹peciálnej konfigurácie, ktorá ako podmno¾inu obsahuje konfiguráciu uvedenú v~kapitole \ref{confopt}. V~tejto konfigurácií sa nastavuje typ podporovaného grafického výstupu, napr. celkové najlep¹ie dosiahnuté skóre pre 1 alebo viacero konfigurácií, výstup pre najhor¹iu konfiguráciu, celkový èas strávený pri rie¹ení problému, vyu¾itie pamäte pri vykonávaní jednotlivých krokov. 
@@ -464,7 +462,7 @@ Na nasledujúcom obrázku je zobrazený grafický výstup z~OptaPlanneru pre rie¹enie
  
 \end{figure} 
  
-Na obrázku è. \ref{statconf} je zobrazený grafický výstup z~OptaPlanneru pre hodnoty skóre pre rôzne rozostavenia dám a rozlièné optimalizaèné algoritmy. Graf má na ose Y nanesené èíselné hodnoty skóre a na ose X definièný súbor, pre ktorý bol vyprodukovaný daný grafický výstup. Pre ka¾dý pou¾itý definièný súbor (4 Dám, 8 Dám, 16 Dám, 32 Dám) boli pou¾ité 3 optimalizaèné algoritmy: tabuSearch-moveTabu (reprezentovaný ståpcom èervenej farby), tabuSerach-propertyTabu (reprezentovaný ståpcom modrej farby) a simulatedAnnealing (reprezentovaný ståpcom zelenej farby). Najlep¹ie skóre je také, ktorého hodnota je najväè¹ia (v~tomto prípade, ktorá sa najviac blí¾i 0). Z~daného grafického výstupu mô¾eme usúdi», ¾e pre problém N Dám s~poèiatoèným rozlo¾ením Dám na 1.riadku ¹achovnice (najvy¹¹om) je najlep¹í optimalizaèný algoritmus SimulatedAnnnealing. Takýto grafický výstup mô¾eme dosiahnu» pre µubovolný plánovací problém. Rovnako mô¾eme dosta» aj iný grafický výstup v~závislosti od vlastnosti, ktoré chceme sledova» (napr. celkový èas strávený pri plánovaní, vyu¾itie pamäte).
+Na obrázku è. \ref{statconf} je zobrazený grafický výstup z~OptaPlanneru pre hodnoty skóre pre rôzne rozostavenia dám a rozlièné optimalizaèné algoritmy. Graf má na osi Y nanesené èíselné hodnoty skóre a na osi X definièný súbor, pre ktorý bol vyprodukovaný daný grafický výstup. Pre ka¾dý pou¾itý definièný súbor (4 Dám, 8 Dám, 16 Dám, 32 Dám) boli pou¾ité 3 optimalizaèné algoritmy: tabuSearch-moveTabu (reprezentovaný ståpcom èervenej farby), tabuSerach-propertyTabu (reprezentovaný ståpcom modrej farby) a simulatedAnnealing (reprezentovaný ståpcom zelenej farby). Najlep¹ie skóre je také, ktorého hodnota je najväè¹ia (v~tomto prípade, ktorá sa najviac blí¾i 0). Z~daného grafického výstupu mô¾eme usúdi», ¾e pre problém N Dám s~poèiatoèným rozlo¾ením Dám na 1.riadku ¹achovnice (najvy¹¹om) je najlep¹í optimalizaèný algoritmus SimulatedAnnnealing. Takýto grafický výstup mô¾eme dosiahnu» pre µubovolný plánovací problém. Rovnako mô¾eme dosta» aj iný grafický výstup v~závislosti od vlastnosti, ktoré chceme sledova» (napr. celkový èas strávený pri plánovaní, vyu¾itie pamäte).
 
 
 \newpage
@@ -473,13 +471,11 @@ Na obrázku è. \ref{statconf} je zobrazený grafický výstup z~OptaPlanneru pre hod
 \chapter{Analýza a návrh aplikácie}\label{impl}
 V~tejto kapitole postupne uvedieme po¾iadavky na aplikáciu, analýzu systému, návrh aplikácie, implementáciu. Rovnako si prejdeme rozdelenie systému plánovania na dve èasti a to grafické u¾ívateµské rozhranie a plánovaciu èas» optimalizovanú pre problémy N Dám, vyvá¾enia cloudu a cestovateµského turnaja s~mo¾nos»ou roz¹írenia pre akýkoµvek plánovací problém. V~kapitole je ukázaný dátový model aplikácie spolu s~návrhom u¾ívateµského rozhrania.
 
-\section{©pecifikácia po¾iadavkov}
-V~tejto kapitole postupne uvedieme po¾iadavky na aplikáciu, analýzu systému, návrh aplikácie, implementáciu, testovanie a nakoniec vyhodnotíme aplikáciu a navrhneme jej mo¾né roz¹írenia. Rovnako si prejdeme rozdelenie systému plánovaniu na dve èasti a to grafické u¾ívateµské rozhranie a plánovaciu optimalizované pre problémy N Dám, vyvá¾enia cloudu a cestovateµského turnaja s~mo¾nos»ou roz¹írenia pre akýkoµvek plánovací problém. V~kapitole je ukázaný dátový model aplikácie spolu s~návrhom u¾ívateµského rozhrania. 
- 
+
 \section{©pecifikácia po¾iadavkov} 
-V~tejto kapitole postupne rozoberieme po¾iadavky na systém monitorovania stavu úloh. Základnou úlohou systému je monitorovanie úloh. Na jednej strane bude systém schopný zobrazova» stav plánovacích úloh, na druhej strane bude môc» systém plánovacie úloh spú¹»a»/pozastavi».  
+V~tejto kapitole postupne uvedieme po¾iadavky na aplikáciu, analýzu systému, návrh aplikácie, implementáciu, testovanie a nakoniec vyhodnotíme aplikáciu a navrhneme jej mo¾né roz¹írenia. Rovnako si prejdeme rozdelenie systému plánovaniu na dve èasti a to grafické u¾ívateµské rozhranie a plánovaciu optimalizované pre problémy N Dám, vyvá¾enia cloudu a cestovateµského turnaja s~mo¾nos»ou roz¹írenia pre akýkoµvek plánovací problém. V~kapitole je ukázaný dátový model aplikácie spolu s~návrhom u¾ívateµského rozhrania.  
  
-Úlohy bude mo¾né triedi» podla urèitého kritéria, rovnako systém bude schopný aj úlohy vyhµadáva». Jednotlivé úlohy je mo¾né aj maza», alebo zmeni» definíciu plánovacieho problému \ref{planprob} a úlohu znovu spusti». Novú úlohu bude mo¾né do systému vlo¾i» a následne stupi». Bude mo¾né vytvára» nové definície plánovacích problémov.  
+Úlohy bude mo¾né triedi» podla urèitého kritéria, rovnako systém bude schopný aj úlohy vyhµadáva». Jednotlivé úlohy je mo¾né aj maza», alebo zmeni» definíciu plánovacieho problému \ref{planprob} a úlohu znovu spusti». Novú úlohu bude mo¾né do systému vlo¾i» a následne spusti». Bude mo¾né vytvára» nové definície plánovacích problémov.  
  
 Úlohy bude môc» systém publikova», èím sa myslí akcia, ktorá vytvorí pre úlohu ¹peciálne URL, na ktoré sa po kliknutí zobrazí stránku s~názvom úlohy a obsahom XML definièného súboru. Úlohu bude mo¾né aj odpublikova» a po pristúpení k~odpublikovanej úlohe sa vráti prázdny obsah. 
   
@@ -526,7 +522,7 @@ Podpora ostatných prehliadaèov nie je odporúèaná z~dôvodu neoèakávaného chovania
 
 V~druhej èasti sa zameriame na problémy backend-u aplikácie. Celá aplikácia potrebuje udr¾ova» a spravova» dáta. Dátami sú mienené informácie o~úlohách, u¾ívateµoch a organizáciach. Z~toho dôvodu bolo treba vyrie¹i» otázku voµby vhodnej databázovej technológie. Existuje niekoµko mo¾ností, ktoré sa dajú µahko integrova» s~JBoss-om \ref{jbossc}. Keï¾e nároky na vy»a¾enos» prístupu k~dátam, rovnako aj mno¾stvo ulo¾ených dát sú malého merítka bolo vhodné zvoli» k~tomu adekvátnu databázovú technológiu a tou technológiou je MySQL \ref{mysqlkap}.
 
- Následne treba spomenú» problém komunikácie databáze s~u¾ívateµským rozhraní. Grafické u¾ívateµské rozhranie potrebuje komunikova» s~databázou odkiaµ získava aktuálne informácie o~úlohách, u¾ívateµoch a organizáciách. Rovnako sa do databázy zapisujú priebe¾né informácie o~plánovaní. Vzhµadom na podmienku nezávislosti pou¾itia databázovej technológie bola pou¾itá technológia JPA \ref{jpakap}.
+ Následne treba spomenú» problém komunikácie databázy s~u¾ívateµským rozhraní. Grafické u¾ívateµské rozhranie potrebuje komunikova» s~databázou odkiaµ získava aktuálne informácie o~úlohách, u¾ívateµoch a organizáciách. Rovnako sa do databázy zapisujú priebe¾né informácie o~plánovaní. Vzhµadom na podmienku nezávislosti pou¾itia databázovej technológie bola pou¾itá technológia JPA \ref{jpakap}.
 
 Pre publikovanie bola zvolená jednoduch¹ia varianta webovej slu¾by a to RESTful webová slu¾ba \ref{restkap}, ktorá bude namapovaná na URI task/parameter a parameter predstavuje ID úlohy, ktorý sa má zobrazi». Chovanie tejto slu¾by je mo¾né rozdeli» podµa prihláseného a neprihláseného u¾ívateµa:
 \begin{itemize}
@@ -546,7 +542,7 @@ Pre publikovanie bola zvolená jednoduch¹ia varianta webovej slu¾by a to RESTful 
 
 
 
- Komunikácia s~plánovacou èastou je realizovaná prostredníctvom webovej slu¾by \ref{webkap} prostredníctvom HTTP protokolu. Z~dôvodu pou¾itia ¹tandardných komunikaèných protokolov a ni¾¹ím nákladom na prevádzkovanie bola zvolená Big webová slu¾ba \ref{bigkap}. U¾ívateµské rozhranie predstavuje klienta, ktorý volá metódy na spustenie a pozastavenie plánovania. PlannerService predstavuje koncový bod webovej slu¾by a zachytáva správy od klienta a zabezpeèuje spú¹»anie/pozastavenie výpoètu(plánovania).
+ Komunikácia s~plánovacou èastou je realizovaná prostredníctvom webovej slu¾by \ref{webkap} prostredníctvom HTTP protokolu. Z~dôvodu pou¾itia ¹tandardných komunikaèných protokolov a ni¾¹ím nákladom na prevádzkovanie bola zvolená Big webová slu¾ba \ref{bigkap}. U¾ívateµské rozhranie predstavuje klienta, ktorý volá metódy na spustenie a pozastavenie plánovania. PlannerService predstavuje koncový bod webovej slu¾by a zachytáva správy od klienta a zabezpeèuje spú¹»anie/pozastavenie výpoètu (plánovania).
 
 PlannerService je realizovaná v~podobe session bean-y \ref{sessionkap}, ktorá reprezentuje webovú slu¾bu a obsahuje funkènos» pre spustenie a zastavenie výpoètu. Pri spustení výpoètu sú informácie predávané message-driven bean-e \ref{messagekap}, ktorá zabezpeèuje spú¹»anie plánovania prostredníctvom OptaPlanner-u \ref{optaplannerC}.
 
@@ -558,9 +554,9 @@ Kvôli závislosti èasti systému PlannerService na entitných triedach, bola apliká
 
 
 \section{Návrh aplikácie}
-Výsledná aplikácia je rozdelená na dve èasti. Na èas» reprezentujúci grafické u¾ívateµského rozhranie s~podporou prihlasovania, u¾ívateµských rol, zabezpeèenia proti neautorizovanému prístupu. Rovnako je schopné zobrazova» úlohy, u¾ívateµov a organizácie podµa u¾ívateµskej role. Rozhranie pravidelne aktualizuje informácia o~úlohách, u¾ívateµoch a organizáciach z~databáze. 
+Výsledná aplikácia je rozdelená na dve èasti. Na èas» reprezentujúci grafické u¾ívateµského rozhranie s~podporou prihlasovania, u¾ívateµských rol, zabezpeèenia proti neautorizovanému prístupu. Rovnako je schopné zobrazova» úlohy, u¾ívateµov a organizácie podµa u¾ívateµskej role. Rozhranie pravidelne aktualizuje informácia o~úlohách, u¾ívateµoch a organizáciach z~databázy. 
  
- Pre spustenie výpoètu úlohy komunikuje pomocou webovej slu¾by s~PlannerService\\(optimalizované pre rie¹enie problému N Dám, vyvá¾enie cloudu a problém obchodného cestujúceho), ktorá implementuje spracovanie informácií. Pri po¾iadavke o~spustenie/pozastavenie výpoètu spracovania úlohy sa predá v~HTTP po¾iadavky ID úlohy. Webová slu¾ba následne zaradí po¾iadavok o~spustení do JMS fronty. Message-driven bean-a následne postupne odoberá po¾iadavky z~fronty a vyhodnocuje. Pritom najprv nájde potrebný XML definièný súbor v~databáze a spustí výpoèet pomocou OptaPlanner. Priebe¾né informácie(èas do skonèenia plánovania, pokrok vo výpoète) sú priebe¾ne vkladané do databázy, èo umo¾òuje u¾ívateµovi prostredníctvom rozhrania sledova» stav úlohy. K~pozastaveniu úlohy dôjde prostredníctvom zmeny stavu vo webovej slu¾be, èo pozastaví plánovanie. 
+ Pre spustenie výpoètu úlohy komunikuje pomocou webovej slu¾by s~PlannerService\\ (optimalizované pre rie¹enie problému N Dám, vyvá¾enie cloudu a problém obchodného cestujúceho), ktorá implementuje spracovanie informácií. Pri po¾iadavke o~spustenie/pozastavenie výpoètu spracovania úlohy sa predá v~HTTP po¾iadavky ID úlohy. Webová slu¾ba následne zaradí po¾iadavku o~spustení do JMS fronty. Message-driven bean-a následne postupne odoberá po¾iadavky z~fronty a vyhodnocuje. Pritom najprv nájde potrebný XML definièný súbor v~databáze a spustí výpoèet pomocou OptaPlanner. Priebe¾né informácie (èas do skonèenia plánovania, pokrok vo výpoète) sú priebe¾ne vkladané do databázy, èo umo¾òuje u¾ívateµovi prostredníctvom rozhrania sledova» stav úlohy. K~pozastaveniu úlohy dôjde prostredníctvom zmeny stavu vo webovej slu¾be, èo pozastaví plánovanie. 
  
  
 \begin{figure}[htb] 
@@ -574,7 +570,7 @@ Výsledná aplikácia je rozdelená na dve èasti. Na èas» reprezentujúci grafické u¾
 \end{center} 
  
 \end{figure} 
-Na obrázku è.\ref{work} je popísané spôsob komunikácie u¾ívateµského rozhrania s~PlannerService. Základom je vytvorenie a vlo¾enie XML definièného súboru plánovacieho problému prostredníctvom u¾ívateµského rozhrania a následne ulo¾enie definície do databázy. Následne sa u¾ívateµovi zobrazí nová pridaná úloha v~tabuµke úloh, ktorú mu bude umo¾òova» spusti»/pozastavi» plánovanie prostredníctvom tlaèidla vedµa úlohy. Po stlaèení dôjde k~zaslaniu ¾iadosti o~spustenie plánovania úlohy s~ID úlohy prostredníctvom HTTP protokolu webovej slu¾by PlannerService(OptaPlanner), ktorá ¾iados» spracuje. Táto webová slu¾ba získa z~databáze potrebný XML definièný súbor podµa ID úlohy, ktorú obdr¾ala. Následne zmení stav úlohy a spustí plánovanie. Priebe¾ne pritom ukladá informácie o~pokroku úlohy, a èase ukonèenia úlohy. Èas» systému reprezentovaná u¾ívateµským rozhraním pravidelne získava informácie o~úlohách z~databáze a zobrazuje ich v~prehµadnej tabuµke. 
+Na obrázku è.\ref{work} je popísané spôsob komunikácie u¾ívateµského rozhrania s~PlannerService. Základom je vytvorenie a vlo¾enie XML definièného súboru plánovacieho problému prostredníctvom u¾ívateµského rozhrania a následne ulo¾enie definície do databázy. Následne sa u¾ívateµovi zobrazí nová pridaná úloha v~tabuµke úloh, ktorú mu bude umo¾òova» spusti»/pozastavi» plánovanie prostredníctvom tlaèidla vedµa úlohy. Po stlaèení dôjde k~zaslaniu ¾iadosti o~spustenie plánovania úlohy s~ID úlohy prostredníctvom HTTP protokolu webovej slu¾by PlannerService(OptaPlanner), ktorá ¾iados» spracuje. Táto webová slu¾ba získa z~databázy potrebný XML definièný súbor podµa ID úlohy, ktorú obdr¾ala. Následne zmení stav úlohy a spustí plánovanie. Priebe¾ne pritom ukladá informácie o~pokroku úlohy, a èase ukonèenia úlohy do databázy. Èas» systému reprezentovaná u¾ívateµským rozhraním pravidelne získava informácie o~úlohách z~databázy a zobrazuje ich v~prehµadnej tabuµke. 
  
 Celý návrh aplikácie bol otestovaný prostredníctvom skupiny odborných a laických u¾ívateµov s~cieµom zdôrazni» rýchlu uèiacu sa krivku u¾ívateµského rozhrania. Následne prebiehalo testovanie prostredníctvom u¾ívateµov, ktorý testovali validáciu vstupov, prihlasovanie, správne vyhµadávanie jednotlivých entít(úloh, u¾ívateµov, organizácií).
 
@@ -592,10 +588,10 @@ Na nasledujúcom obrázku je ukázaný ER diagram, ktorý bol pou¾itý pre databázu:
  
 \end{figure} 
  
-Tento obrázok zobrazuje jednotlivé entity, ktoré sú potrebné v~databázy, ka¾dá z~nich ma urèité polo¾ky. ER diagram sa skladá zo~4 entít: user - entita, ktorá reprezentuje u¾ívateµa, task - entita, ktorá reprezentuje úlohu a organization - entita, ktorá reprezentuje organizáciu a tasktype - entita, ktorá reprezentuje typ problému. Výsledný návrh odpovedá skutoènosti, ¾e ka¾dý u¾ívateµ musí by» súèas»ou organizácie, rovnako mô¾e ma» vytvorených 0 a¾ N úloh. Taktie¾ pre zjednodu¹enie je ka¾dá úloha priradená priamo organizácií pre zlep¹enie rýchlosti získania výsledku a zjednodu¹enia ich nájdenia. A~nakoniec je ka¾\\dá úloha urèitého typu. Ka¾dá entita obsahuje primárny kµúè(jedná sa o~silné entitné mno¾iny), ktorý je odvodený od názvu a zaèína predponou id\_ a pokraèuje názvom entity s~CamelCase notáciou (ka¾dé slovo zaèína veµkým písmenom a slová sú spojené spolu). Poï\\me sa pozrie» bli¾¹ie na jednotlivé entity. Entitná mno¾ina tasktype obsahuje 3 polo¾ky a to idType, ktorá reprezentuje primárny kµúè, name, ktorý reprezentuje názov plánovacieho problému (napr. N Dám, problém vyvá¾enia cloudu, \ldots) a configuration, ktorá reprezentuje XML konfiguráciu pre daný typ problému. 
+Tento obrázok zobrazuje jednotlivé entity, ktoré sú potrebné v~databáze, ka¾dá z~nich ma urèité polo¾ky. ER diagram sa skladá zo~4 entít: user - entita, ktorá reprezentuje u¾ívateµa, task - entita, ktorá reprezentuje úlohu a organization - entita, ktorá reprezentuje organizáciu a tasktype - entita, ktorá reprezentuje typ problému. Výsledný návrh odpovedá skutoènosti, ¾e ka¾dý u¾ívateµ musí by» súèas»ou organizácie, rovnako mô¾e ma» vytvorených 0 a¾ N úloh. Taktie¾ pre zjednodu¹enie je ka¾dá úloha priradená priamo organizácií pre zlep¹enie rýchlosti získania výsledku a zjednodu¹enia ich nájdenia. A~nakoniec je ka¾\\dá úloha urèitého typu. Ka¾dá entita obsahuje primárny kµúè(jedná sa o~silné entitné mno¾iny), ktorý je odvodený od názvu a zaèína predponou id\_ a pokraèuje názvom entity s~CamelCase notáciou (ka¾dé slovo zaèína veµkým písmenom a slová sú spojené spolu). Poï\\me sa pozrie» bli¾¹ie na jednotlivé entity. Entitná mno¾ina tasktype obsahuje 3 polo¾ky a to idType, ktorá reprezentuje primárny kµúè, name, ktorý reprezentuje názov plánovacieho problému (napr. N Dám, problém vyvá¾enia cloudu, \ldots) a configuration, ktorá reprezentuje XML konfiguráciu pre daný typ problému. 
  
  
-Entitná mno¾ina organization obsahuje 2 polo¾ky jednou z~nich je primárny klúè a ïal¹ou názov organizácia podµa, ktorej sú zaraïovaný jednotliví u¾ívatelia a úlohy. Ïalej prejdime k~entitnej mno¾ine user. Táto entita má rovnako primárny kµúè. Ïalej obsahuje polo¾ku pre u¾ívateµské meno(username), heslo(password), email, u¾ívateµskú rolu(role) a cudzí kµúè organization, ktorý obsahuje na odkaz na organizáciu, ku ktorej je u¾ívateµ priradený. Nakoniec prejdime k~entitnej mno¾ine task. Táto entitná mno¾ina obsahuje primárny kµúè, ïalej obsahuje XML súbor, ktorý reprezentuje danú úlohu, stav úlohy (status, ktorý reprezentuje rôzne stavy úlohy), ktoré si podrobnej¹ie rozobereme. Úloha sa mô¾e nachádza» v~jednom z~nasledujúcich stavov: 
+Entitná mno¾ina organization obsahuje 2 polo¾ky jednou z~nich je primárny klúè a ïal¹ou názov organizácie podµa, ktorej sú zaraïovaní jednotliví u¾ívatelia a úlohy. Ïalej prejdime k~entitnej mno¾ine user. Táto entita má rovnako primárny kµúè. Ïalej obsahuje polo¾ku pre u¾ívateµské meno(username), heslo(password), email, u¾ívateµskú rolu(role) a cudzí kµúè organization, ktorý obsahuje na odkaz na organizáciu, ku ktorej je u¾ívateµ priradený. Nakoniec prejdime k~entitnej mno¾ine task. Táto entitná mno¾ina obsahuje primárny kµúè, ïalej obsahuje XML súbor, ktorý reprezentuje danú úlohu, stav úlohy (status, ktorý reprezentuje rôzne stavy úlohy), ktoré si podrobnej¹ie rozobereme. Úloha sa mô¾e nachádza» v~jednom z~nasledujúcich stavov: 
 \begin{itemize} 
 \item NEW - úloha bola vytvorená 
 \item MODIFIED - XML súbor bol modifikovaný 
@@ -607,25 +603,25 @@ Entitná mno¾ina organization obsahuje 2 polo¾ky jednou z~nich je primárny klúè a
 Entitná mno¾ina task ïalej obsahuje polo¾ku, ktorá percentuálne hodnotí stav výpoètu úlohy (progress), èas do skonèenia výpoètu úlohy (eta), nastavenie úlohy na privátnu alebo verejnú (permision), názov úlohy(name) a cudzie kµúèe user, ktorý odkazuje na u¾ívateµa, ktorým bola úloha vytvorená a organization, ktorá odkazuje na organizáciu u¾ívateµa, ktorým bola vytvorená.
 
 \subsection{Návrh u¾ívateµského rozhrania}
-Výsledné rozhranie kladie dôraz na jednoduchos» a prehµadnos» zobrazených úloh. Z~tohto dôvodu boli implementované mechanizmy vyhµadávania úloh, organizácií a u¾ívateµov. Rovnako mo¾nosti lexikografického triedenia. Jednotlivé mo¾nosti práce so systémom sú zakomponované do rolovacích zoznamov, ktoré sa skladajú z~polo¾iek, v~ktorých je sprístupnená príslu¹ná funkènos». Výsledné rozhranie je prenositeµné aj na mobilné zaradenie. U¾ívateµské rozhranie je popísané na nasledujúcom obrázku: 
+Výsledné rozhranie kladie dôraz na jednoduchos» a prehµadnos» zobrazených úloh. Z~tohto dôvodu boli implementované mechanizmy vyhµadávania úloh, organizácií a u¾ívateµov. Rovnako mo¾nosti lexikografického triedenia. Jednotlivé mo¾nosti práce so systémom sú zakomponované do rolovacích zoznamov, ktoré sa skladajú z~polo¾iek, v~ktorých je sprístupnená príslu¹ná funkènos». Výsledné rozhranie je prenositeµné aj na mobilné zaradenie. 
 \begin{figure}[htb] 
  
 \begin{center} 
  
-\includegraphics[scale=0.3]{page.jpg}  
+\includegraphics[scale=0.2]{page.jpg}  
 \caption{Uká¾ka návrhu u¾ívateµského rozhrania pre zobrazenie plánovacích úloh} 
 \label{rozhranie} 
  
 \end{center} 
  
 \end{figure} 
-Na obrázku è.\ref{rozhranie} mô¾eme vidie» návrh u¾ívateµského rozhrania. Rozhranie je rozdelené do 6 èastí, ktoré mô¾me rozozna» na obrázku èíslami od 1 do 6, ktoré sú aj ohranièené. Celé rozhranie mô¾me rozdeli» do nasledujúcich èastí: 
+Na obrázku è.\ref{rozhranie} mô¾eme vidie» návrh u¾ívateµského rozhrania. Rozhranie je rozdelené do 6 èastí, ktoré mô¾eme rozozna» na obrázku èíslami od 1 do 6, ktoré sú aj ohranièené. Celé rozhranie mô¾me rozdeli» do nasledujúcich èastí: 
 \begin{itemize} 
 \item Oblas» è.1 predstavuje navigaèné menu, kde sú jednotlivé akcie rozdelené do rolovacích zoznamov. Pre kliknutí na príslu¹ný zoznam dôjde k~jeho odrolovaniu a zobrazeniu polo¾iek. Po kliknutí na polo¾ku dôjde k~zmenu obsahu stránky. 
 \item Oblas» è.2 obsahuje informáciu o~prihlásenom u¾ívateµovi, rovnako obsahuje aj tlaèidlo Logout, prostredníctvom ktorého sa mô¾e u¾ívateµ z~aplikácie odhlási» 
 \item Oblas» è.3 predstavuje jednu z~funkèných mo¾ností. Jedná sa o~vyhµadávanie, ktoré je zlo¾ené zo vstupného prvku, do ktorého zadáme vyhµadávaný re»azec a druhá èas» predstavuje menu, z~ktorého zvolíme ståpec podµa, ktorého bude prebieha» vyhµadávanie. Následne je mo¾nos» realizova» tlaèidlom Find, ktoré prekreslí obsah tabuµky ni¾¹ie a naplní ju nájdenými výsledkami. 
 \item Oblas» è.4 predstavuje tabuµku, ktorá je dynamicky obnovovaná a reaguje na asynchrónne ukladanie dát z~webovej slu¾by. Tabuµka je rozdelená do ståpcov. Názvy ståpcov, ktoré sú oznaèené modrou farbou sú zároveò odkazy, na ktoré je mo¾né kliknú». Po kliknutí na daný odkaz dôjde k~lexikografickému zoradeniu obsahu tabuµky podµa daného ståpca striedavo vzostupne alebo zostupne. Rád by som upozornil na ståpec progress, ktorý pre ka¾dú úlohu zobrazuje stav spracovania úlohy. Rovnako musím zdôrazni» ståpec Permission, ktorý zobrazuje, èi je úloha verejná alebo privátna. Pokiaµ je úloha verejná(Public), tak je tento odkaz zobrazený modrou farbou, èo znamená, ¾e je to odkaz, preto je mo¾né naò ho kliknú». Po kliknutí sa zobrazí stránka s~informáciami o~názve úlohy a xml súbore. Tento odkaz je mo¾né následne µubovolne preposla» a pristupova» k~nemu. V~poslednom rade treba zdôrazni» ståpec Actions, ktorý je najdôle¾itej¹í pre ka¾dú úlohu povoµuje sadu akcií. Jednotlivé akcie sú reprezentované tlaèidlami, pritom odrá¾ajú aktuálny stav spracovania úlohy spolu s~ïal¹ími informáciami o~úlohe. 
-\item Oblas» è.5 predstavuje komponentu na stránkovanie, aby pri rozsiahlom obsahu sa nezväè¹oval neúmerne veµkos» stránky. 
+\item Oblas» è.5 predstavuje komponent na stránkovanie, aby pri rozsiahlom obsahu sa nezväè¹oval neúmerne veµkos» stránky. 
 \item Oblas» è.6 predstavuje funkènú oblas». Táto oblas» je ¹pecifická pre ka¾dú stránku, ktorá reprezentuje jej obsah. V~tej oblasti sú umiestnené typicky obsahy databázových tabuliek, nástroje na vyhµadávanie, rôzne akcie, ktoré je mo¾né vykonáva» s~dátami, rovnako aj mo¾nosti na vytváranie entít. 
  
 \end{itemize} 
@@ -661,16 +657,16 @@ Komunikácia s~databázou je realizovaná prostredníctvom aplikaèného servera. Zákl
     
 
 \subsection{Prihlasovanie}
-Základom prihlasovania sú komponenty na stránke Login.xhtml pre zadanie mena a hesla u¾ívateµa. Údaje sú následné spracované v~managed bean-e(triede) s~názvom LoginBean, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.beans. Táto trieda rovnako obsahuje aj validátory(metódy validateUsername/validatePassword), ktoré kontrolujú existenciu u¾ívateµa a validitu hesla. V~prípade, ¾e u¾ívateµ neexistuje alebo je zadané nevalidné heslo je zobrazená komponenta h:outputText, ktorá zabezpeèí zobrazenie príslu¹nej informácie. 
+Základom prihlasovania sú komponenty na stránke Login.xhtml pre zadanie mena a hesla u¾ívateµa. Údaje sú následné spracované v~managed bean-e (triede) s~názvom LoginBean, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.beans. Táto trieda rovnako obsahuje aj validátory (metódy validateUsername/validatePassword), ktoré kontrolujú existenciu u¾ívateµa a validitu hesla. V~prípade, ¾e u¾ívateµ neexistuje alebo je zadané nevalidné heslo je zobrazený komponent h:outputText, ktorá zabezpeèí zobrazenie príslu¹nej informácie. 
  
   
 V~prípade, ¾e validácia prebehne úspe¹ne zavolá sa metóda authenticate z~moduly Seam Security. Táto metóda získa u¾ívateµskú rolu zadaného u¾ívateµa a ID u¾ívateµa, ktorú následne vlo¾í do ¾ivotného cyklu aplikácie pomocou metódy setUser, ktorá je súèas» balíku org.picketlink.idm.api.User. 
 
-Úspe¹né prihlásenie je dané nastavením metódy setStatus na hodnotu SUCCESS, v~prípade, ¾e validácia údajov neprebehne úspe¹ne sa nastaví metóda setStatus na hodnotu FAILURE. Po úspe¹nom prihlásení je mo¾né identitu u¾ívateµa získa» nainjektovaním(uvedením anotácie @Inject) pred triedu Identity, z~ktorej je mo¾né získa» prihlasovacie meno u¾ívateµa, ktoré sa zobrazuje na stránke. 
+Úspe¹né prihlásenie je dané nastavením metódy setStatus na hodnotu SUCCESS, v~prípade, ¾e validácia údajov neprebehne úspe¹ne sa nastaví metóda setStatus na hodnotu FAILURE. Po úspe¹nom prihlásení je mo¾né identitu u¾ívateµa získa» nainjektovaním (uvedením anotácie @Inject) pred triedu Identity, z~ktorej je mo¾né získa» prihlasovacie meno u¾ívateµa, ktoré sa zobrazuje na stránke. 
  
 Po prihlásení u¾ívateµa je realizovaná navigácia u¾ívateµa na stránku Tasks.xhtml. Navigácia je implementovaná pomocou pravidla v~súbore faces-config.xml. Rozlí¹enie u¾ívateµskej role pri prihlasovaní je dané zobrazovaním polo¾iek v~menu aplikácie prostredníctvom, ktorého je mo¾né vykonáva» akcie. 
  
-Problematika odhlasovania úzko súvisí s~prihlasovaním. Menu aplikácie obsahuje komponentu h:commandButton, ktorá v~atribúte action volá metódu logout. Tá spôsobí zavolanie metódy identity.logout, ktorá odobere identitu daného u¾ívateµa(zamedzí mu opätovnú prístup k~stránke podµa jeho role) a presmeruje ho na prihlasovaciu stránku(Login.xhtml).
+Problematika odhlasovania úzko súvisí s~prihlasovaním. Menu aplikácie obsahuje komponent h:commandButton, ktorá v~atribúte action volá metódu logout. Tá spôsobí zavolanie metódy identity.logout, ktorá odobere identitu daného u¾ívateµa (zamedzí mu opätovnú prístup k~stránke podµa jeho role) a presmeruje ho na prihlasovaciu stránku (Login.xhtml).
 
 \subsection{Komunikácia s~PlannerService}
 Základom komunikácie s~plánovacou èas»ou systém (PlannerService) je vygenerovanie \\klienta z~WSDL súboru webovej slu¾by. Preto bolo potrebné vykona» nasledovné kroky:
@@ -686,18 +682,18 @@ Na stránke Tasks.xhtml je zobrazená tabuµka úloh, ktorá pre daný stav úlohy povo
 Pre implementáciu rozhrania bola pou¾itá technológia XHTML stránok. Pre ka¾dú u¾ívateµskú rolu sú sprístupnené rovnaké stránky a¾ na to, ¾e do ka¾dej stránky je vlo¾ené menu a to stránkou template.xhtml, prièom polo¾ky menu sú zobrazované podµa u¾ívateµskej role. Stránka template.xhtml obsahuje menu, ktoré je rozdelené do kategórií. V~pravej hornej èasti sa nachádza informácia o~prihlásenom u¾ívateµovi vrátane tlaèidla na odhlásenie.   
  
  
-Pri kliknutí na danú kategóriu sa vyroluje zoznam, ktorý obsahuje rôzne polo¾ky v~závislosti od kategórie. Polo¾ky View Tasks, View Users a View Organition obsahujú komponenty h:datatable z~kni¾nice JSF pre zobrazenie dát úloh, u¾ívateµov a organizácií. Tieto dáta sú pravidelné obnovované z~databázy, èo zabezpeèuje ich aktuálnos» prostredníctvom komponenty a4j:poll, ktorá je vytvorená pre ka¾dú tabuµku a pravidelne volá metódu, ktorá získava údaje z~databázy. Rovnako ka¾dá stránka obsahuje pole pre vyhµadávanie, prièom je mo¾né zvoli» podµa, ktorého ståpca sa bude vyhµadáva». Výsledky sa zobrazia do rovnakej tabuµky (reprezentované komponent h:datatable) prièom zobrazené polo¾ky budú odpoveda» nájdeným výsledkom. Pri vyhµadávaní sa preru¹í obnovovanie obsahu tabuliek a zobrazí sa informácia o~vyhµadávanom re»azci a èasovom razítku kedy bolo vyhµadávanie realizované. S~vyhµadanými polo¾kami je rovnako mo¾né realizova» v¹etky akcie ako s~obnovovanými dátami, ktorých obsah je pravidelne obnovovaný. 
+Pri kliknutí na danú kategóriu sa vyroluje zoznam, ktorý obsahuje rôzne polo¾ky v~závislosti od kategórie. Polo¾ky View Tasks, View Users a View Organition obsahujú komponenty h:datatable z~kni¾nice JSF pre zobrazenie dát úloh, u¾ívateµov a organizácií. Tieto dáta sú pravidelné obnovované z~databázy, èo zabezpeèuje ich aktuálnos» prostredníctvom komponentu a4j:poll, ktorá je vytvorená pre ka¾dú tabuµku a pravidelne volá metódu, ktorá získava údaje z~databázy. Rovnako ka¾dá stránka obsahuje pole pre vyhµadávanie, prièom je mo¾né zvoli» podµa, ktorého ståpca sa bude vyhµadáva». Výsledky sa zobrazia do rovnakej tabuµky (reprezentované komponent h:datatable) prièom zobrazené polo¾ky budú odpoveda» nájdeným výsledkom. Pri vyhµadávaní sa preru¹í obnovovanie obsahu tabuliek a zobrazí sa informácia o~vyhµadávanom re»azci a èasovom razítku kedy bolo vyhµadávanie realizované. S~vyhµadanými polo¾kami je rovnako mo¾né realizova» v¹etky akcie ako s~obnovovanými dátami, ktorých obsah je pravidelne obnovovaný. 
  
- Pri ka¾dej polo¾ke v~tabuµke je mo¾né vykonáva» isté akcie ako je vymaza» danú entitu (task, user, organization), po prípade ju editova», alebo vykonáva» mno¾stvo iných akcií. V¹etky akcie je mo¾né vykonáva» prostredníctvom komponenty h:commandButton, ktoré volajú príslu¹né metódy z~AdministratorBean. Jednotlivé tlaèidlá reflektujú individuálny stav danej entity (úlohy, u¾ívateµa alebo organizácie). Rovnako je mo¾né jednotlivé entity (organizácie, úlohy, u¾ívateµov) vytvára» prostredníctvom stránok Create Task/Organization/User. Tie zavolajú metódu z~triedy AdministratorBean, ktorá zabezpeèí jej vytvorenie a ulo¾enie do databáze. 
+ Pri ka¾dej polo¾ke v~tabuµke je mo¾né vykonáva» isté akcie ako je vymaza» danú entitu (task, user, organization), po prípade ju editova», alebo vykonáva» mno¾stvo iných akcií. V¹etky akcie je mo¾né vykonáva» prostredníctvom komponentu h:commandButton, ktoré volajú príslu¹né metódy z~AdministratorBean. Jednotlivé tlaèidlá reflektujú individuálny stav danej entity (úlohy, u¾ívateµa alebo organizácie). Rovnako je mo¾né jednotlivé entity (organizácie, úlohy, u¾ívateµov) vytvára» prostredníctvom stránok Create Task/Organization/User. Tie zavolajú metódu z~triedy AdministratorBean, ktorá zabezpeèí jej vytvorenie a ulo¾enie do databáze. 
  
  Ka¾dú tabuµku je mo¾né aj radi». Radenie prebieha kliknutím na názov ståpca tabuµky (zvýraznený modrou farbou), prièom daný ståpec implementuje funkciu radenia pre daný ståpec. Pri kliknutí na názov ståpca dôjde k~zavolaniu metódy(napr. pre ståpec ID sa zavolá metóda sortById), ktorá je daná atribútom action v~komponente h:commandLink. Metóda radenia je implementovaná prostredníctvom triedy Collections, ktorá obsahuje metódu sort, ktoré triedia model (trieda, ktorá obsahuje polo¾ky tabuµky) danej entity, ktorá vytvorí komparátor, ktorý porovná 2 polo¾ky daného modelu a upraví ich poradie. 
 
 \subsection{Publikovanie úloh}
-Ïal¹ou podstatnou èas»ou aplikácie pre u¾ívateµské rozhranie je mo¾nos» \\publikova»/odpublikova» úlohu (task). Túto akciu je mo¾né realizova» prostredníctvom tlaèidla v~tabuµke úloh Publish Task/Unpublish Task na stránke Tasks.xhtml. Tieto tlaèidlá nie sú v¾dy prístupné, podmienkou je, ¾e úloha je nastavená ako privátna a nachádza v~stave MODIFIED alebo COMPLETE. Naopak odpublikovanie úlohy je mo¾né kedykoµvek podmienkou je, aby úloha bola nastavená ako verejná (public). 
+Ïal¹ou podstatnou èas»ou aplikácie pre u¾ívateµské rozhranie je mo¾nos» publikova»/odpublikova» \\úlohu (task). Túto akciu je mo¾né realizova» prostredníctvom tlaèidla v~tabuµke úloh Publish Task/Unpublish Task na stránke Tasks.xhtml. Tieto tlaèidlá nie sú v¾dy prístupné, podmienkou je, ¾e úloha je nastavená ako privátna a nachádza v~stave MODIFIED alebo COMPLETE. Naopak odpublikovanie úlohy je mo¾né kedykoµvek podmienkou je, aby úloha bola nastavená ako verejná (public). 
  
- Publikovanie je realizované zavolaním metódy publishTask z~triedy AdministratorBean. V~tejto metóde dôjde k~zavolaniu metódy changePermission z~balíka org.jboss.optaplanner.con\\troller.database. Zavolaním tejto metódy dôjde k~zmenu stavu úlohy v~databáze na verejnú. Informácia sa spropaguje do tabuµky úloh a následne sa v~ståpci permission zobrazí text Public modrou farbou, ktorý po kliknutí zobrazí názov úlohy a XML súbor plánovacej úlohy. Po kliknutí na odkaz sa zavolá RESTFul webová slu¾ba s~parametrom ID úlohy. Na èas» URL task/id je namapovaná RESTFul webová slu¾\\ba, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.restservice, kde sa nachádza trieda RESTPublishTask, ktorá reprezentuje práve túto slu¾bu starajúcu sa o~publikovanie úloh.
+ Publikovanie je realizované zavolaním metódy publishTask z~triedy AdministratorBean. V~tejto metóde dôjde k~zavolaniu metódy changePermission z~balíka org.jboss.optaplanner.\\controller.database. Zavolaním tejto metódy dôjde k~zmene stavu úlohy v~databáze na verejnú. Informácia sa spropaguje do tabuµky úloh a následne sa v~ståpci permission zobrazí text Public modrou farbou, ktorý po kliknutí zobrazí názov úlohy a XML súbor plánovacej úlohy. Po kliknutí na odkaz sa zavolá RESTFul webová slu¾ba s~parametrom ID úlohy. Na èas» URL task/id je namapovaná RESTFul webová slu¾\\ba, ktorá je súèas»ou balíku org.jboss.optaplanner.controller.restservice, kde sa nachádza trieda RESTPublishTask, ktorá reprezentuje práve túto slu¾bu starajúcu sa o~publikovanie úloh.
  
- Táto slu¾ba obsahuje 1 metóda getUserById, ktorá dostane ako parameter ID úlohy. Toto ID úlohy je získavané zo zadaného URL. Dôle¾itou anotáciou je anotácia @Produces(), ktorá obsahuje hodnotu text/html, ktorá hovorí, ¾e vrátená odpoveï metódy bude HTML súbor a teda výsledok bude zobrazený v~prehliadaèi. Táto metóda na svojom zaèiatku vytiahne informáciu o~úlohe (názov, XML súbor, povolenie a u¾ívateµa spolu s~organizáciou, do ktorej je zaradený). Na základe povolenia urèí, èi je úloha nastavená ako verejná, ak nie vráti prázdnu stránku. V~prípade, ¾e je úloha verejná vráti stránku, ktorá obsahuje informáciu o~názve úlohy a XML súbor. Prístup k~tomuto k~tejto slu¾be nie je podmienený prihlásením.
+ Táto slu¾ba obsahuje jednu metóda getUserById, ktorá dostane ako parameter ID úlohy. Toto ID úlohy je získavané zo zadaného URL. Dôle¾itou anotáciou je anotácia @Produces(), ktorá obsahuje hodnotu text/html, ktorá hovorí, ¾e vrátená odpoveï metódy bude HTML súbor a teda výsledok bude zobrazený v~prehliadaèi. Táto metóda na svojom zaèiatku vytiahne informáciu o~úlohe (názov, XML súbor, povolenie a u¾ívateµa spolu s~organizáciou, do ktorej je zaradený). Na základe povolenia urèí, èi je úloha nastavená ako verejná, ak nie vráti prázdnu stránku. V~prípade, ¾e je úloha verejná vráti stránku, ktorá obsahuje informáciu o~názve úlohy a XML súbor. Prístup k~tomuto k~tejto slu¾be nie je podmienený prihlásením.
 
 
 \subsection{Validácia}
@@ -707,7 +703,7 @@ V¹etky grafické komponenty obsahujú validáciu na neprázdne, niektoré aj na neval
 
 
 \section{PlannerService}\label{plannerapp}
-PlannerService predstavuje èas» systému, ktorá zabezpeèuje spracovanie po¾iadavok na plánovanie od aplikácie z~u¾ívateµského rozhrania.  
+PlannerService predstavuje èas» systému, ktorá zabezpeèuje spracovanie po¾iadavkov na plánovanie od aplikácie z~u¾ívateµského rozhrania.  
 Aplikácia vyu¾íva ako závislos» modul Entites z~èasti systému u¾ívateµského rozhrania. Aplikácia je rozdelená do nasledovných balíkov: 
 \begin{itemize} 
 \item org.jboss.optaplanner.service - balík obsahuje triedu pre vytvorenie koncového bodu webovej slu¾by spolu s~príslu¹nými metódami na spustenie/pozastavenie plánovania a triedu, v~ktorej prebieha plánovanie 
@@ -716,13 +712,13 @@ Aplikácia vyu¾íva ako závislos» modul Entites z~èasti systému u¾ívateµského rozh
  
  
 \end{itemize} 
-Komunikácia s~databázou je realizovaná prostredníctvom aplikaèného servera. Základom je správne nastavení súbor persistence.xml, v~ktorom sú uvedené informácie o~entitných triedach a odkaz na datasource aplikaèného servera. 
+Komunikácia s~databázou je realizovaná prostredníctvom aplikaèného servera. Základom je správne nastavený súbor persistence.xml, v~ktorom sú uvedené informácie o~entitných triedach a odkaz na datasource aplikaèného servera. 
  
 Základom je trieda OptaPlanerWebService, ktorá predstavuje Big webovú slu¾bu, ktorá je súèas»ou balíku org.jboss.optaplanner.service.server. Táto trieda obsahuje metódy startTask (long id), ktorá má parameter ID úlohy, ktorú má spusti» a pauseTask (long id), ktorá má parameter ID úlohy, ktorej plánovanie má pozastavi». 
  
 Metóda runTask vytvorí spojenie s~frontou Optaplanner, do ktorej sa vkladajú ID úloh, ktoré majú by» naplánované, pomocou príkazu \uv{sender = session.createProducer (queue)}. Týmto  sa vytvorí spojenie a príkazom sender.send (message) sa vlo¾í správa do JMS fronty. 
  
-V~ïal¹ej èasti vstupuje trieda OptaPlannerMessageBean, ktorá reprezentuje Message-bean-u pre príjem správ a ich následné spracovanie. Základom triedy je metóda onMessage (Message message), ktorá asynchrónne spracováva správy vo fronte. Základom je získanie úlohy z~databáze, to je realizované príkazom Task task = em.find(Task.class, new Long(msg)). Metóda získa informácie o~úlohe a príkazom execute spustí plánovanie. 
+V~ïal¹ej èasti vstupuje trieda OptaPlannerMessageBean, ktorá reprezentuje Message-bean-u pre príjem správ a ich následné spracovanie. Základom triedy je metóda onMessage (Message message), ktorá asynchrónne spracováva správy vo fronte. Základom je získanie úlohy z~databázy, to je realizované príkazom Task task = em.find(Task.class, new Long(msg)). Metóda získa informácie o~úlohe a príkazom execute spustí plánovanie. 
  
 Základom plánovania je cyklus, ktorý testuje korektnos» stavu na RUNNING (be¾iaci) a prebiehajúce plánovanie. V~cykle sa z~triedy ProblemSolver získava informácia o~skóre a kalkulujú a ukladajú sa nové informácie o~pokroku a èase do skonèenia do databázy. 
  
@@ -761,7 +757,9 @@ Po testovacej fáze nasledovala fáza vyhodnotenia aplikácie. Cieµovej skupine bol
  
  
  
-Aplikácia by mohla by» upravená do u¾ívateµsky prívetivej¹ieho rozhrania a mohli by» zahrnuté v¹etky názory u¾ívateµov. Rovnako by PlannerService mohla by» roz¹írená o~spracovanie ïal¹ích typov plánovacích problémov, rovnako aj o~vlastné plánovacie problémy, prièom rozhranie obsahuje mo¾nos» na vytváranie vkladanie µubovolného typu plánovacích problémov. Rovnako pou¾itá technológia prístupu k~databázy umo¾òuje jednoduché roz¹írenie existujúcej databáze schémy a jej následne vytvorenie. Princíp vkladanie plánovacích problémov prostredníctvom XML súboru by mohol by» nahradený sprievodcom, kde u¾ívateµ vyplní polo¾ky a sprievodca vygeneruje príslu¹ný definièný súbor.
+Aplikácia by mohla by» upravená do u¾ívateµsky prívetivej¹ieho rozhrania a mohli by» zahrnuté v¹etky názory u¾ívateµov. Rovnako by PlannerService mohla by» roz¹írená o~spracovanie ïal¹ích typov plánovacích problémov, rovnako aj o~vlastné plánovacie problémy, prièom rozhranie obsahuje mo¾nos» na vytváranie vkladanie µubovolného typu plánovacích problémov. Toto roz¹írenie je realizované vlo¾ením informácie o DRL súbore a potrebnej kni¾nice s definíciou problému do plánovacej èasti a nahratie konfiguraèného súboru pre nový typ plánovacieho problémuu prostredníctvom u¾ívateµského rozhrania.
+
+Rovnako pou¾itá technológia prístupu k~databáze umo¾òuje jednoduché roz¹írenie existujúcej databázovej schémy a jej následne vytvorenie. Princíp vkladanie plánovacích problémov prostredníctvom XML súboru by mohol by» nahradený sprievodcom, kde u¾ívateµ vyplní polo¾ky a sprievodca vygeneruje príslu¹ný definièný súbor.
 
 
 \chapter{Záver}\label{zaver}

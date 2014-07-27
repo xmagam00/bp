@@ -5,25 +5,29 @@
 V~tejto kapitole by som Vám rád objasnil postup in¹talácie aplikácie. V~prvom rade uvediem potrebné prostriedky pre beh aplikácie: 
         \begin{itemize} 
         \item JBoss aplikaèný server najmenej vo verzii 7.1.1.Final, ktorý je súèas»ou CD 
-        \item MySQL databázový server najmenej vo verzii 5.5.37 (na distribúciu Ubuntu je mo¾né ho nain¹talova» príkazom \uv{apt-get install mysql-server mysql-client}, alebo je mo¾né postupova» podµa nasledujúceho návodu  \\http://dev.mysql.com/doc/refman/5.1/en/linux-installation.html) 
-        \item Webový prehliadaè Mozilla Firefox najmenej vo verzii 29.0 alebo Google Chrome najmenej vo verzii 34.0 (v prostredí Ubuntu je mo¾né ho nain¹talova» nasledujúcim príkazom \uv{apt get install firefox/google-chrome}) 
+        \item MySQL Connector/J minimálne vo verzii 5.0.8, ktorý je súèas»ou CD 
+        \item MySQL databázový server najmenej vo verzii 5.5.37(na distribúcií ubuntu je mo¾né ho nain¹talova» príkazom \uv{apt-get install mysql-server mysql-client}, alebo je mo¾né postupova» podµa nasledujúceho návodu  \\http://dev.mysql.com/doc/refman/5.1/en/linux-installation.html) 
+        \item Webový prehliadaè Mozilla Firefox najmenej vo verzii 29.0 alebo Google Chrome najmenej vo verzii 34.0(v prostredí ubuntu je mo¾né ho nain¹talova» nasledujúcim príkazom \uv{apt get install firefox/google-chrome}) 
  
         \end{itemize} 
-        V~prvom rade je potrebné nain¹talova» MySQL server a poèas in¹talácie nakonfigurova» databázu s~názvom \uv{optaplanner} s~u¾ívateµským menom \uv{root} a heslom \uv{root}. Pokiaµ sme databázu \uv{optaplanner} nevytvorili poèas in¹talácie, tak po in¹talácí zadáme do terminálu nasledujúci príkaz: mysql -u root -e create database optaplanner -p a zadáme heslo root.
-        Následne treba databázu naplni» dátami, preto skopírujeme súbory create.sql a insert.sql na disk a spustíme terminál: 
+        V~prvom rade je potrebné nain¹talova» MySQL server nakonfigurova» databázu s~názvom \uv{optaplanner} s~u¾ívateµským menom \uv{root} a heslom \uv{root}. Následne je potrebné skopírova» JBoss aplikaèný server na súborový systém z CD.   
+ 
+        Následne treba vytvori» potrebnú databázu a naplni» ju dátami, preto spustíme terminál: 
         \begin{itemize} 
-        \item Zadáme príkaz mysql -u root -p optaplanner $\prec$ cesta/k/suboru/create.sql (bude od nás vy¾adované heslo root, ktoré zadáme)  
-        \item Zadáme príkaz mysql -u root -p optaplanner $\prec$ cesta/k/suboru/insert.sql (bude od nás vy¾adované heslo root, ktoré zadáme) 
+        \item Zadáme príkaz mysql -u root -e create database optaplanner -p a zadáme heslo root 
+        \item Zadáme príkaz mysql -u root -p optaplanner $\prec$ cesta/k/suboru/create.sql(bude od nás vy¾adované heslo root, ktoré zadáme)  
+        \item Zadáme príkaz mysql -u root -p optaplanner $\prec$ cesta/k/suboru/insert.sql(bude od nás vy¾adované heslo root, ktoré zadáme) 
         \end{itemize} 
  
          
-        Aplikáciu mô¾eme spusti» nasledovne: 
+        Aplikáciu mô¾me spusti» nasledovne: 
         \begin{itemize} 
-        \item Skopírujeme adresár JBoss-as-7.1.1.Final na disk 
-        \item Prejdeme do zlo¾ky JBOSS\_HOME\footnote{JBOSS\_HOME predstavuje adresár s aplikaèným serverom JBOss-as-7.1.1.Final}/standalone/bin a spustíme skript standalone.sh a to zadaním do príkazu terminálu ./standalone.sh 
+        \item Skopírujeme adresár JBoss-7.1.1.Final na disk 
+        \item Skopírujeme pripravený adresára optaplanner.controller.war a optaplanner-service.war do adresára \\ JBOSS\_HOME\footnote{JBOSS\_HOME predstavuje koreòový adresár serveru JBoss na disku}/standalone/deployments 
+        \item Prejdeme do zlo¾ky JBOSS\_HOME/standalone/bin a spustíme skript standalone.sh a to zadaním do terminálu príkazu ./standalone.sh 
         \end{itemize} 
          
-        K~aplikácií pristúpime zadaním adresy http://localhost:8080/optaplanner.controller.war/ do podporovaného webového prehliadaèa a mô¾eme sa prihlási» do systému nasledovne: 
+        K~aplikácií pristúpime zadaním adresy http://localhost:8080/optaplanner.controller.war/ do podporovaného webového prehliadaèa a mô¾me sa prihlási» do systému nasledovne: 
         \begin{itemize} 
         \item Pre u¾ívateµskú rolu Administrátor - prihlasovacie meno: martin, heslo: martin 
         \item Pre u¾ívateµskú rolu Plánovaè - prihlasovacie meno: peter heslo: peter 
@@ -189,12 +193,12 @@ V~tejto kapitole by som Vám rád objasnil postup in¹talácie aplikácie. V~prvom ra
 {
 	Prilo¾ené CD obsahuje nasledujúce súbory:
 	\begin{itemize}
-        \item Jboss-as-7.1.1.Final - nakonfigurovaný aplikaèný server spolu s prelo¾enými aplikáciami pre u¾ívateµské rozhranie a plánovanie
+	\item optaplanner.controller.war - adresár aplikácie pre u¾ívateµské rozhranie obsahujúce prelo¾ené zdrojové súbory
 	\item create.sql - SQL súbor s~definíciami tabuliek
 	\item insert.sql - SQL súbor s~naplnením dát tabuliek
 	\item bachelor\_thesis.pdf - elektronická verzia textovej èasti bakalárskej práce
-	\item 4queens.xml, cloudbalance.xml, travellingtournament.xml - definièné súbory pre plánovacie problémy
-	\item src - adresár, ktorý obsahuje zdrojové kódy k~aplikácií pre u¾ívateµské \\rozhranie (optaplanner.controller) a plánovanie (optaplanner-service)
+	\item 4queens.xml,cloudbalance.xml, travellingtournament.xml - definièné súbory pre plánovacie problémy
+	\item src - adresár, ktorý obsahuje zdrojové kódy k~aplikácií pre u¾ívateµské \\rozhranie(optaplanner.controller)
 	\item docs - adresár zo zdrojovými textami k dokumentácií
 	\end{itemize}
 }
